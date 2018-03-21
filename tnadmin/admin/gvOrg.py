@@ -1,13 +1,6 @@
-# -*- coding: utf-8 -*-
-# This software is distributed under the two-clause BSD license.
-# Copyright (c) The django-ldapdb project
-
-
 from django import forms
 from django.contrib import admin
-
-
-from tnadmin.models.gvOrg import gvOrgUnit, gvOrganisation
+from tnadmin.models.gvOrg import *
 
 class gvOrgUnitForm(forms.ModelForm):
     class Meta(object):
@@ -20,8 +13,7 @@ class gvOrgUnitForm(forms.ModelForm):
 
 @admin.register(gvOrgUnit)
 class gvOrgUnitAdmin(admin.ModelAdmin):
-    form = gvOrgUnitForm
-    readonly_fields = ('gvSource', )
+    actions = None
     fields = (
         'gvOuID',
         'gvOuVKZ',
@@ -37,8 +29,9 @@ class gvOrgUnitAdmin(admin.ModelAdmin):
         'gvStatus',
         'gvSource',
     )
-    #exclude = ['dn']
+    form = gvOrgUnitForm
     list_display = ['gvOuID', 'gvOuVKZ', 'ou']
+    readonly_fields = ('gvSource', )
     #search_fields = ['first_name', 'last_name', 'full_name']
 
 class gvOrganisationForm(forms.ModelForm):
@@ -53,15 +46,13 @@ class gvOrganisationForm(forms.ModelForm):
 
 @admin.register(gvOrganisation)
 class gvOrganisationAdmin(admin.ModelAdmin):
-    form = gvOrganisationForm
-    readonly_fields = ('gvSource', )
+    actions = None
     exclude = ('gvOuIdParent', )
     fields = (
         'gvOuID',
         'gvOuVKZ',
         'o',
         'cn',
-        'gvOuCn',
         'location',
         'mail',
         'description',
@@ -70,5 +61,7 @@ class gvOrganisationAdmin(admin.ModelAdmin):
         'gvStatus',
         'gvSource',
     )
-    list_display = ['gvOuID', 'gvOuVKZ', 'o']
+    form = gvOrganisationForm
+    list_display = ['gvOuID', 'gvOuVKZ', 'cn']
+    readonly_fields = ('gvSource', )
     #search_fields = ['first_name', 'last_name', 'full_name']

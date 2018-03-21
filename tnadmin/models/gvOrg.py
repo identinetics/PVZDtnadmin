@@ -67,6 +67,11 @@ class gvOrgAbstract(gvAdminAbstract):
         help_text='Format JJJJ-MM-TT',
         max_length=10)
 
+    def save(self, *args, **kwargs):
+        self.gvOuID = self.gvOuID.upper()
+        self.gvOuVKZ = self.gvOuVKZ.upper()
+        super(gvOrgAbstract, self).save(*args, **kwargs)
+
 
 class gvOrgUnit(gvOrgAbstract):
     class Meta:
@@ -78,6 +83,8 @@ class gvOrgUnit(gvOrgAbstract):
     #object_classes = ['gvOrgUnit']
 
     ordering = ['gvOuVKZ']
+    actions = None
+
     ou = models.CharField(
         unique=True,
         verbose_name='Kurzbezeichnung (ou)',
@@ -99,6 +106,7 @@ class gvOrganisation(gvOrgAbstract):
     #base_dn = "dc=at"
     #object_classes = ['gvOrganisation']
     ordering = ['o']
+    actions = None
 
     o = models.CharField(
         unique=True,

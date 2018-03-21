@@ -19,3 +19,7 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+admin.site.site_header = 'PVZD Teilnehmerverwaltung'
+admin.site.index_title = 'Features area'
+admin.site.site_title = 'HTML title from adminsitration'
