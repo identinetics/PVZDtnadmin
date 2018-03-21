@@ -8,6 +8,7 @@ class gvUserPortalAdmin(admin.ModelAdmin):
     fields = (
         'cn',
         'gvOuIdOwner',
+        'gvOuIdParticipant',
         'gvMaxSecClass',
         'description',
         'gvStatus',

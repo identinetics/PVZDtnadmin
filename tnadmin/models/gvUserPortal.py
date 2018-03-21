@@ -18,10 +18,19 @@ class gvUserPortal(gvAdminAbstract):
         max_length=64)
     gvOuIdOwner = models.ForeignKey(
         gvOrganisation,
+        related_name='Portalbetreiber',
         on_delete=models.CASCADE,
         verbose_name='Portalbetreiber',
         null=True, blank=True,
         help_text='gvOuId des Stammportalbetreibers (Organisation des Portalverantwortlichen')
+    gvOuIdParticipant = models.ForeignKey(
+        gvOrganisation,
+        related_name='Participant',
+        on_delete=models.CASCADE,
+        verbose_name='Participant',
+        null=True, blank=True,
+        help_text='Liste der zugriffsberechtigten Stelle (gvOrganisation), die das Stammportal '
+                  'benutzen, als gvOuId')
     gvMaxSecClass = models.PositiveIntegerField(
         validators=[MaxValueValidator(3)],
         verbose_name='Max Sicherheitsklasse',
