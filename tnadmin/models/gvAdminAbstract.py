@@ -4,7 +4,7 @@ from django.db import models
 
 
 
-class gvAdminAbstract(models.Model):
+class GvAdminAbstract(models.Model):
     ''' Basisklasse mit administrativen Attributen '''
     class Meta:
         abstract = True

@@ -1,0 +1,85 @@
+[
+
+  {
+    "model": "tnadmin.gvfederation",
+    "pk": 1,
+    "fields": {
+      "gvStatus": "active",
+      "gvSource": "",
+      "gvScope": "gv.at",
+      "gvFederationName": "test.portalverbund.gv.at",
+      "gvMetaDataURL": "http://metadata.test.portalverbund.gv.at/metadata.xml"
+    }
+  },
+  {
+    "model": "tnadmin.gvfederation",
+    "pk": 2,
+    "fields": {
+      "gvStatus": "inactive",
+      "gvSource": "",
+      "gvScope": "gv.at",
+      "gvFederationName": "portalverbund.gv.at",
+      "gvMetaDataURL": "http://metadata.portalverbund.gv.at/metadata.xml"
+    }
+  },
+  {
+    "model": "tnadmin.gvorganisation",
+    "pk": 1,
+    "fields": {
+      "gvStatus": "active",
+      "gvSource": "",
+      "gvScope": "gv.at",
+      "gvOuID": "AT:BKA",
+      "gvOuVKZ": "AT:B:111",
+      "gvOuIdParent": null,
+      "cn": "Bundeskanzleramt",
+      "gvOuCn": "",
+      "mail": null,
+      "location": "Wien",
+      "description": "",
+      "gvNotValidBefore": null,
+      "gvNotValidAfter": null,
+      "o": "AT:B:111"
+    }
+  },
+  {
+    "model": "tnadmin.gvorganisation",
+    "pk": 2,
+    "fields": {
+      "gvStatus": "active",
+      "gvSource": "",
+      "gvScope": "gv.at",
+      "gvOuID": "AT:L9",
+      "gvOuVKZ": "AT:VKZ:L9",
+      "gvOuIdParent": null,
+      "cn": "Stadt Wien",
+      "gvOuCn": "",
+      "mail": null,
+      "location": "Wien",
+      "description": "",
+      "gvNotValidBefore": null,
+      "gvNotValidAfter": null,
+      "o": "Stadt Wien"
+    }
+  },
+  {
+    "model": "tnadmin.gvorganisation",
+    "pk": 3,
+    "fields": {
+      "gvStatus": "active",
+      "gvSource": "",
+      "gvScope": "gv.at",
+      "gvOuID": "AT:L4",
+      "gvOuVKZ": "AT:L4:000000",
+      "gvOuIdParent": null,
+      "cn": "Land Ober\u00f6sterreich",
+      "gvOuCn": "",
+      "mail": null,
+      "location": "Linz",
+      "description": "",
+      "gvNotValidBefore": null,
+      "gvNotValidAfter": null,
+      "o": "Land O\u00d6"
+    }
+  }
+]

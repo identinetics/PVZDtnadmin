@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from tnadmin.models.gvOrg import *
 
-class gvOrgUnitForm(forms.ModelForm):
+class GvOrgUnitForm(forms.ModelForm):
     class Meta(object):
         widgets = {
             'gvOuID': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
@@ -11,8 +11,8 @@ class gvOrgUnitForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows':2, 'cols':80}),
         }
 
-@admin.register(gvOrgUnit)
-class gvOrgUnitAdmin(admin.ModelAdmin):
+@admin.register(GvOrgUnit)
+class GvOrgUnitAdmin(admin.ModelAdmin):
     actions = None
     fields = (
         'gvOuID',
@@ -29,12 +29,12 @@ class gvOrgUnitAdmin(admin.ModelAdmin):
         'gvStatus',
         'gvSource',
     )
-    form = gvOrgUnitForm
+    form = GvOrgUnitForm
     list_display = ['gvOuID', 'gvOuVKZ', 'ou']
     readonly_fields = ('gvSource', )
     #search_fields = ['first_name', 'last_name', 'full_name']
 
-class gvOrganisationForm(forms.ModelForm):
+class GvOrganisationForm(forms.ModelForm):
     class Meta(object):
         #model = gvOrganisation
         widgets = {
@@ -44,8 +44,8 @@ class gvOrganisationForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows':2, 'cols':80}),
         }
 
-@admin.register(gvOrganisation)
-class gvOrganisationAdmin(admin.ModelAdmin):
+@admin.register(GvOrganisation)
+class GvOrganisationAdmin(admin.ModelAdmin):
     actions = None
     exclude = ('gvOuIdParent', )
     fields = (
@@ -61,7 +61,7 @@ class gvOrganisationAdmin(admin.ModelAdmin):
         'gvStatus',
         'gvSource',
     )
-    form = gvOrganisationForm
+    form = GvOrganisationForm
     list_display = ['gvOuID', 'gvOuVKZ', 'cn']
     readonly_fields = ('gvSource', )
     #search_fields = ['first_name', 'last_name', 'full_name']

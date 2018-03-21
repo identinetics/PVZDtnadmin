@@ -1,10 +1,10 @@
 from django.db import models
-from tnadmin.models.gvAdminAbstract import gvAdminAbstract
+from tnadmin.models.gvAdminAbstract import *
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
 
 
-class gvFederation(gvAdminAbstract):
+class GvFederation(GvAdminAbstract):
     '''
     Gemeinsame Basisklasse für gvOu und gvOrganization
     Wird benötigt, weil gvOrganization nicht das Feld 'ou' erbt (weil es mandatory wäre).

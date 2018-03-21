@@ -3,9 +3,9 @@ from django.contrib import admin
 from tnadmin.models.gvFederation import *
 
 
-@admin.register(gvFederation)
-class gvFederationAdmin(admin.ModelAdmin):
-    readonly_fields = ('gvSource', )
+@admin.register(GvFederation)
+class GvFederationAdmin(admin.ModelAdmin):
+    actions = None
     fields = (
         'gvFederationName',
         'gvMetaDataURL',
@@ -13,4 +13,5 @@ class gvFederationAdmin(admin.ModelAdmin):
         'gvSource',
     )
     list_display = ['gvFederationName', 'gvMetaDataURL', 'gvStatus', 'gvSource']
-    actions = None
+    readonly_fields = ('gvSource', )
+

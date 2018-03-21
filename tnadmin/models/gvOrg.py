@@ -4,7 +4,7 @@ from tnadmin.models import *
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
 
 
-class gvOrgAbstract(gvAdminAbstract):
+class GvOrgAbstract(GvAdminAbstract):
     '''
     Gemeinsame Basisklasse für gvOu und gvOrganization
     Wird benötigt, weil gvOrganization nicht das Feld 'ou' erbt (weil es mandatory wäre).
@@ -73,7 +73,7 @@ class gvOrgAbstract(gvAdminAbstract):
         super(gvOrgAbstract, self).save(*args, **kwargs)
 
 
-class gvOrgUnit(gvOrgAbstract):
+class GvOrgUnit(GvOrgAbstract):
     class Meta:
         verbose_name = 'Organisationseinheit'
         verbose_name_plural = 'Organisationseinheiten'
@@ -98,7 +98,7 @@ class gvOrgUnit(gvOrgAbstract):
 
 
 
-class gvOrganisation(gvOrgAbstract):
+class GvOrganisation(GvOrgAbstract):
     class Meta:
         verbose_name = 'Organisation'
         verbose_name_plural = 'Organisationen'
