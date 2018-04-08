@@ -27,7 +27,6 @@ class GvUserPortal(GvAdminAbstract):
     gvOuIdParticipant = models.ManyToManyField(
         GvOrganisation,
         verbose_name='Participant',
-        null=True, blank=True,
         help_text='Liste der Participants, die am Stammportal berechtigt sind')
     gvSamlIdpEntityId = models.URLField(
         null=True, blank=True,
