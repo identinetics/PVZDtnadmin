@@ -1,5 +1,6 @@
 from django.db import models
 from tnadmin.models.gvAdminAbstract import *
+from tnadmin.models.gvOrg import GvOrganisation
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
 
@@ -28,6 +29,17 @@ class GvFederation(GvAdminAbstract):
         verbose_name='Metadata URL',
         help_text='Bezugspunkt für Metadaten dieser Federation (URL für signiertes SAML Metadata Aggregat)',
         max_length=200)
+    gvDefaultFederation = models.BooleanField(
+        default=False,
+        verbose_name='default',
+        help_text='Setzt die Federation beim Erstellen einer Federation Organisation')
+    gvOuId = models.ForeignKey(
+        GvOrganisation,
+        related_name='Depositar',
+        on_delete=models.CASCADE,
+        verbose_name='gvOuId',
+        null=True, blank=True,
+        help_text='gvOuId des Depositars/Federation Operators')
 
     def __str__(self):
         return self.gvFederationName

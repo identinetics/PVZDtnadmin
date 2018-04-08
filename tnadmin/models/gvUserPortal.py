@@ -24,14 +24,16 @@ class GvUserPortal(GvAdminAbstract):
         verbose_name='Portalbetreiber',
         null=True, blank=True,
         help_text='gvOuId des Stammportalbetreibers (Organisation des Portalverantwortlichen')
-    gvOuIdParticipant = models.ForeignKey(
+    gvOuIdParticipant = models.ManyToManyField(
         GvOrganisation,
-        related_name='Participant',
-        on_delete=models.CASCADE,
         verbose_name='Participant',
         null=True, blank=True,
-        help_text='Liste der zugriffsberechtigten Stelle (gvOrganisation), die das Stammportal '
-                  'benutzen, als gvOuId')
+        help_text='Liste der Participants, die am Stammportal berechtigt sind')
+    gvSamlIdpEntityId = models.URLField(
+        null=True, blank=True,
+        verbose_name='EntityID',
+        help_text='Eindeutiger Identifier des Stammportal in einer SAML Federation (URI)',
+        max_length=80)
     gvMaxSecClass = models.PositiveIntegerField(
         validators=[MaxValueValidator(3)],
         verbose_name='Max Sicherheitsklasse',
@@ -41,35 +43,41 @@ class GvUserPortal(GvAdminAbstract):
         null=True, blank=True,
         help_text='Beschreibung',
         max_length=1024)
-    gvFederationNames = models.ManyToManyField(
-        GvFederation,
-        through='GvUserPortalFederationInfo')
-    gvSamlIdpEntityId = models.URLField(
+    gvPortalHotlineMail = models.TextField(
         null=True, blank=True,
-        verbose_name='EntityID',
-        help_text='Eindeutiger Identifier des Stammportal in einer SAML Federation (URI)',
-        max_length=80)
+        help_text='EMail-Adresse(n) Helpdesk',
+        max_length=1024)
+    gvAdminContactName = models.TextField(
+        null=True, blank=True,
+        help_text='Name Portalverantwortlicher',
+        max_length=1024)
+    gvAdminContactMail = models.TextField(
+        null=True, blank=True,
+        help_text='EMail-Adresse(n) Portalverantwortlicher',
+        max_length=1024)
+    gvAdminContactTel = models.TextField(
+        null=True, blank=True,
+        help_text='Telefon Portalverantwortlicher',
+        max_length=1024)
 
     def __str__(self):
         return self.cn
 
 
-class GvUserPortalFederationInfo(GvAdminAbstract):
-    class Meta:
-        verbose_name = 'Stammportal-Federation'
-        verbose_name_plural = 'Stammportal-Federations'
-
-    class Meta:
-        auto_created = True
-    gvFederationName = models.ForeignKey(
-        GvFederation,
-        on_delete=models.CASCADE,
-        verbose_name='Federation',
-        null=True, blank=True,
-        help_text='Federation, in die das Stammportal eingebunden ist')
-    gvUserPortal = models.ForeignKey(
-        GvUserPortal,
-        on_delete=models.CASCADE,
-        verbose_name='Federation',
-        null=True, blank=True,
-        help_text='Federation, in die das Stammportal eingebunden ist')
+# class GvUserPortalFederationLink(GvAdminAbstract):
+#     class Meta:
+#         verbose_name = 'Stammportal-Federationobject'
+#         verbose_name_plural = 'Stammportal-Federationobjects'
+#
+#     gvFederationName = models.ForeignKey(
+#         GvFederation,
+#         on_delete=models.CASCADE,
+#         verbose_name='Federation',
+#         null=True, blank=True,
+#         help_text='Federation')
+#     gvUserPortal = models.ForeignKey(
+#         GvUserPortal,
+#         on_delete=models.CASCADE,
+#         verbose_name='Federation',
+#         null=True, blank=True,
+#         help_text='Stammportal')

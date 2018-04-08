@@ -30,7 +30,14 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+MENU_WEIGHT = {
+    'GvOrganisation': 20,
+    'GvFederationOrg': 15,
+    'GvUserPortal': 10,
+    'GvFederation': 5
+}
 INSTALLED_APPS = [
+    'admin_menu',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
