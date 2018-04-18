@@ -6,9 +6,10 @@ from tnadmin.models.gvFederationOrg import *
 @admin.register(GvFederationOrg)
 class GvFederationOrgAdmin(admin.ModelAdmin):
     actions = None
-    autocomplete_fields = ('gvOuId', 'gvCaseOrg', )
+    autocomplete_fields = ('gvOuId', 'gvCaseOrg', 'gvOuId2', )
     fields = (
         'gvOuId',
+        'gvOuId2',
         'gvContractStatus',
         'gvDateEffective',
         'gvDateTerminated',

@@ -9,15 +9,9 @@ class GvFederationAdmin(admin.ModelAdmin):
     fields = (
         'gvFederationName',
         'gvMetaDataURL',
-        'gvDefaultFederation',
-        'gvOuId',
         'gvStatus',
         'gvSource',
     )
-    list_display = ['gvFederationName', 'get_federationoperator', 'gvMetaDataURL', 'gvDefaultFederation', 'gvStatus', 'gvSource']
+    list_display = ['gvFederationName', 'gvMetaDataURL', 'gvStatus', 'gvSource']
     readonly_fields = ('gvSource', )
-
-    def get_federationoperator(self, inst):
-        return inst.gvOuId.o
-    get_federationoperator.short_description = 'Depositar/FO'
 

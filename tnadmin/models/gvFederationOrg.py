@@ -34,15 +34,22 @@ LEGAL_BASIS_IDP_OP = (LEGAL_BASIS_PVV,
 
 class GvFederationOrg(GvAdminAbstract):
     class Meta:
-        verbose_name = 'Federation Organisation'
-        verbose_name_plural = 'Federation Organisationen'
+        verbose_name = 'Federation Member'
+        verbose_name_plural = 'Federation Members'
 
     gvOuId = models.ForeignKey(
         GvOrganisation,
         related_name='Vertragspartei',
         on_delete=models.CASCADE,
-        verbose_name='Vertragspartei',
+        verbose_name='Vertragspartei (berechtigt)',
         help_text='gvOuId der Vertragspartei in der Rolle Teilnehmer, zugriffsberechtige Stelle oder Dienstleister')
+    gvOuId2 = models.ForeignKey(
+        GvOrganisation,
+        related_name='VertragsparteiPVV',
+        on_delete=models.PROTECT,
+        null=True, blank=True,
+        verbose_name='Vertragspartei (Aufsicht)',
+        help_text='gvOuId der Vertragspartei in der Rolle "Vertreter des Depositars"')
     gvContractStatus = models.CharField(
         verbose_name='Rechtsgrundlage',
         null=False,
@@ -70,13 +77,6 @@ class GvFederationOrg(GvAdminAbstract):
         null=True, blank=True,
         help_text='Kommentare',
         max_length=10000)
-    gvFederationNames = models.ForeignKey(
-        GvFederation,
-        on_delete=models.CASCADE,
-        verbose_name='Federation',
-        #default=get_default_federationname,
-        null=True,
-        help_text='Vertrag mit Federation')
 
     ordering = ('gvOuId', )
 

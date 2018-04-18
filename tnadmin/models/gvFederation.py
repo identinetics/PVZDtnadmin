@@ -6,10 +6,7 @@ from tnadmin.models.gvOrg import GvOrganisation
 
 
 class GvFederation(GvAdminAbstract):
-    '''
-    Gemeinsame Basisklasse für gvOu und gvOrganization
-    Wird benötigt, weil gvOrganization nicht das Feld 'ou' erbt (weil es mandatory wäre).
-    '''
+    ''' singleton '''
     class Meta:
         verbose_name = 'Federation'
         verbose_name_plural = 'Federations'
@@ -29,17 +26,6 @@ class GvFederation(GvAdminAbstract):
         verbose_name='Metadata URL',
         help_text='Bezugspunkt für Metadaten dieser Federation (URL für signiertes SAML Metadata Aggregat)',
         max_length=200)
-    gvDefaultFederation = models.BooleanField(
-        default=False,
-        verbose_name='default',
-        help_text='Setzt die Federation beim Erstellen einer Federation Organisation')
-    gvOuId = models.ForeignKey(
-        GvOrganisation,
-        related_name='Depositar',
-        on_delete=models.CASCADE,
-        verbose_name='gvOuId',
-        null=True, blank=True,
-        help_text='gvOuId des Depositars/Federation Operators')
 
     def __str__(self):
         return self.gvFederationName
