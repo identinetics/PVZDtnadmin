@@ -34,6 +34,7 @@ LEGAL_BASIS_IDP_OP = (LEGAL_BASIS_PVV,
 
 class GvFederationOrg(GvAdminAbstract):
     class Meta:
+        ordering = ('gvOuId',)
         verbose_name = 'Federation Member'
         verbose_name_plural = 'Federation Members'
 
@@ -78,7 +79,6 @@ class GvFederationOrg(GvAdminAbstract):
         help_text='Kommentare',
         max_length=10000)
 
-    ordering = ('gvOuId', )
 
     #def __str__(self):
     #    return self.gvOuId + '/' + self.gvContractStatus + ' (' + self.gvUserPortalName + ')'

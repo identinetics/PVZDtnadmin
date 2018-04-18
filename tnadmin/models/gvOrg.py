@@ -76,6 +76,7 @@ class GvOrgAbstract(GvAdminAbstract):
 
 class GvOrgUnit(GvOrgAbstract):
     class Meta:
+        ordering = ['gvOuVKZ']
         verbose_name = 'Organisationseinheit'
         verbose_name_plural = 'Organisationseinheiten'
 
@@ -83,7 +84,6 @@ class GvOrgUnit(GvOrgAbstract):
     #base_dn = "dc=at"
     #object_classes = ['gvOrgUnit']
 
-    ordering = ['gvOuVKZ']
     actions = None
 
     ou = models.CharField(
@@ -101,12 +101,12 @@ class GvOrgUnit(GvOrgAbstract):
 
 class GvOrganisation(GvOrgAbstract):
     class Meta:
+        ordering = ['o']
         verbose_name = 'Organisation'
         verbose_name_plural = 'Organisationen'
     # LDAP meta-data
     #base_dn = "dc=at"
     #object_classes = ['gvOrganisation']
-    ordering = ['o']
     actions = None
 
     o = models.CharField(

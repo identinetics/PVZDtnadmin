@@ -9,6 +9,7 @@ from tnadmin.models.gvOrg import GvOrganisation
 
 class GvUserPortal(GvAdminAbstract):
     class Meta:
+        ordering = ('cn', )
         verbose_name = 'Stammportal'
         verbose_name_plural = 'Stammportale'
 
