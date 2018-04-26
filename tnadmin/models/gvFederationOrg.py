@@ -103,7 +103,7 @@ class GvUserPortalOperatorManager(models.Manager):
 
 
 class GvUserPortalOperator(GvFederationOrg):
-    objects = GvParticipantManager()
+    objects = GvUserPortalOperatorManager()
     class Meta:
         proxy = True
         verbose_name = 'STP-Betreiber'

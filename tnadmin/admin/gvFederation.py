@@ -15,3 +15,6 @@ class GvFederationAdmin(admin.ModelAdmin):
     list_display = ['gvFederationName', 'gvMetaDataURL', 'gvStatus', 'gvSource']
     readonly_fields = ('gvSource', )
 
+    def has_add_permission(self, request):
+        return False
+

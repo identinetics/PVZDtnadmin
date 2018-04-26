@@ -14,16 +14,16 @@ class GvOrgAbstract(GvAdminAbstract):
 
     gvOuID = models.CharField(
         unique=True,
-        verbose_name='Organisationskennz. (gvOuId)',
-        db_column='gvOuID',
+        verbose_name='gvOuId',
+        db_column='gvOuVKZ',
         help_text='Syntax: gvOuID::= Landeskennung ":" ID ID::= "VKZ:" VKZ | Org-Id  (z.B. AT:VKZ:GGA1234, AT:L9:9876)',
-        max_length=32)
+        max_length=32)  # dbcol vertauscht mit gvOuVKZ
     gvOuVKZ = models.CharField(
         unique=True,
         verbose_name='Verwaltungskennz (gvOuVKZ)',
-        db_column='gvOuVKZ',
+        db_column='gvOuID',
         help_text='Organisationskennzeichen (OKZ) gemäß der Spezifikation [VKZ]. Das Organisationskennzeichen ist für die Verwendung auf Ausdrucken, als Suchbegriff bzw. zur Anzeige vorgesehen. Das OKZ enthält Semantik und ist nur für österreichische Organisationen definiert. Für Referenzen in elektronischen Datenbeständen soll dieses Kennzeichen NICHT verwendet werden, sondern ausschließlich die gvOuId. Das VKZ kann aufgrund von Namensänderungen angepasst werden müssen. (z.B. BMEIA statt BMAA für das Außenministerium)  (z.B. GGA-12345)',
-        max_length=32)
+        max_length=32)  # dbcol vertauscht mit gvOuId
     gvOuIdParent = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
