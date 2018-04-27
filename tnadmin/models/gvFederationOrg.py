@@ -51,6 +51,13 @@ class GvFederationOrg(GvAdminAbstract):
         null=True, blank=True,
         verbose_name='Vertragspartei (Aufsicht)',
         help_text='gvOuId der Vertragspartei in der Rolle "Vertreter des Depositars"')
+    gvOuId3 = models.ForeignKey(
+        GvOrganisation,
+        related_name='Dienstleister',
+        on_delete=models.PROTECT,
+        null=True, blank=True,
+        verbose_name='Dienstleister',
+        help_text='gvOuId des Dienstleister')
     gvContractStatus = models.CharField(
         verbose_name='Rechtsgrundlage',
         null=False,

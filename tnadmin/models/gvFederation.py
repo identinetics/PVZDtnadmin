@@ -9,12 +9,12 @@ class GvFederation(GvAdminAbstract):
     ''' singleton '''
     class Meta:
         verbose_name = 'Federation'
-        verbose_name_plural = 'Federations'
+        verbose_name_plural = 'Federation'
 
     gvFederationName = models.CharField(
         unique=True,
         verbose_name='Federation Name',
-        help_text='Eindeutige Bezeichnung einer Federation im E-Mail-Adressen Format nach RFC 822 '
+        help_text='Eindeutige Bezeichnung der Federation im E-Mail-Adressen Format nach RFC 822 '
                   'beziehungsweise als DNS Name. Das Zeichen SLASH darf nicht verwendet werden. '
                   'Für den Portalverbund der österreichischen Behörden gem. Portalverbundvereinbarung'
                   'ist als gvFederationName der Wert portalverbund.gv.at festgelegt.'

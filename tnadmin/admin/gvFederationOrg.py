@@ -9,10 +9,11 @@ from tnadmin.models.gvFederationOrg import *
 @admin.register(GvFederationOrg)
 class GvFederationOrgAdmin(admin.ModelAdmin):
     actions = None
-    autocomplete_fields = ('gvOuId', 'gvCaseOrg', 'gvOuId2', )
+    autocomplete_fields = ('gvOuId', 'gvCaseOrg', 'gvOuId2', 'gvOuId3')
     fields = (
         'gvOuId',
         'gvOuId2',
+        'gvOuId3',
         'gvContractStatus',
         'gvDateEffective',
         'gvDateTerminated',
@@ -44,6 +45,13 @@ class GvFederationOrgAdmin(admin.ModelAdmin):
         else:
             return ''
     get_org_o2.short_description = 'Vertragspartei (Aufsicht)'
+
+    def get_org_o3(self, inst):
+        if inst.gvOuId3 is not None:
+            return "%s (%s)" % (inst.gvOuId3, inst.gvOuId3.o)
+        else:
+            return ''
+    get_org_o3.short_description = 'Dienstleister'
 
     def get_query_set(self):
         return super(Requirement, self).get_query_set().select_related('GvOrganisation', )  # improve performance by joining related tables
