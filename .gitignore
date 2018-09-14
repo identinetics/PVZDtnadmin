@@ -1,4 +1,6 @@
 .DS_Store
 .idea/
+!.idea/runConfigurations/
 db.sqlite3
-__pycache__/
+__pycache__
+work/

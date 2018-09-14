@@ -18,7 +18,7 @@ class GvFederation(GvAdminAbstract):
                   'beziehungsweise als DNS Name. Das Zeichen SLASH darf nicht verwendet werden. '
                   'Für den Portalverbund der österreichischen Behörden gem. Portalverbundvereinbarung'
                   'ist als gvFederationName der Wert portalverbund.gv.at festgelegt.'
-                  'Organisationsinterne Federations SOLLEN mit "internal@" + Domain-Name der '
+                  'Organisationsinterne Federations SOLLEN mit "internal@" + Namespace-Name der '
                   'Organisation. (z.B. intern@lfrz.at) bezeichnet werden.',
         max_length=64)
     gvMetaDataURL = models.URLField(

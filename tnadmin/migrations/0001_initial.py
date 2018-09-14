@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('gvStatus', models.CharField(choices=[('active', 'active'), ('inactive', 'inactive')], db_column='gvStatus', default='active', max_length=8, null=True, verbose_name='Status')),
                 ('gvSource', models.CharField(blank=True, db_column='gvSource', default='', max_length=10, null=True, verbose_name='Änderung am/durch')),
                 ('gvScope', models.CharField(db_column='gvScope', default='gv.at', max_length=32, null=True)),
-                ('gvFederationName', models.CharField(help_text='Eindeutige Bezeichnung einer Federation im E-Mail-Adressen Format nach RFC 822 beziehungsweise als DNS Name. Das Zeichen SLASH darf nicht verwendet werden. Für den Portalverbund der österreichischen Behörden gem. Portalverbundvereinbarungist als gvFederationName der Wert portalverbund.gv.at festgelegt.Organisationsinterne Federations SOLLEN mit "internal@" + Domain-Name der Organisation. (z.B. intern@lfrz.at) bezeichnet werden.', max_length=64, unique=True, verbose_name='Federation Name')),
+                ('gvFederationName', models.CharField(help_text='Eindeutige Bezeichnung einer Federation im E-Mail-Adressen Format nach RFC 822 beziehungsweise als DNS Name. Das Zeichen SLASH darf nicht verwendet werden. Für den Portalverbund der österreichischen Behörden gem. Portalverbundvereinbarungist als gvFederationName der Wert portalverbund.gv.at festgelegt.Organisationsinterne Federations SOLLEN mit "internal@" + Namespace-Name der Organisation. (z.B. intern@lfrz.at) bezeichnet werden.', max_length=64, unique=True, verbose_name='Federation Name')),
                 ('gvMetaDataURL', models.URLField(help_text='Bezugspunkt für Metadaten dieser Federation (URL für signiertes SAML Metadata Aggregat)', unique=True, verbose_name='Metadata URL')),
             ],
             options={
@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True, help_text='Beschreibung', max_length=1024, null=True)),
                 ('gvSamlIdpEntityId', models.URLField(blank=True, help_text='Eindeutiger Identifier des Stammportal in einer SAML Federation (URI)', max_length=80, null=True, verbose_name='EntityID')),
                 ('gvFederationNames', models.ManyToManyField(to='tnadmin.GvFederation')),
-                ('gvOuIdOwner', models.ForeignKey(blank=True, help_text='gvOuId des Stammportalbetreibers (Organisation des Portalverantwortlichen', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='Portalbetreiber', to='tnadmin.GvOrganisation', verbose_name='Portalbetreiber')),
+                ('gvOuIdOwner', models.ForeignKey(blank=True, help_text='gvOuId des Stammportalbetreibers (Organisation des Portalverantwortlichen', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='STPbetreiber', to='tnadmin.GvOrganisation', verbose_name='STPbetreiber')),
                 ('gvOuIdParticipant', models.ForeignKey(blank=True, help_text='Liste der zugriffsberechtigten Stelle (gvOrganisation), die das Stammportal benutzen, als gvOuId', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='Participant', to='tnadmin.GvOrganisation', verbose_name='Participant')),
             ],
             options={

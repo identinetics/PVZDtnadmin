@@ -20,9 +20,9 @@ class GvUserPortal(GvAdminAbstract):
         max_length=64)
     gvOuIdOwner = models.ForeignKey(
         GvOrganisation,
-        related_name='Portalbetreiber',
+        related_name='STPbetreiber',
         on_delete=models.CASCADE,
-        verbose_name='Portalbetreiber',
+        verbose_name='STPbetreiber',
         null=True, blank=True,
         help_text='gvOuId des Stammportalbetreibers (Organisation des Portalverantwortlichen')
     gvOuIdParticipant = models.ManyToManyField(

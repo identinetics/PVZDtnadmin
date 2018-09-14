@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='gvfederation',
             name='gvFederationName',
-            field=models.CharField(help_text='Eindeutige Bezeichnung der Federation im E-Mail-Adressen Format nach RFC 822 beziehungsweise als DNS Name. Das Zeichen SLASH darf nicht verwendet werden. Für den Portalverbund der österreichischen Behörden gem. Portalverbundvereinbarungist als gvFederationName der Wert portalverbund.gv.at festgelegt.Organisationsinterne Federations SOLLEN mit "internal@" + Domain-Name der Organisation. (z.B. intern@lfrz.at) bezeichnet werden.', max_length=64, unique=True, verbose_name='Federation Name'),
+            field=models.CharField(help_text='Eindeutige Bezeichnung der Federation im E-Mail-Adressen Format nach RFC 822 beziehungsweise als DNS Name. Das Zeichen SLASH darf nicht verwendet werden. Für den Portalverbund der österreichischen Behörden gem. Portalverbundvereinbarungist als gvFederationName der Wert portalverbund.gv.at festgelegt.Organisationsinterne Federations SOLLEN mit "internal@" + Namespace-Name der Organisation. (z.B. intern@lfrz.at) bezeichnet werden.', max_length=64, unique=True, verbose_name='Federation Name'),
         ),
 
     ]
