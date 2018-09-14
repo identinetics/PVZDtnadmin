@@ -1,6 +1,6 @@
 from django.db import models
 
-class Revocation:
+class Revocation(models.Model):
     cert = models.CharField(
         unique=True,
         verbose_name='Zertifikat',

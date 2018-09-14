@@ -1,6 +1,6 @@
 from django.db import models
 
-class Issuer:
+class Issuer(models.Model):
     cacert = models.CharField(
         unique=True,
         verbose_name='Namespace',

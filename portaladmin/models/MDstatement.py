@@ -2,7 +2,7 @@ from django.db import models
 
 
 
-class MDstatement:
+class MDstatement(models.Model):
     '''
     Metadata Statement (Meldung von neuen/zu aktualisierenden Metadaten)
     '''
@@ -12,17 +12,15 @@ class MDstatement:
         verbose_name = 'Metadata Statement'
 
     entityID = models.CharField(unique=True, max_length=128)
-    STATUS_ACTIVE = 'active'
-    STATUS_CHOICES = ((STATUS_UPLOADED,
-                       GIT_REQUESTQUEUE,
-                       GIT_REJECTED,
-                       GIT_PUBLISHED,
-                       ), (
-                       'uploaded',
-                       'request_queue',
-                       'rejected',
-                       'published',
-                      ))
+    STATUS_UPLOADED = 'uploaded'
+    STATUS_REQUEST_QUEUE = 'request_queue'
+    STATUS_REJECTED = 'rejected'
+    STATUS_PUBLISHED = 'published'
+    STATUS_CHOICES = ((STATUS_UPLOADED, STATUS_UPLOADED),
+                      (STATUS_REQUEST_QUEUE, STATUS_REQUEST_QUEUE),
+                      (STATUS_REJECTED, STATUS_REJECTED),
+                      (STATUS_PUBLISHED, STATUS_PUBLISHED),
+                       )
     Status = models.CharField(
         verbose_name='Status',
         default=STATUS_UPLOADED, null=True,
