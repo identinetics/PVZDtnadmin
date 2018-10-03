@@ -20,3 +20,7 @@ class Namespaceobj(models.Model):
 
     def save(self, *args, **kwargs):
         self.fqdn = self.fqdn.lower()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.fqdn)

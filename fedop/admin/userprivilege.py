@@ -7,7 +7,7 @@ from fedop.models.userprivilege import *
 class UserprivilegeAdmin(admin.ModelAdmin):
     actions = None
     list_display = ['cn', 'cert']
-    readonly_fields = ('cn', 'cert')
+    #readonly_fields = ('cn', 'cert')
     #search_fields = (
     #    'fqdn',
     #    'org_cn',

@@ -1,13 +1,13 @@
 from django.db import models
+#from fedop.models.organization import *
 
 
 class STPbetreiber(models.Model):
     '''
-    Stammportalbetreiber als Teilmenge von gvOrg. Wird nicht in LDAP, sondern im Policy-Journal gespeichert
+    Stammportalbetreiber als Teilmenge von gvOrg.
     '''
 
     class Meta:
-        ordering = ['gvOuID']
         verbose_name = 'STPbetreiber'
         verbose_name_plural = 'STPbetreiber'
 
@@ -19,7 +19,13 @@ class STPbetreiber(models.Model):
         verbose_name='Bezeichnung (cn)',
         help_text='Bezeichnung der Organisationseinheit (ausgeschrieben). (Abt. ITMS/Ref. NIK -  Referat nationale und internationale Koordination)',
         max_length=64)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum',) #default=django.utils.timezone.now())
+    updated_at = models.DateTimeField(auto_now=True)
 
-    #def save(self, *args, **kwargs):
-    #    self.gvOuID = self.gvOuID.upper()
-    #    super(STPbetreiber, self).save(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.gvOuID = self.gvOuID.upper()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return str('{} {}'.format(self.gvOuID, self.cn)[:30])

@@ -17,6 +17,7 @@ class Userprivilege(models.Model):
         help_text='OrgID des Portalbetreibers')
     cn = models.CharField(
         verbose_name='Name (cn)',
+        null=True, blank=True,
         help_text='Vor- und Familienname des Zertifikatsinhabers',
         max_length=64)
 
