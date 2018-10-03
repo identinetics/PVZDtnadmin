@@ -20,6 +20,6 @@ class STPbetreiber(models.Model):
         help_text='Bezeichnung der Organisationseinheit (ausgeschrieben). (Abt. ITMS/Ref. NIK -  Referat nationale und internationale Koordination)',
         max_length=64)
 
-    def save(self, *args, **kwargs):
-        self.gvOuID = self.gvOuID.upper()
-
+    #def save(self, *args, **kwargs):
+    #    self.gvOuID = self.gvOuID.upper()
+    #    super(STPbetreiber, self).save(*args, **kwargs)

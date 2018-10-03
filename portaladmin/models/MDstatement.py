@@ -27,5 +27,4 @@ class MDstatement(models.Model):
         choices=STATUS_CHOICES,
         max_length=14)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
     updated_at = models.DateTimeField(auto_now=True)
