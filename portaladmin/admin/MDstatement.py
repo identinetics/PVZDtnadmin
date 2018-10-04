@@ -6,12 +6,6 @@ from portaladmin.models.MDstatement import *
 @admin.register(MDstatement)
 class MDstatementAdmin(admin.ModelAdmin):
     actions = None
-    #list_display = ['fqdn', 'org_cn']
-    #readonly_fields = ('fqdn', 'org_cn')
-    #search_fields = (
-    #    'fqdn',
-    #    'org_cn',
-    #)
-
-    #def org_cn(self):
-    #    return self.gvOuIdParent.cn
+    list_display = ['entityID', 'Status']
+    readonly_fields = list_display
+    search_fields = ('entityID', 'Status', )

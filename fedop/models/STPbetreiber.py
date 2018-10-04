@@ -1,5 +1,4 @@
 from django.db import models
-#from fedop.models.organization import *
 
 
 class STPbetreiber(models.Model):
