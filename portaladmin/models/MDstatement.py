@@ -1,11 +1,17 @@
 from django.db import models
 
+from django.conf import settings
+
+
+class CheckOut(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    checkout_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
 
 
 class MDstatement(models.Model):
-    '''
+    """
     Metadata Statement (Meldung von neuen/zu aktualisierenden Metadaten)
-    '''
+    """
 
     class Meta:
         ordering = ['entityID']
@@ -22,7 +28,7 @@ class MDstatement(models.Model):
                       (STATUS_REQUEST_QUEUE, 'signiert und eingebracht'),
                       (STATUS_REJECTED, 'fehlerhaft'),
                       (STATUS_PUBLISHED, 'veröffentlicht'),
-                       )
+                      )
     Status = models.CharField(
         verbose_name='Status',
         default=STATUS_UPLOADED, null=True,
@@ -38,12 +44,13 @@ class MDstatement(models.Model):
         help_text='SAML EntityDescriptor (signiert)',
         max_length=100000)
     delete = models.BooleanField(
-        default = False,
+        default=False,
         help_text='EntitiyDescriptor vom Metadaten Aggregat löschen',
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
     updated_at = models.DateTimeField(auto_now=True)
 
+    checkout_status = models.ForeignKey(CheckOut, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.entityID)
