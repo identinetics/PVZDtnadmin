@@ -1,0 +1,25 @@
+#!/bin/bash
+# set locations for backend system configuration
+# env variables starting with POLMAN_ are understood by PEP and PMP
+
+
+if [[ "$(uname) == "Linux" ]]; then
+    [[ "$LOGDIR" ]] || export LOGDIR=/var/log/polman
+    [[ "$POLMAN_REPODIR" ]] || export POLMAN_REPODIR=/var/data/repo
+    [[ "$POLMAN_AODS" ]] || export POLMAN_AODS=$POLMAN_REPODIR/policydir/aods.xml
+    [[ "$POLMAN_TRUSTEDCERTS" ]] || export POLMAN_TRUSTEDCERTS=$HOME/polman/trustedcerts.json
+    mkdir -p $POLMAN_REPODIR/policydir/ $HOME/polman/
+elif [[ "$(uname)" == "Darwin" || "$HOSTNAME" == "kal1" ]]; then
+    #  used for OSX/Linux dev env
+    if [ -z "$PROJ_HOME" ]; then
+        echo "Need to set PROJ_HOME"
+        exit 1
+    fi
+    [[ "$LOGDIR" ]] || export LOGDIR=$PROJ_HOME/tests/log
+    [[ "$POLMAN_REPODIR" ]] || export POLMAN_REPODIR=$PROJ_HOME/tests/work/policyDirectory
+    [[ "$POLMAN_AODS" ]] || export POLMAN_AODS=$PROJ_HOME/tests/work/PEP/03/policyDirectory_basic_MOA/policydir/pol_journal.xml
+    [[ "$POLMAN_TRUSTEDCERTS" ]] || export POLMAN_TRUSTEDCERTS=$PROJ_HOME/tests/testdata/trustedcerts.json
+else
+    echo "no environment defined."
+    exit 1
+fi
