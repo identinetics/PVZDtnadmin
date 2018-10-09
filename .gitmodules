@@ -1,0 +1,3 @@
+[submodule "PVZDlib"]
+	path = PVZDlib
+	url = git@github.com:identinetics/PVZDlib

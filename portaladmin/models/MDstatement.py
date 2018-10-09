@@ -1,5 +1,5 @@
 from django.db import models
-
+from PVZDpy.samlentitydescriptor import *
 
 
 class MDstatement(models.Model):
