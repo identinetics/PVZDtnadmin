@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fedop',
-    'portaladmin',
+    # 'portaladmin',
+    'portaladmin.apps.PortaladminConfig',
     'tnadmin',
 ]
 
@@ -115,3 +116,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+PORTALADMIN_CHECKOUT_MINUTES = 1
