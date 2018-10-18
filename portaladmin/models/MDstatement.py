@@ -5,7 +5,7 @@ from django.conf import settings
 
 class CheckOut(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    checkout_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    checkout_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
 class MDstatement(models.Model):
@@ -50,7 +50,9 @@ class MDstatement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
     updated_at = models.DateTimeField(auto_now=True)
 
-    checkout_status = models.ForeignKey(CheckOut, blank=True, null=True, on_delete=models.CASCADE)
+    checkout_status = models.ForeignKey(CheckOut, blank=True,
+                                        related_name="md_statements",
+                                        null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.entityID)

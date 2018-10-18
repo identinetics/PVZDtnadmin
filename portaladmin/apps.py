@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class LoadReceivers(AppConfig):
+class PortaladminConfig(AppConfig):
     name = 'portaladmin'
 
     def ready(self):
