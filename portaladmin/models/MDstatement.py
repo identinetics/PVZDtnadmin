@@ -19,15 +19,15 @@ class MDstatement(models.Model):
 
     entityID = models.CharField(unique=True, max_length=128)
     STATUS_UPLOADED = 'uploaded'
-    STATUS_INVALID = 'invalid'
     STATUS_REQUEST_QUEUE = 'request_queue'
     STATUS_REJECTED = 'rejected'
     STATUS_PUBLISHED = 'published'
+    STATUS_DELETED = 'deleted'
     STATUS_CHOICES = ((STATUS_UPLOADED, 'hochgeladen'),
-                      (STATUS_INVALID, 'Validierungsfehler'),
                       (STATUS_REQUEST_QUEUE, 'signiert und eingebracht'),
                       (STATUS_REJECTED, 'fehlerhaft'),
                       (STATUS_PUBLISHED, 'veröffentlicht'),
+                      (STATUS_DELETED, 'gelöscht'),
                       )
     Status = models.CharField(
         verbose_name='Status',
