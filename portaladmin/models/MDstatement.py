@@ -34,12 +34,14 @@ class MDstatement(models.Model):
         default=STATUS_UPLOADED, null=True,
         choices=STATUS_CHOICES,
         max_length=14)
-    Validation_message = models.CharField(max_length=1000)
+    Validation_message = models.CharField(blank=True, null=True, max_length=1000)
     ed_uploaded = models.TextField(
+        blank=True, null=True,
         verbose_name='EntityDescriptor uploaded',
         help_text='SAML EntityDescriptor (uploaded, signiert)',
         max_length=100000)
     ed_signed = models.TextField(
+        blank=True, null=True,
         verbose_name='EntityDescriptor signiert',
         help_text='SAML EntityDescriptor (signiert)',
         max_length=100000)
