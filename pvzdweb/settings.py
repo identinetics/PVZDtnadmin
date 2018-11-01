@@ -118,3 +118,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 PORTALADMIN_CHECKOUT_MINUTES = 15
+
+PVZD_SETTINGS = {
+    'policyjournal': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/pol_journal_sig_rh.xml',
+    'trustedcerts': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/trustedcerts_rh.json',
+}
