@@ -1,4 +1,5 @@
 from django.db import models
+import json
 import tempfile
 
 from PVZDpy.aodsfilehandler import AODSFileHandler
@@ -10,7 +11,9 @@ from PVZDpy.userexceptions import *
 from django.conf import settings
 
 
-def getPolicyDict() -> dict:
+
+def getPolicyDict_from_journal() -> dict:
+
     aods_filename = settings.PVZD_SETTINGS['policyjournal']
     trustedcerts_filename = settings.PVZD_SETTINGS['trustedcerts']
     aodsfh_invocation = aodsfhInvocation(aods_filename, trustedcerts_filename)
@@ -28,7 +31,10 @@ class CheckOut(models.Model):
 
 
 class MDstatementAbstract(models.Model):
-    entityID = models.CharField(unique=True, max_length=128)
+    @staticmethod
+    def getPolicyDict_from_json() -> dict:
+        with open(settings.PVZD_SETTINGS['policydir']) as fd:
+            return json.load(fd)
 
     STATUS_CREATED = 'created'
     STATUS_UPLOADED = 'uploaded'
@@ -41,13 +47,11 @@ class MDstatementAbstract(models.Model):
                       (STATUS_REJECTED, 'fehlerhaft'),
                       (STATUS_ACCEPTED, 'akzeptiert'),
                       )
-    Status = models.CharField(
+    status = models.CharField(
         verbose_name='Status',
         default=STATUS_UPLOADED, null=True,
         choices=STATUS_CHOICES,
         max_length=14)
-    validation_message = models.CharField(db_column="validation_message",
-                                          blank=True, null=True, max_length=1000)
     ed_uploaded = models.TextField(
         blank=True, null=True,
         verbose_name='EntityDescriptor uploaded',
@@ -62,14 +66,19 @@ class MDstatementAbstract(models.Model):
         default=False,
         help_text='EntitiyDescriptor vom Metadaten Aggregat löschen',
     )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
+    updated_at = models.DateTimeField(auto_now=True)
+
     @property
-    def entityID2(self):
+    def entityID(self):
         if self.ed_uploaded:
+            if not getattr(self, 'policydir', False):
+                self.policydir = self.getPolicyDict_from_json()
             fd = tempfile.NamedTemporaryFile(mode='w', prefix='pvzd_', suffix='.xml')
             fd.write(self.ed_uploaded)
             fd.flush()
             try:
-                entityID = SAMLEntityDescriptorPVP(fd.name, getPolicyDict()).get_entityID()  # TODO: Optimize, get rid of implicit dsig validation on policy journal
+                entityID = SAMLEntityDescriptorPVP(fd.name, self.policydir).get_entityID()
             except(Exception) as e:
                 entityID = e.__class__.__name__ + ': ' + str(e)
             fd.close()
@@ -77,15 +86,12 @@ class MDstatementAbstract(models.Model):
             entityID = ''
         return entityID
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
-    updated_at = models.DateTimeField(auto_now=True)
-
     def __str__(self):
         return str(self.entityID)
 
     class Meta:
         abstract = True
-        ordering = ['entityID', 'updated_at']
+        ordering = ['updated_at']
         verbose_name = 'Metadaten Statement'
 
 

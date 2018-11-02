@@ -121,5 +121,6 @@ PORTALADMIN_CHECKOUT_MINUTES = 15
 
 PVZD_SETTINGS = {
     'policyjournal': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/pol_journal_sig_rh.xml',
+    'policydir': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/poldir_sig_rh.json',
     'trustedcerts': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/trustedcerts_rh.json',
 }

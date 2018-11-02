@@ -11,6 +11,7 @@ class MDstatementHistory(MDstatementAbstract):
 
     class Meta:
         verbose_name = 'Metadaten Statement History'
+        verbose_name_plural = 'Metadaten Statements History'
 
 
 # class MDstatementHistory(models.Model):
