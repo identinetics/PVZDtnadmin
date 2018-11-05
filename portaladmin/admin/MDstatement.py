@@ -20,9 +20,9 @@ class MDstatementForm(forms.ModelForm):
 class MDstatementAdmin(admin.ModelAdmin):
     form = MDstatementForm
     actions = None
-    list_display = ['entityID', 'status']
+    list_display = ['get_entityID', 'status', 'is_valid', 'get_validation_message', 'updated_at']
     readonly_fields = list_display
-    search_fields = ('entityID', 'status', )
+    search_fields = ('get_entityID', 'status', )
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
 

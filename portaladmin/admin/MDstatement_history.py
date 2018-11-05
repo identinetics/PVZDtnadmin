@@ -21,7 +21,7 @@ class ReadOnlyAdmin(admin.ModelAdmin):  # TODO move to util
 @admin.register(MDstatementHistory)
 class MDstatement_historyAdmin(ReadOnlyAdmin):
     actions = None
-    list_display = ['entityID', 'status']
+    list_display = ['get_entityID', 'status']
     readonly_fields = list_display
     search_fields = ('entityID', 'status', )
 
