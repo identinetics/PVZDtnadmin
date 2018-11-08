@@ -8,7 +8,6 @@ from django.conf import settings
 from ..signals import md_statement_edit_starts
 from ..models import CheckOut, MDstatement
 
-
 class MDstatementForm(forms.ModelForm):
 
     class Meta:
@@ -20,9 +19,66 @@ class MDstatementForm(forms.ModelForm):
 class MDstatementAdmin(admin.ModelAdmin):
     form = MDstatementForm
     actions = None
-    list_display = ['get_entityID', 'status', 'is_valid', 'get_validation_message', 'updated_at']
-    readonly_fields = list_display
+    readonly_fields = (
+        'get_boilerplate_help',
+        'get_entityID',
+        'status',
+        'valid',
+        'authorized',
+        'is_delete',
+        'get_signer_subject',
+        'ed_uploaded_filename',
+        'get_validation_message',
+        'created_at',
+        'updated_at',
+    )
+    list_display = (
+        'get_entityID',
+        'status',
+        'valid',
+        'authorized',
+        'is_delete',
+        'get_validation_message_trunc',
+        'updated',
+        'admin_note',
+    )
     search_fields = ('get_entityID', 'status', )
+    fieldsets = (
+        (None, {
+            'fields': ('get_boilerplate_help', )
+        }),
+        ('Entity', {
+            'fields': (
+                'get_entityID',
+                'is_delete',
+            )
+        }),
+        ('Datei hochladen', {
+            'fields': (
+                'ed_file_upload',
+                'ed_uploaded_filename',
+            )
+        }),
+        ('Prozess Status', {
+            'fields': (
+                'status',
+                'valid',
+                'authorized',
+                'get_validation_message',
+            )
+        }),
+        ('Adminsitrative Attribute', {
+            'fields': (
+                ('created_at', 'updated_at', ),
+                'get_signer_subject',
+                'admin_note',
+            )
+        }),
+        ('EntityDescriptor XML', {
+            'classes': ('collapse',),
+            'fields': ('ed_uploaded', ),
+        }),
+    )
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
 
