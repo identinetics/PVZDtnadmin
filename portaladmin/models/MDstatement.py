@@ -42,7 +42,7 @@ class MDstatementAbstract(models.Model):
         choices=STATUS_CHOICES,
         max_length=14)
     ed_file_upload = models.FileField(
-        upload_to='upload/', default='',
+        upload_to='upload/', default='', null=True, blank=True,
         verbose_name='EntityDescriptor hochladen',)
     ed_uploaded = models.TextField(
         blank=True, null=True,
@@ -126,7 +126,8 @@ class MDstatementAbstract(models.Model):
 
     def get_boilerplate_help(self):
         return "Ein Metadaten Statement wird erstellt und geändert, indem eine Datei mit einem " \
-               "SAML Entity Descriptor hochgeladen wird."
+               "SAML Entity Descriptor hochgeladen wird. Für die Signatur ist in der Listansicht " \
+               "der Eintrag zu markieren und die Aktion zum signieren auszuführen."
     get_boilerplate_help.short_description = ''
 
 
@@ -152,7 +153,7 @@ class MDstatementAbstract(models.Model):
             return json.load(fd)
 
     def save(self, *args, **kwargs):
-        if self.ed_file_upload.file:
+        if self.ed_file_upload and self.ed_file_upload.file:
             self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
         if self.ed_uploaded:
             if self.ed_uploaded != self._ed_uploaded_old and \
