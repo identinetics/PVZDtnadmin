@@ -5,6 +5,7 @@ import tempfile
 from .constants import *
 from PVZDpy.samled_validator import SamlEdValidator
 from django.conf import settings
+from ..policydict import getPolicyDict_from_json
 
 
 class CheckOut(models.Model):
@@ -127,17 +128,12 @@ class MDstatementAbstract(models.Model):
 
     def validate(self):
         if not getattr(self, 'ed_val', None):
-            self.ed_val = SamlEdValidator(self.getPolicyDict_from_json())
+            self.ed_val = SamlEdValidator(getPolicyDict_from_json())
         if self.ed_signed:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)
         elif self.ed_uploaded:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_uploaded, sigval=False)
         pass
-
-    @staticmethod
-    def getPolicyDict_from_json() -> dict:
-        with open(settings.PVZD_SETTINGS['policydir']) as fd:
-            return json.load(fd)
 
     def save(self, *args, **kwargs):
         if self.ed_file_upload and self.ed_file_upload.file:
