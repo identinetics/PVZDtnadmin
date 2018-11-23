@@ -7,19 +7,6 @@ from PVZDpy.samled_validator import SamlEdValidator
 from django.conf import settings
 
 
-#def getPolicyDict_from_journal() -> dict:
-
-#    aods_filename = settings.PVZD_SETTINGS['policyjournal']
-#    trustedcerts_filename = settings.PVZD_SETTINGS['trustedcerts']
-#    aodsfh_invocation = aodsfhInvocation(aods_filename, trustedcerts_filename)
-#    aodsFileHandler = AODSFileHandler(aodsfh_invocation)
-#    aodsfh_invocation = aodslhInvocation(
-#        inputfilename=aods_filename,
-#        trustedcerts=trustedcerts_filename)
-#    aodsListHandler = AodsListHandler(aodsFileHandler, aodsfh_invocation)
-#    return aodsListHandler.aods_read()
-
-
 class CheckOut(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     checkout_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -155,6 +142,7 @@ class MDstatementAbstract(models.Model):
     def save(self, *args, **kwargs):
         if self.ed_file_upload and self.ed_file_upload.file:
             self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
+            self.ed_signed = None
         if self.ed_uploaded:
             if self.ed_uploaded != self._ed_uploaded_old and \
                self.status in (STATUS_CREATED, STATUS_REJECTED):
