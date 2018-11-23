@@ -140,4 +140,8 @@ class MDstatementAdmin(admin.ModelAdmin):
         pass
     sign_ed.short_description = "EntityDescriptor mit lokaler BKU signieren"
 
-
+    def get_action_choices(self, request):
+        # remove default blank selection in action drop-down
+        choices = super(MDstatementAdmin, self).get_action_choices(request)
+        choices.pop(0) # choices is a list, the first is the BLANK_CHOICE_DASH
+        return choices
