@@ -6,6 +6,7 @@ from .constants import *
 from PVZDpy.samled_validator import SamlEdValidator
 from django.conf import settings
 from ..policydict import getPolicyDict_from_json
+from fedop.models.namespace import Namespaceobj
 
 
 class CheckOut(models.Model):
@@ -50,6 +51,10 @@ class MDstatementAbstract(models.Model):
         blank=True, null=True,
         verbose_name='Admin Notiz',
         max_length=1000)
+#    namespaceobj = models.ForeignKey(
+#        Namespaceobj,
+#        on_delete=models.PROTECT,
+#        help_text='Namespace')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Änderungsdatum', )
 
@@ -93,6 +98,12 @@ class MDstatementAbstract(models.Model):
             return self.ed_val.content_val_ok
         else:
             return False
+
+    @property
+    def namespace(self):
+        self.validate()
+        if getattr(self.ed_val, 'ed', False):
+            return self.ed_val.ed.get_namespace()
 
     @property
     def updated(self):

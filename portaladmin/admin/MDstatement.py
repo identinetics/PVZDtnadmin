@@ -21,8 +21,9 @@ class MDstatementForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if not (self.instance.ed_uploaded and not cleaned_data.get("ed_file_upload")):
-            self.add_error('ed_file_upload', 'Es wurde noch kein EntityDescriptor hochgeladen')
+        if not self.instance.ed_uploaded:
+            if not cleaned_data.get("ed_file_upload"):
+                self.add_error('ed_file_upload', 'Es wurde noch kein EntityDescriptor hochgeladen')
 
 
 site.disable_action('delete_selected')
@@ -43,6 +44,7 @@ class MDstatementAdmin(admin.ModelAdmin):
         'get_signer_subject',
         'get_validation_message',
         'is_delete',
+        'namespace',
         'status',
         'updated_at',
         'valid',
@@ -53,6 +55,7 @@ class MDstatementAdmin(admin.ModelAdmin):
         'valid',
         'authorized',
         'is_delete',
+        'namespace',
         'get_validation_message_trunc',
         'updated',
         'admin_note',
