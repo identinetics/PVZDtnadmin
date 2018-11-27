@@ -7,3 +7,4 @@ javabridge
 lxml
 pyOpenSSL>=0.15.1
 requests
+json2html=1.2.1
