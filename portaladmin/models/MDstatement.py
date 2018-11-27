@@ -17,7 +17,7 @@ class CheckOut(models.Model):
 class MDstatementAbstract(models.Model):
     class Meta:
         abstract = True
-        ordering = ['updated_at']
+        ordering = ['-updated_at']
         verbose_name = 'Metadaten Statement'
 
     def __init__(self, *args, **kw):
@@ -64,7 +64,6 @@ class MDstatementAbstract(models.Model):
     def is_delete(self):
         self.validate()
         return self.ed_val.deletionRequest
-    is_delete.short_description = 'delete entity'
 
     def get_validation_message(self):
         self.validate()
@@ -97,6 +96,16 @@ class MDstatementAbstract(models.Model):
         self.validate()
         if getattr(self.ed_val, 'ed', False):
             return self.ed_val.ed.get_namespace()
+
+    @property
+    def operation(self):
+        if not getattr(self.ed_val, 'ed', False):
+            return ''
+        if not self.ed_val.ed.get_entityid_hostname():
+            return ''
+        if self.is_delete():
+            return 'delete'
+        return 'add/mod'
 
     @property
     def orgid(self):
