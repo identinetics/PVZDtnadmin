@@ -27,6 +27,7 @@ class MDstatementForm(forms.ModelForm):
 
 site.disable_action('delete_selected')
 
+
 @admin.register(MDstatement)
 class MDstatementAdmin(admin.ModelAdmin):
     form = MDstatementForm
