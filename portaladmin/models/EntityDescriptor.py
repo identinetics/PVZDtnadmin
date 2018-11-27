@@ -29,6 +29,9 @@ class EntityDescriptor(models.Model):
         verbose_name='EntityDescriptor',
         help_text='SAML EntityDescriptor (geprüft, nicht signiert)',
         max_length=100000)
+    entityID = models.CharField(
+        blank=False, null=False,
+    )
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Änderungsdatum', )
 
     def get_entityID(self):

@@ -51,6 +51,9 @@ class MDstatementAbstract(models.Model):
         blank=True, null=True,
         verbose_name='Admin Notiz',
         max_length=1000)
+    entityID = models.CharField(
+        blank=True, null=True,
+        max_length=300)
 #    namespaceobj = models.ForeignKey(
 #        Namespaceobj,
 #        on_delete=models.PROTECT,
@@ -62,16 +65,6 @@ class MDstatementAbstract(models.Model):
         self.validate()
         return self.ed_val.deletionRequest
     is_delete.short_description = 'delete entity'
-
-    def get_entityID(self):
-        self.validate()
-        eid = self.ed_val.entityID
-        if eid:
-            return eid
-        else:
-            return '?'
-
-    get_entityID.short_description = 'entityID'
 
     def get_validation_message(self):
         self.validate()
@@ -104,6 +97,18 @@ class MDstatementAbstract(models.Model):
         self.validate()
         if getattr(self.ed_val, 'ed', False):
             return self.ed_val.ed.get_namespace()
+
+    @property
+    def orgid(self):
+        self.validate()
+        if getattr(self.ed_val, 'ed', False):
+            return self.ed_val.ed.get_orgid()
+
+    @property
+    def orgcn(self):
+        self.validate()
+        if getattr(self.ed_val, 'ed', False):
+            return self.ed_val.ed.get_orgcn()
 
     @property
     def updated(self):
@@ -150,17 +155,33 @@ class MDstatementAbstract(models.Model):
         if self.ed_file_upload and self.ed_file_upload.file:
             self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
             self.ed_signed = None
+        if self.status == STATUS_ACCEPTED:
+            raise ValidationError(_('Cannot change if status = ' + STATUS_ACCEPTED), code='invalid')
         if self.ed_uploaded:
             if self.ed_uploaded != self._ed_uploaded_old and \
-               self.status in (STATUS_CREATED, STATUS_REJECTED):
+               self.status in (STATUS_CREATED, STATUS_REJECTED, STATUS_UPLOADED):
                 self.status = STATUS_UPLOADED
                 self.ed_uploaded_filename = self.ed_file_upload.file.name
+                self.entityID = self._get_entityID()
                 super().save(*args, **kwargs)
         else:
             self.status = STATUS_CREATED
             self.ed_uploaded_filename = self.ed_file_upload.file.name
             super().save(*args, **kwargs)
         pass
+
+    def _get_entityID(self):
+        self.validate()
+        eid = self.ed_val.entityID
+        if eid:
+            return eid
+        elif self.ed_uploaded:
+            return '?'
+        else:
+            return ''
+
+
+
 
 class MDstatement(MDstatementAbstract):
 

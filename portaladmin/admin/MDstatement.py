@@ -39,35 +39,39 @@ class MDstatementAdmin(admin.ModelAdmin):
         'ed_signed',
         'ed_uploaded',
         'ed_uploaded_filename',
+        'entityID',
         'get_boilerplate_help',
-        'get_entityID',
         'get_signer_subject',
         'get_validation_message',
         'is_delete',
         'namespace',
+        'orgcn',
+        'orgid',
         'status',
         'updated_at',
         'valid',
     )
     list_display = (
-        'get_entityID',
+        'entityID',
         'status',
         'valid',
         'authorized',
         'is_delete',
         'namespace',
+        'orgid',
+        'get_signer_subject',
         'get_validation_message_trunc',
         'updated',
         'admin_note',
     )
-    search_fields = ('get_entityID', 'status', )
+    search_fields = ('entityID', 'status', )
     fieldsets = (
         (None, {
             'fields': ('get_boilerplate_help', )
         }),
         ('Entity', {
             'fields': (
-                'get_entityID',
+                'entityID',
                 'is_delete',
             )
         }),
@@ -133,8 +137,7 @@ class MDstatementAdmin(admin.ModelAdmin):
         try:
             signed_contents = creSignedXML(ed.get_xml_str(),
                                            sig_type='enveloped',
-                                           sig_position='/' + md_namespace_prefix + ':EntityDescriptor',
-                                           verbose=False)
+                                           sig_position='/' + md_namespace_prefix + ':EntityDescriptor')
             MDstatement.objects.filter(pk=ed_pk).update(ed_signed=signed_contents,
                                                         status=STATUS_REQUEST_QUEUE)
             messages.info(request, "EntityDescriptor signiert und Status auf 'submitted' gesetzt")

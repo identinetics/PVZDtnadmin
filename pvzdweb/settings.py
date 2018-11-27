@@ -119,4 +119,10 @@ PVZD_SETTINGS = {
     'policyjournal': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/pol_journal_sig_rh.xml',
     'policydir': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/poldir_sig_rh.json',
     'trustedcerts': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/trustedcerts_rh.json',
+    'pepoutdir': 'PVZDlib/PVZDpy/tests/testdout/pepout',
+    'superuser': True,  # allow signer in trustedcerts to skip authorization check
+    'loglevel': 'DEBUG',
+    'poldirhtml': 'PVZDlib/PVZDpy/tests/testdout/poldir/poldir.html',
+    'poldirjson': 'PVZDlib/PVZDpy/tests/testdout/poldir/poldir.json',
+    'shibacl': 'PVZDlib/PVZDpy/tests/testdout/poldir/shibacl.xml',
 }
