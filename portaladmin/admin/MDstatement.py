@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.admin import site
 from django.utils import timezone
 from django.conf import settings
+from .mds_sign_and_update import mds_sign_and_update
 from ..constants import *
 from ..signals import md_statement_edit_starts
 from ..models import CheckOut, MDstatement
@@ -32,7 +33,6 @@ site.disable_action('delete_selected')
 @admin.register(MDstatement)
 class MDstatementAdmin(admin.ModelAdmin):
     form = MDstatementForm
-    actions = ['sign_ed']
     save_on_top = True
     readonly_fields = (
         'authorized',
@@ -131,31 +131,15 @@ class MDstatementAdmin(admin.ModelAdmin):
 
         return super().change_view(request, object_id, form_url, extra_context)
 
-    def sign_ed(modeladmin, request, queryset):
-        if len(queryset.all()) > 1:
-            messages.error(request, "Bitte genau einen EntityDescriptor auswählen")
-        this_rec = queryset.all()[0]
-        ed_pk = this_rec.pk
-        ed = SAMLEntityDescriptorFromStrFactory(this_rec.ed_uploaded)
-        signed_contents = MDstatementAdmin._request_xmldsig(ed, request)
-        mds = MDstatement.objects.get(pk=ed_pk)
-        mds.ed_signed = signed_contents
-        mds.status = STATUS_REQUEST_QUEUE
-        mds.save()
-        messages.info(request, "EntityDescriptor signiert und Status auf 'submitted' gesetzt")
-    sign_ed.short_description = "EntityDescriptor mit lokaler BKU signieren"
+    actions = ['sign_and_update_action']
 
-    @staticmethod
-    def _request_xmldsig(ed, request) -> str:
-        ed.remove_enveloped_signature()
-        md_namespace_prefix = ed.get_namespace_prefix()
+    def sign_and_update_action(self, request, queryset):
         try:
-            return creSignedXML(ed.get_xml_str(),
-                               sig_type='enveloped',
-                               sig_position='/' + md_namespace_prefix + ':EntityDescriptor')
+            mds_sign_and_update(self, request, queryset)
+            messages.info(request, "EntityDescriptor signiert")
         except(Exception) as e:
             messages.error(request, "Fehler bei der Signaturanforderung: " + str(e))
-            raise
+    sign_and_update_action.short_description = "EntityDescriptor mit lokaler BKU signieren"
 
     def get_action_choices(self, request):
         # remove default blank selection in action drop-down

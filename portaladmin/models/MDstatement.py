@@ -24,6 +24,7 @@ class MDstatementAbstract(models.Model):
         super(MDstatementAbstract, self).__init__(*args, **kw)
         self._ed_uploaded_old = self.ed_uploaded
         self._ed_signed_old = self.ed_signed
+        self._ed_file_upload_name_old = self.ed_file_upload.name
 
     status = models.CharField(
         verbose_name='Workflow Status',
@@ -161,23 +162,36 @@ class MDstatementAbstract(models.Model):
         pass
 
     def save(self, *args, **kwargs):
-        if self.ed_file_upload and self.ed_file_upload.file:
-            self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
-            self.ed_signed = None
-        if self.status == STATUS_ACCEPTED:
-            raise ValidationError(_('Cannot change if status = ' + STATUS_ACCEPTED), code='invalid')
-        if self.ed_uploaded:
-            if self.ed_uploaded != self._ed_uploaded_old and \
-               self.status in (STATUS_CREATED, STATUS_REJECTED, STATUS_UPLOADED):
-                self.status = STATUS_UPLOADED
+        def _fail_if_updating_not_allowed():
+            if self.status == STATUS_ACCEPTED:
+                raise ValidationError(_('Cannot change if status = ' + STATUS_ACCEPTED), code='invalid')
+
+        def _read_uploaded_file_on_change():
+            if self.ed_file_upload.file:
+                ed_file_upload_name_new = self.ed_file_upload.file.name or ''
+                if self._ed_file_upload_name_old != ed_file_upload_name_new:
+                    self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
+                    self.ed_signed = None
+                elif not self.ed_uploaded:
+                    self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
+
+        def _set_status_on_upload():
+            if self.ed_uploaded:
+                if self.ed_uploaded != self._ed_uploaded_old:
+                    if self.status in (STATUS_CREATED, STATUS_REJECTED):
+                        self.status = STATUS_UPLOADED
+
+        def _set_computed_fields():
                 self.ed_uploaded_filename = self.ed_file_upload.file.name
                 self.entityID = self._get_entityID()
-                super().save(*args, **kwargs)
-        else:
-            self.status = STATUS_CREATED
-            self.ed_uploaded_filename = self.ed_file_upload.file.name
-            super().save(*args, **kwargs)
-        pass
+
+
+        _fail_if_updating_not_allowed()
+        _read_uploaded_file_on_change()
+        _set_status_on_upload()
+        _set_computed_fields()
+        super().save(*args, **kwargs)
+
 
     def _get_entityID(self):
         self.validate()
