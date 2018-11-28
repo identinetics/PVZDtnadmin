@@ -106,8 +106,12 @@ class MDstatementAdmin(admin.ModelAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
 
         extra_context = extra_context or {}
-        extra_context['show_save_and_continue'] = False
-        extra_context['show_save_and_add_another'] = False
+
+        # don't work due:
+        # https://github.com/django/django/blob/master/django/contrib/admin/templatetags/admin_modify.py#L73
+        # extra_context['show_save_and_continue'] = False
+        # extra_context['show_save_and_add_another'] = False
+
         delta_min = getattr(settings, 'PORTALADMIN_CHECKOUT_MINUTES', 15)
         datetime_ago = timezone.now() - timedelta(minutes=delta_min)
 
