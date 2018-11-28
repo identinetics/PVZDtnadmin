@@ -106,8 +106,12 @@ class MDstatementAdmin(admin.ModelAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
 
         extra_context = extra_context or {}
-        extra_context['show_save_and_continue'] = False
-        extra_context['show_save_and_add_another'] = False
+
+        # don't work due:
+        # https://github.com/django/django/blob/master/django/contrib/admin/templatetags/admin_modify.py#L73
+        # extra_context['show_save_and_continue'] = False
+        # extra_context['show_save_and_add_another'] = False
+
         delta_min = getattr(settings, 'PORTALADMIN_CHECKOUT_MINUTES', 15)
         datetime_ago = timezone.now() - timedelta(minutes=delta_min)
 
@@ -133,9 +137,7 @@ class MDstatementAdmin(admin.ModelAdmin):
         this_rec = queryset.all()[0]
         ed_pk = this_rec.pk
         ed = SAMLEntityDescriptorFromStrFactory(this_rec.ed_uploaded)
-        ed.remove_enveloped_signature()
-        md_namespace_prefix = ed.get_namespace_prefix()
-        signed_contents = _request_xmldsig(self, ed)
+        signed_contents = MDstatementAdmin._request_xmldsig(ed, request)
         mds = MDstatement.objects.get(pk=ed_pk)
         mds.ed_signed = signed_contents
         mds.status = STATUS_REQUEST_QUEUE
@@ -143,15 +145,17 @@ class MDstatementAdmin(admin.ModelAdmin):
         messages.info(request, "EntityDescriptor signiert und Status auf 'submitted' gesetzt")
     sign_ed.short_description = "EntityDescriptor mit lokaler BKU signieren"
 
-    def _request_xmldsig(self, ed) -> str:
+    @staticmethod
+    def _request_xmldsig(ed, request) -> str:
+        ed.remove_enveloped_signature()
+        md_namespace_prefix = ed.get_namespace_prefix()
         try:
             return creSignedXML(ed.get_xml_str(),
-                                           sig_type='enveloped',
-                                           sig_position='/' + md_namespace_prefix + ':EntityDescriptor')
+                               sig_type='enveloped',
+                               sig_position='/' + md_namespace_prefix + ':EntityDescriptor')
         except(Exception) as e:
             messages.error(request, "Fehler bei der Signaturanforderung: " + str(e))
-
-
+            raise
 
     def get_action_choices(self, request):
         # remove default blank selection in action drop-down
