@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.admin import site
 from django.utils import timezone
 from django.conf import settings
-from ..models.constants import *
+from ..constants import *
 from ..signals import md_statement_edit_starts
 from ..models import CheckOut, MDstatement
 from PVZDpy.cresignedxml import creSignedXML

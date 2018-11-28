@@ -2,7 +2,7 @@ from django.db import models
 import json
 import tempfile
 
-from .constants import *
+from ..constants import *
 from PVZDpy.samled_validator import SamlEdValidator
 from django.conf import settings
 from ..policydict import getPolicyDict_from_json
