@@ -32,13 +32,11 @@ class MDstatementAbstract(models.Model):
         verbose_name='Admin Notiz',
         max_length=1000)
     content_valid = models.BooleanField(
-        default=False,
-        verbose_name='Content validation',
-    )
+        default=False, null=True,
+        verbose_name='Content validation', )
     deletionRequest = models.BooleanField(
-        default=False,
-        verbose_name='Deletion Request (unpublish Entity)',
-    )
+        default=False, null=True,
+        verbose_name='Deletion Request (unpublish Entity)', )
     ed_file_upload = models.FileField(
         upload_to='upload/', default='', null=True, blank=True,
         verbose_name='EntityDescriptor hochladen',)
@@ -61,6 +59,7 @@ class MDstatementAbstract(models.Model):
         max_length=300)
     entity_fqdn = models.CharField(
         blank=True, null=True,
+        verbose_name='Entity FQDN',
         max_length=300)
     operation = models.CharField(
         blank=True, null=True,
@@ -75,8 +74,7 @@ class MDstatementAbstract(models.Model):
         max_length=20)
     signer_authorized = models.BooleanField(
         default=False, null=True,
-        verbose_name='Signer Authorization',
-    )
+        verbose_name='Signer Authorization', )
     signer_subject = models.CharField(
         blank=True, null=True,
         verbose_name='Signator',
@@ -90,6 +88,9 @@ class MDstatementAbstract(models.Model):
         blank=True, null=True,
         verbose_name='Error Messages',
         max_length=100000)
+    namespace = models.CharField(
+        default=STATUS_CREATED, null=True,
+        max_length=30)
 #    namespaceobj = models.ForeignKey(
 #        Namespaceobj,
 #        on_delete=models.PROTECT,
@@ -100,12 +101,6 @@ class MDstatementAbstract(models.Model):
     @property
     def updated(self):
         return self.updated_at.strftime("%Y%m%d %H:%M")
-
-    @property
-    def namespace(self):
-        self.validate()
-        if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.ed.get_namespace()
 
     def get_validation_message_trunc(self):
         m = json.dumps(self.validation_message, indent=2)
@@ -180,8 +175,9 @@ class MDstatementAbstract(models.Model):
             self.content_valid = self._is_content_valid()
             self.deletionRequest = self.ed_val.deletionRequest
             self.ed_uploaded_filename = self.ed_file_upload.file.name
-            self.entity_fqdn = self.ed_val.ed.get_entityid_hostname()
+            self.entity_fqdn = self._get_fqdn()
             self.entityID = self._get_entityID()
+            self.namespace = self._get_namespace()
             self.operation = self._get_operation()
             self.org_cn = self._get_orgcn()
             self.org_id = self._get_orgid()
@@ -204,17 +200,15 @@ class MDstatementAbstract(models.Model):
         else:
             return ''
 
-    def _get_validation_message(self):
-        if getattr(self.ed_val, 'val_mesg_dict', False):
-            return json.dumps(self.ed_val.val_mesg_dict, indent=2)
+    def _get_fqdn(self):
+        if getattr(self.ed_val, 'ed', False):
+            return self.ed_val.ed.get_entityid_hostname()
         else:
             return ''
 
-    def _is_content_valid(self):
-        if getattr(self.ed_val, 'content_val_ok', False):
-            return self.ed_val.content_val_ok
-        else:
-            return False
+    def _get_namespace(self):
+        if getattr(self.ed_val, 'ed', False):
+            return self.ed_val.ed.get_namespace()
 
     def _get_operation(self):
         if not getattr(self.ed_val, 'ed', False):
@@ -234,12 +228,24 @@ class MDstatementAbstract(models.Model):
         if getattr(self.ed_val, 'ed', False):
             return self.ed_val.policystore.get_orgcn(self._get_orgid())
 
+    def _get_validation_message(self):
+        if getattr(self.ed_val, 'val_mesg_dict', False):
+            return json.dumps(self.ed_val.val_mesg_dict, indent=2)
+        else:
+            return ''
+
     def _is_authorized(self):
         self.validate()
         if getattr(self.ed_val, 'authz_ok', False):
             return False
         else:
             return self.ed_val.authz_ok
+
+    def _is_content_valid(self):
+        if getattr(self.ed_val, 'content_val_ok', False):
+            return self.ed_val.content_val_ok
+        else:
+            return False
 
 
 class MDstatement(MDstatementAbstract):

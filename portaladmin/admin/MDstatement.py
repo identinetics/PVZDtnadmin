@@ -53,7 +53,7 @@ class MDstatementAdmin(admin.ModelAdmin):
         'validation_message',
     )
     list_display = (
-        'entityID',
+        'entity_fqdn',
         'status',
         'content_valid',
         'signer_authorized',
@@ -65,7 +65,22 @@ class MDstatementAdmin(admin.ModelAdmin):
         'updated',
         'admin_note',
     )
-    search_fields = ('entityID', 'status', )
+    list_display_links = ('entity_fqdn', 'status')
+    list_filter = (
+        'status',
+        'namespace',
+        'org_id',
+        'signer_subject',
+    )
+    search_fields = (
+        'entity_fqdn',
+        'status',
+        'operation',
+        'namespace',
+        'org_id',
+        'signer_subject',
+        'admin_note',
+    )
     fieldsets = (
         (None, {
             'fields': ('get_boilerplate_help', )
