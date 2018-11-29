@@ -15,10 +15,15 @@ def assert_equal(expected, actual, fn=''):
 
 
 @pytest.fixture
-def ed_path01():
-    path = opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
-    return ed_path(1, dir=path)
-    # return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', 'unsigned_ed', '01_idp1_valid_cert.xml'])
+def testdata_basedir():
+    # return opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
+    return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', ])
+
+
+
+@pytest.fixture
+def ed_path01(testdata_basedir):
+    return ed_path(1, dir=testdata_basedir)
 
 
 @pytest.fixture
@@ -38,7 +43,7 @@ def test_insert01(ed_path01, result01):
 
 @pytest.fixture
 def ed_path02():
-    return ed_path(2, dir=opj(settings.BASE_DIR, 'portaladmin/tests/saml'))
+    return ed_path(2, dir=opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml'))
 
 
 @pytest.fixture
@@ -46,9 +51,10 @@ def result02():
     with open(opj(path_expected_results, 'insert02.json')) as fd:
         return fd.read()
 
-# def test_insert02(ed_path02, result02):
-#     mds = MDstatement(ed_file_upload=ed_path02)
-#     mds.save()
-#     assert 1 == len(MDstatement.objects.all())
-#     assert_equal(result02, MDstatement.objects.all()[0].serialize_json())
-#     pass
+def test_insert02(ed_path02, result02):
+    mds = MDstatement(ed_file_upload=ed_path02)
+    mds.save()
+    assert 1 == len(MDstatement.objects.all())
+    assert_equal(result02, MDstatement.objects.all()[0].serialize_json())
+    pass
+
