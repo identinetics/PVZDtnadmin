@@ -131,7 +131,7 @@ class MDstatementAdmin(admin.ModelAdmin):
 
         return super().change_view(request, object_id, form_url, extra_context)
 
-    actions = ['sign_and_update_action']
+    actions = ['delete_selected', 'sign_and_update_action']
 
     def sign_and_update_action(self, request, queryset):
         try:

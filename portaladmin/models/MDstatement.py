@@ -145,6 +145,19 @@ class MDstatementAbstract(models.Model):
     get_boilerplate_help.short_description = ''
 
 
+    def serialize_json(self):
+        dictfilt = lambda x, y: dict([(i, x[i]) for i in x if i in set(y)])
+        wanted_keys = (
+            'admin_note',
+            'ed_signed',
+            'ed_uploaded',
+            'ed_uploaded_filename',
+            'entityID',
+            'status',
+        )
+        self_dict = dictfilt(self.__dict__, wanted_keys)
+        return json.dumps(self_dict, sort_keys=True, indent=2)
+
     def __str__(self):
         self.validate()
         if getattr(self.ed_val, 'entityID', False):
@@ -192,7 +205,6 @@ class MDstatementAbstract(models.Model):
         _set_computed_fields()
         super().save(*args, **kwargs)
 
-
     def _get_entityID(self):
         self.validate()
         eid = self.ed_val.entityID
@@ -202,8 +214,6 @@ class MDstatementAbstract(models.Model):
             return '?'
         else:
             return ''
-
-
 
 
 class MDstatement(MDstatementAbstract):
