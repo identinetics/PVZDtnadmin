@@ -16,8 +16,8 @@ def assert_equal(expected, actual, fn=''):
 
 @pytest.fixture
 def testdata_basedir():
-    # return opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
-    return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', ])
+    return opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
+    # return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', ])
 
 
 

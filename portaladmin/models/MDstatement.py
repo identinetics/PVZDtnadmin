@@ -5,7 +5,7 @@ from django.db import models
 
 from ..constants import *
 from PVZDpy.samled_validator import SamlEdValidator
-from PVZDpy.policydict import PolicyDict
+from PVZDpy.policystore import PolicyStore
 from django.conf import settings
 from fedop.models.namespace import Namespaceobj
 
@@ -59,6 +59,9 @@ class MDstatementAbstract(models.Model):
     entityID = models.CharField(
         blank=True, null=True,
         max_length=300)
+    entity_fqdn = models.CharField(
+        blank=True, null=True,
+        max_length=300)
     operation = models.CharField(
         blank=True, null=True,
         max_length=7)
@@ -71,7 +74,7 @@ class MDstatementAbstract(models.Model):
         verbose_name='OrgID',
         max_length=20)
     signer_authorized = models.BooleanField(
-        default=False,
+        default=False, null=True,
         verbose_name='Signer Authorization',
     )
     signer_subject = models.CharField(
@@ -142,8 +145,10 @@ class MDstatementAbstract(models.Model):
 
     def validate(self):
         if not getattr(self, 'ed_val', None):
-            policydict = PolicyDict(policydir=settings.PVZD_SETTINGS['policydir'])
-            self.ed_val = SamlEdValidator(policydict)
+            policydir_fn = settings.PVZD_SETTINGS['policydir']
+            with open(policydir_fn) as fd:
+                policystore = PolicyStore(policydir=json.loads(fd.read()))
+            self.ed_val = SamlEdValidator(policystore)
         if self.ed_signed:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)
         elif self.ed_uploaded:
@@ -175,6 +180,7 @@ class MDstatementAbstract(models.Model):
             self.content_valid = self._is_content_valid()
             self.deletionRequest = self.ed_val.deletionRequest
             self.ed_uploaded_filename = self.ed_file_upload.file.name
+            self.entity_fqdn = self.ed_val.ed.get_entityid_hostname()
             self.entityID = self._get_entityID()
             self.operation = self._get_operation()
             self.org_cn = self._get_orgcn()
@@ -221,11 +227,12 @@ class MDstatementAbstract(models.Model):
 
     def _get_orgid(self):
         if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.ed.get_orgid()
+            fqdn = self.ed_val.ed.get_entityid_hostname()
+            return self.ed_val.policystore.get_orgid(fqdn)
 
     def _get_orgcn(self):
         if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.ed.get_orgcn()
+            return self.ed_val.policystore.get_orgcn(self._get_orgid())
 
     def _is_authorized(self):
         self.validate()

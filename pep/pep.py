@@ -5,7 +5,7 @@ import sys
 import tempfile
 from PVZDpy.constants import *
 from PVZDpy.invocation.abstractinvocation import AbstractInvocation
-from PVZDpy.policydict import get_policy_dict
+from PVZDpy.policydict import PolicyDict
 from PVZDpy.samled_validator import SamlEdValidator
 from PVZDpy.userexceptions import *
 from pvzdweb.app_settings import get_aodslhInvocation
@@ -31,8 +31,8 @@ request_counter = 0
 request_counter_accepted = 0
 request_counter_rejected = 0
 try:
-    policyDict = get_policy_dict(get_aodslhInvocation()))
-    ed_validator = SamlEdValidator(policyDict)
+    policyDict = PolicyDict(get_aodslhInvocation())
+    ed_validator = SamlEdValidator(policyDict.get_policydir())
 except Exception as e:
     logging.log(LOGLEVELS['CRITICAL'], str(e) + '\nterminating PEP.')
     raise
