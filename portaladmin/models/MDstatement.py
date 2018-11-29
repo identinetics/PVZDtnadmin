@@ -1,11 +1,12 @@
-from django.db import models
 import json
 import tempfile
+from django.conf import settings
+from django.db import models
 
 from ..constants import *
 from PVZDpy.samled_validator import SamlEdValidator
+from PVZDpy.policydict import PolicyDict
 from django.conf import settings
-from ..policydict import getPolicyDict_from_json
 from fedop.models.namespace import Namespaceobj
 
 
@@ -26,14 +27,26 @@ class MDstatementAbstract(models.Model):
         self._ed_signed_old = self.ed_signed
         self._ed_file_upload_name_old = self.ed_file_upload.name
 
-    status = models.CharField(
-        verbose_name='Workflow Status',
-        default=STATUS_CREATED, null=True,
-        choices=STATUS_CHOICES,
-        max_length=14)
+    admin_note = models.TextField(
+        blank=True, null=True,
+        verbose_name='Admin Notiz',
+        max_length=1000)
+    content_valid = models.BooleanField(
+        default=False,
+        verbose_name='Content validation',
+    )
+    deletionRequest = models.BooleanField(
+        default=False,
+        verbose_name='Deletion Request (unpublish Entity)',
+    )
     ed_file_upload = models.FileField(
         upload_to='upload/', default='', null=True, blank=True,
         verbose_name='EntityDescriptor hochladen',)
+    ed_signed = models.TextField(
+        blank=True, null=True,
+        verbose_name='EntityDescriptor signiert',
+        help_text='SAML EntityDescriptor (signiert)',
+        max_length=100000)
     ed_uploaded = models.TextField(
         blank=True, null=True,
         verbose_name='EntityDescriptor hochgeladen',
@@ -43,18 +56,37 @@ class MDstatementAbstract(models.Model):
         verbose_name='Upload Filename',
         default=None, null=True,
         max_length=100)
-    ed_signed = models.TextField(
-        blank=True, null=True,
-        verbose_name='EntityDescriptor signiert',
-        help_text='SAML EntityDescriptor (signiert)',
-        max_length=100000)
-    admin_note = models.TextField(
-        blank=True, null=True,
-        verbose_name='Admin Notiz',
-        max_length=1000)
     entityID = models.CharField(
         blank=True, null=True,
         max_length=300)
+    operation = models.CharField(
+        blank=True, null=True,
+        max_length=7)
+    org_cn = models.CharField(
+        blank=True, null=True,
+        verbose_name='Organization',
+        max_length=60)
+    org_id = models.CharField(
+        blank=True, null=True,
+        verbose_name='OrgID',
+        max_length=20)
+    signer_authorized = models.BooleanField(
+        default=False,
+        verbose_name='Signer Authorization',
+    )
+    signer_subject = models.CharField(
+        blank=True, null=True,
+        verbose_name='Signator',
+        max_length=80)
+    status = models.CharField(
+        verbose_name='Workflow Status',
+        default=STATUS_CREATED, null=True,
+        choices=STATUS_CHOICES,
+        max_length=14)
+    validation_message  = models.TextField(
+        blank=True, null=True,
+        verbose_name='Error Messages',
+        max_length=100000)
 #    namespaceobj = models.ForeignKey(
 #        Namespaceobj,
 #        on_delete=models.PROTECT,
@@ -62,35 +94,9 @@ class MDstatementAbstract(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Änderungsdatum', )
 
-    def is_delete(self):
-        self.validate()
-        return self.ed_val.deletionRequest
-
-    def get_validation_message(self):
-        self.validate()
-        if getattr(self.ed_val, 'val_mesg_dict', False):
-            return json.dumps(self.ed_val.val_mesg_dict, indent=2)
-        else:
-            return ''
-    get_validation_message.short_description = 'validation message'
-
-    def get_validation_message_trunc(self):
-        self.validate()
-        if getattr(self.ed_val, 'val_mesg_dict', False):
-            m = json.dumps(self.ed_val.val_mesg_dict, indent=2)
-            m = m[0:47]+'...' if len(m) > 47 else m
-            return m
-        else:
-            return ''
-    get_validation_message_trunc.short_description = 'error'
-
     @property
-    def valid(self):
-        self.validate()
-        if getattr(self.ed_val, 'content_val_ok', False):
-            return self.ed_val.content_val_ok
-        else:
-            return False
+    def updated(self):
+        return self.updated_at.strftime("%Y%m%d %H:%M")
 
     @property
     def namespace(self):
@@ -98,44 +104,11 @@ class MDstatementAbstract(models.Model):
         if getattr(self.ed_val, 'ed', False):
             return self.ed_val.ed.get_namespace()
 
-    @property
-    def operation(self):
-        if not getattr(self.ed_val, 'ed', False):
-            return ''
-        if not self.ed_val.ed.get_entityid_hostname():
-            return ''
-        if self.is_delete():
-            return 'delete'
-        return 'add/mod'
-
-    @property
-    def orgid(self):
-        self.validate()
-        if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.ed.get_orgid()
-
-    @property
-    def orgcn(self):
-        self.validate()
-        if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.ed.get_orgcn()
-
-    @property
-    def updated(self):
-        return self.updated_at.strftime("%Y%m%d %H:%M")
-
-    @property
-    def authorized(self):
-        self.validate()
-        if getattr(self.ed_val, 'authz_ok', False):
-            return False
-        else:
-            return self.ed_val.authz_ok
-
-    def get_signer_subject(self):
-        self.validate()
-        return getattr(self.ed_val, 'signer_cert_cn', False)
-    get_signer_subject.short_description = 'Signiert von'
+    def get_validation_message_trunc(self):
+        m = json.dumps(self.validation_message, indent=2)
+        m = m[0:47]+'...' if len(m) > 47 else m
+        return m
+    get_validation_message_trunc.short_description = 'error'
 
 
     def get_boilerplate_help(self):
@@ -145,8 +118,10 @@ class MDstatementAbstract(models.Model):
     get_boilerplate_help.short_description = ''
 
 
+#-------
     def serialize_json(self):
-        dictfilt = lambda x, y: dict([(i, x[i]) for i in x if i in set(y)])
+        dictfilt = lambda d, filter: dict([(k, d[k]) for k in d if k in set(filter)])
+
         wanted_keys = (
             'admin_note',
             'ed_signed',
@@ -167,7 +142,8 @@ class MDstatementAbstract(models.Model):
 
     def validate(self):
         if not getattr(self, 'ed_val', None):
-            self.ed_val = SamlEdValidator(getPolicyDict_from_json())
+            policydict = PolicyDict(policydir=settings.PVZD_SETTINGS['policydir'])
+            self.ed_val = SamlEdValidator(policydict)
         if self.ed_signed:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)
         elif self.ed_uploaded:
@@ -195,9 +171,17 @@ class MDstatementAbstract(models.Model):
                         self.status = STATUS_UPLOADED
 
         def _set_computed_fields():
-                self.ed_uploaded_filename = self.ed_file_upload.file.name
-                self.entityID = self._get_entityID()
-
+            self.validate()
+            self.content_valid = self._is_content_valid()
+            self.deletionRequest = self.ed_val.deletionRequest
+            self.ed_uploaded_filename = self.ed_file_upload.file.name
+            self.entityID = self._get_entityID()
+            self.operation = self._get_operation()
+            self.org_cn = self._get_orgcn()
+            self.org_id = self._get_orgid()
+            self.signer_authorized = self._is_authorized()
+            self.signer_subject = getattr(self.ed_val, 'signer_cert_cn', '')
+            self.validation_message = self._get_validation_message()
 
         _fail_if_updating_not_allowed()
         _read_uploaded_file_on_change()
@@ -206,7 +190,6 @@ class MDstatementAbstract(models.Model):
         super().save(*args, **kwargs)
 
     def _get_entityID(self):
-        self.validate()
         eid = self.ed_val.entityID
         if eid:
             return eid
@@ -214,6 +197,42 @@ class MDstatementAbstract(models.Model):
             return '?'
         else:
             return ''
+
+    def _get_validation_message(self):
+        if getattr(self.ed_val, 'val_mesg_dict', False):
+            return json.dumps(self.ed_val.val_mesg_dict, indent=2)
+        else:
+            return ''
+
+    def _is_content_valid(self):
+        if getattr(self.ed_val, 'content_val_ok', False):
+            return self.ed_val.content_val_ok
+        else:
+            return False
+
+    def _get_operation(self):
+        if not getattr(self.ed_val, 'ed', False):
+            return ''
+        if not self.ed_val.ed.get_entityid_hostname():
+            return ''
+        if self.ed_val.deletionRequest:
+            return 'delete'
+        return 'add/mod'
+
+    def _get_orgid(self):
+        if getattr(self.ed_val, 'ed', False):
+            return self.ed_val.ed.get_orgid()
+
+    def _get_orgcn(self):
+        if getattr(self.ed_val, 'ed', False):
+            return self.ed_val.ed.get_orgcn()
+
+    def _is_authorized(self):
+        self.validate()
+        if getattr(self.ed_val, 'authz_ok', False):
+            return False
+        else:
+            return self.ed_val.authz_ok
 
 
 class MDstatement(MDstatementAbstract):

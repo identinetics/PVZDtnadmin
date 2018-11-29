@@ -35,32 +35,32 @@ class MDstatementAdmin(admin.ModelAdmin):
     form = MDstatementForm
     save_on_top = True
     readonly_fields = (
-        'authorized',
+        'content_valid',
         'created_at',
         'ed_signed',
         'ed_uploaded',
         'ed_uploaded_filename',
         'entityID',
         'get_boilerplate_help',
-        'get_signer_subject',
-        'get_validation_message',
-        'operation',
+        'signer_subject',
         'namespace',
-        'orgcn',
-        'orgid',
+        'operation',
+        'org_cn',
+        'org_id',
+        'signer_authorized',
         'status',
         'updated_at',
-        'valid',
+        'validation_message',
     )
     list_display = (
         'entityID',
         'status',
-        'valid',
-        'authorized',
+        'content_valid',
+        'signer_authorized',
         'operation',
         'namespace',
-        'orgid',
-        'get_signer_subject',
+        'org_id',
+        'signer_subject',
         'get_validation_message_trunc',
         'updated',
         'admin_note',
@@ -85,15 +85,15 @@ class MDstatementAdmin(admin.ModelAdmin):
         ('Prozess Status', {
             'fields': (
                 'status',
-                'valid',
-                'authorized',
-                'get_validation_message',
+                'content_valid',
+                'signer_authorized',
+                'validation_message',
             )
         }),
         ('Adminsitrative Attribute', {
             'fields': (
                 ('created_at', 'updated_at', ),
-                'get_signer_subject',
+                'signer_subject',
                 'admin_note',
             )
         }),
