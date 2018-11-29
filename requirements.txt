@@ -8,3 +8,5 @@ lxml
 pyOpenSSL>=0.15.1
 requests
 json2html=1.2.1
+pytest=4.0.1
+pytest-django=3.4.4
