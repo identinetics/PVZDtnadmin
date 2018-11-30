@@ -33,7 +33,6 @@ def result01():
 
 
 def test_insert01(ed_path01, result01):
-    settings1 = settings
     mds = MDstatement(ed_file_upload=ed_path01)
     mds.save()
     assert 1 == len(MDstatement.objects.all())

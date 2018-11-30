@@ -1,0 +1,3 @@
+{
+  "validate Domain Names": "[InvalidFQDNinEntityID] FQDN of entityID idp6.example.com not in namespaces allowed for signer: ['*.identinetics.com']"
+}

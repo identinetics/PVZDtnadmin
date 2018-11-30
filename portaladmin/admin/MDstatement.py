@@ -8,8 +8,9 @@ from django.utils import timezone
 from django.conf import settings
 from .mds_sign_and_update import mds_sign_and_update
 from ..constants import *
-from ..signals import md_statement_edit_starts
+from ..exceptions import CancelRequest
 from ..models import CheckOut, MDstatement
+from ..signals import md_statement_edit_starts
 from PVZDpy.cresignedxml import creSignedXML
 from PVZDpy.samlentitydescriptor import SAMLEntityDescriptorFromStrFactory, SAMLEntityDescriptor
 
@@ -146,14 +147,17 @@ class MDstatementAdmin(admin.ModelAdmin):
 
         return super().change_view(request, object_id, form_url, extra_context)
 
-    actions = ['delete_selected', 'sign_and_update_action']
+    #actions = ['delete_selected', 'sign_and_update_action']  # for dev
+    actions = ['sign_and_update_action']
 
     def sign_and_update_action(self, request, queryset):
         try:
             mds_sign_and_update(self, request, queryset)
             messages.info(request, "EntityDescriptor signiert")
+        except CancelRequest:
+            pass
         except(Exception) as e:
-            messages.error(request, "Fehler bei der Signaturanforderung: " + str(e))
+            messages.error(request, str(e))
     sign_and_update_action.short_description = "EntityDescriptor mit lokaler BKU signieren"
 
     def get_action_choices(self, request):

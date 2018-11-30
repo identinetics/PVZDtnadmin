@@ -4,9 +4,8 @@ from django.conf import settings
 from django.db import models
 
 from ..constants import *
-from PVZDpy.samled_validator import SamlEdValidator
 from PVZDpy.policystore import PolicyStore
-from django.conf import settings
+from PVZDpy.samled_validator import SamlEdValidator
 from fedop.models.namespace import Namespaceobj
 
 
@@ -103,9 +102,13 @@ class MDstatementAbstract(models.Model):
         return self.updated_at.strftime("%Y%m%d %H:%M")
 
     def get_validation_message_trunc(self):
-        m = json.dumps(self.validation_message, indent=2)
-        m = m[0:47]+'...' if len(m) > 47 else m
-        return m
+        if self.validation_message:
+            m = json.dumps(self.validation_message, indent=2)[1:-1]
+            m = m.replace('\\n','').replace('\\"','"').replace('{','').replace('"','')
+            m = m[0:47]+'...' if len(m) > 47 else m
+            return m
+        else:
+            return ''
     get_validation_message_trunc.short_description = 'error'
 
 
@@ -156,12 +159,12 @@ class MDstatementAbstract(models.Model):
                 raise ValidationError(_('Cannot change if status = ' + STATUS_ACCEPTED), code='invalid')
 
         def _read_uploaded_file_on_change():
-            if self.ed_file_upload.file:
+            if self.ed_file_upload:
                 ed_file_upload_name_new = self.ed_file_upload.file.name or ''
                 if self._ed_file_upload_name_old != ed_file_upload_name_new:
                     self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
                     self.ed_signed = None
-                elif not self.ed_uploaded:
+                elif not self.ed_uploaded:  # add
                     self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
 
         def _set_status_on_upload():
@@ -174,7 +177,7 @@ class MDstatementAbstract(models.Model):
             self.validate()
             self.content_valid = self._is_content_valid()
             self.deletionRequest = self.ed_val.deletionRequest
-            self.ed_uploaded_filename = self.ed_file_upload.file.name
+            self.ed_uploaded_filename = self.ed_file_upload.file.name if self.ed_file_upload else None
             self.entity_fqdn = self._get_fqdn()
             self.entityID = self._get_entityID()
             self.namespace = self._get_namespace()
@@ -185,11 +188,14 @@ class MDstatementAbstract(models.Model):
             self.signer_subject = getattr(self.ed_val, 'signer_cert_cn', '')
             self.validation_message = self._get_validation_message()
 
-        _fail_if_updating_not_allowed()
-        _read_uploaded_file_on_change()
-        _set_status_on_upload()
-        _set_computed_fields()
-        super().save(*args, **kwargs)
+        if kwargs.get('operation', '') == 'mds_sign_and_update':
+            super().save(*args, {})
+        else:
+            _fail_if_updating_not_allowed()
+            _read_uploaded_file_on_change()
+            _set_status_on_upload()
+            _set_computed_fields()
+            super().save(*args, **kwargs)
 
     def _get_entityID(self):
         eid = self.ed_val.entityID

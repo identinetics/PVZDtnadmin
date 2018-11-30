@@ -1,0 +1,3 @@
+class CancelRequest(Exception):
+    pass
+
