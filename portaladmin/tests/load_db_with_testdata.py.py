@@ -2,13 +2,25 @@
 # Work around: run from Pycharm/Python Console
 
 from os.path import join as opj
-from django.conf import settings
-from portaladmin.models import MDstatement
 from PVZDpy.tests.common_fixtures import ed_path
+
+import django
+import sys
+import os
+
+if __name__ == '__main__':
+    django_proj_path = os.path.dirname(os.path.dirname(os.getcwd()))
+    sys.path.append(django_proj_path)
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
+    django.setup()
+else:
+    assert False
+
+from portaladmin.models import MDstatement
+from django.conf import settings
 
 #basedir = settings.BASE_DIR
 basedir = '/Users/admin/devl/python/identinetics/PVZDweb'
-
 
 
 def fixture_testdata_basedir():
