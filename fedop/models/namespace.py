@@ -12,7 +12,7 @@ class Namespaceobj(models.Model):
         unique=True,
         verbose_name='Namespace',
         help_text='fully qualified domain name or domain with * for any hostname, such as "*.sso.xyz.org"',
-        max_length=128)
+        max_length=30)
     gvOuIdParent = models.ForeignKey(
         STPbetreiber,
         on_delete=models.PROTECT,

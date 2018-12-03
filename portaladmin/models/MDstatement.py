@@ -97,13 +97,14 @@ class MDstatementAbstract(models.Model):
         blank=True, null=True,
         verbose_name='Error Messages',
         max_length=100000)
-    namespace = models.CharField(
+#    namespace = models.CharField(
+#        blank=True, null=True,
+#        max_length=30)
+    namespace = models.ForeignKey(
+        Namespaceobj,
         blank=True, null=True,
-        max_length=30)
-#    namespaceobj = models.ForeignKey(
-#        Namespaceobj,
-#        on_delete=models.PROTECT,
-#        help_text='Namespace')
+        on_delete=models.PROTECT,
+        help_text='Namespace')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Änderungsdatum', )
 
@@ -192,7 +193,7 @@ class MDstatementAbstract(models.Model):
             self.entity_fqdn = self._get_fqdn()
             self.entityID = self._get_entityID()
             self.make_blank_entityid_unique = self._get_make_blank_entityid_unique()
-            self.namespace = self._get_namespace()
+            self.namespace_id = self._get_namespace_id()
             self.operation = self._get_operation()
             self.org_cn = self._get_orgcn()
             self.org_id = self._get_orgid()
@@ -234,9 +235,11 @@ class MDstatementAbstract(models.Model):
         else:
             return ''
 
-    def _get_namespace(self):
+    def _get_namespace_id(self):
         if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.ed.get_namespace()
+            ns = self.ed_val.ed.get_namespace()
+            return Namespaceobj.objects.filter(fqdn=ns)[0].id
+
 
     def _get_operation(self):
         if not getattr(self.ed_val, 'ed', False):

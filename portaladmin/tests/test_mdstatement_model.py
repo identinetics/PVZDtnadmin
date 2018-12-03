@@ -24,6 +24,7 @@ def fixture_result(filename):
     with open(opj(settings.BASE_DIR, *['portaladmin', 'tests'], path_expected_results, filename)) as fd:
         return fd.read()
 
+
 @pytest.mark.parametrize('expected_result_fn, ed_path_no',
                          [('insert01.json', 1),
                           ('insert02.json', 2),
@@ -56,9 +57,3 @@ def test_insert(expected_result_fn, ed_path_no):
     assert 1 == len(MDstatement.objects.all())
     expected_result = fixture_result(expected_result_fn)
     assert_equal(expected_result, MDstatement.objects.all()[0].serialize_json())
-    #try:
-    #    expected_result = fixture_result(expected_result_fn)
-    #    assert_equal(expected_result, MDstatement.objects.all()[0].serialize_json())
-    #except Exception:
-    #    with open('/Users/admin/devl/python/identinetics/PVZDweb/portaladmin/tests/testout/' + expected_result_fn, 'w') as fd:
-    #        fd.write(MDstatement.objects.all()[0].serialize_json())
