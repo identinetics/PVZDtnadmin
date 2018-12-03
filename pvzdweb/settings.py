@@ -114,6 +114,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 PORTALADMIN_CHECKOUT_MINUTES = 15
 
 PVZD_SETTINGS = {

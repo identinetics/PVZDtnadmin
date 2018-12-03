@@ -6,6 +6,9 @@ from django.contrib import messages
 from django.contrib.admin import site
 from django.utils import timezone
 from django.conf import settings
+from django.http import Http404
+from django.db import models
+from django.forms.widgets import ClearableFileInput
 from .mds_sign_and_update import mds_sign_and_update
 from ..constants import *
 from ..exceptions import CancelRequest
@@ -13,6 +16,10 @@ from ..models import CheckOut, MDstatement
 from ..signals import md_statement_edit_starts
 from PVZDpy.cresignedxml import creSignedXML
 from PVZDpy.samlentitydescriptor import SAMLEntityDescriptorFromStrFactory, SAMLEntityDescriptor
+
+
+class FileInputWidget(ClearableFileInput):
+    template_name = 'portaladmin/widgets/clearable_file_input.html'
 
 
 class MDstatementForm(forms.ModelForm):
@@ -33,6 +40,9 @@ site.disable_action('delete_selected')
 
 @admin.register(MDstatement)
 class MDstatementAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.FileField: {'widget': FileInputWidget},
+    }
     form = MDstatementForm
     save_on_top = True
     readonly_fields = (
@@ -134,7 +144,7 @@ class MDstatementAdmin(admin.ModelAdmin):
         try:
             md_statement = MDstatement.objects.get(id=object_id)
         except MDstatement.DoesNotExist:
-            return
+            raise Http404("Metadaten Statement does not exist")  # TODO translate
 
         if md_statement.checkout_status:
             # CheckOut by another user

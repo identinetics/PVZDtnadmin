@@ -8,4 +8,5 @@ venv/
 database/db.sqlite3
 /29pvzdpep.repo/
 upload/
+media/
 /database/db.test.sqlite3
