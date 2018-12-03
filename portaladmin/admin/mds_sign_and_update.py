@@ -9,9 +9,12 @@ from PVZDpy.policystore import PolicyStore
 from PVZDpy.samled_validator import SamlEdValidator
 from PVZDpy.samlentitydescriptor import SAMLEntityDescriptorFromStrFactory
 
-def mds_sign_and_update(_modeladmin, request, queryset):
+def mds_sign_and_update(_modeladmin, request, queryset, used_uploaded_as_signed=False):
     mds = _get_selected_record_from_queryset(request, queryset)
-    mds.ed_signed = _request_xmldsig(mds.ed_uploaded)
+    if used_uploaded_as_signed:
+        mds.ed_signed = mds.ed_uploaded
+    else:
+        mds.ed_signed = _request_xmldsig(mds.ed_uploaded)
     mds.status = STATUS_SIGNATURE_APPLIED  # to be overwritten by revalidate
     _revalidate_after_signing(mds)
     mds.save(operation='mds_sign_and_update')
@@ -19,6 +22,8 @@ def mds_sign_and_update(_modeladmin, request, queryset):
 def _get_selected_record_from_queryset(request, queryset) -> MDstatement:
     if len(queryset.all()) > 1:
         messages.error(request, "Bitte genau einen EntityDescriptor auswählen")
+    if len(queryset.all()) == 0:
+        messages.error(request, "Kein EntityDescriptor ausgewählt/übergeben")
     this_rec = queryset.all()[0]
     if this_rec.status in (STATUS_REQUEST_QUEUE, STATUS_SIGNATURE_APPLIED, STATUS_ACCEPTED):
         messages.error(request, "EntityDescriptor wurde bereits signiert")
