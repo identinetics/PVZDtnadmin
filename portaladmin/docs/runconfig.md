@@ -2,3 +2,6 @@ export CLASSPATH=/Users/admin/devl/python/identinetics/PVZDweb/PVZDlib/MOA-SPSS/
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0/Contents/Home
 export DYLD_LIBRARY_PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0/Contents/Home/jre/lib/server
 export PYJNIUS_ACTIVATE=
+
+
+export PYTHONPATH=/Users/admin/devl/python/identinetics/PVZDweb:/Users/admin/devl/python/identinetics/PVZDweb/portaladmin:/Users/admin/devl/python/identinetics/PVZDweb/PVZDlib

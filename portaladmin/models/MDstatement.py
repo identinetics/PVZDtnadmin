@@ -180,12 +180,10 @@ class MDstatementAbstract(models.Model):
         def _read_uploaded_file():
             if self.ed_file_upload.name:
                 self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
-
         def _set_status_on_upload():
             if self.ed_uploaded != self._ed_uploaded_old:
                 if self.status in (STATUS_CREATED, STATUS_REJECTED):
                     self.status = STATUS_UPLOADED
-
         def _set_computed_fields():
             self.validate()
             self.content_valid = self._is_content_valid()

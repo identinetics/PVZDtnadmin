@@ -1,0 +1,8 @@
+{
+  "admin_note": null,
+  "ed_signed": null,
+  "ed_uploaded": "    <!-- DELETE entity descriptor from metadata -->\n    <md:EntityDescriptor entityID=\"https://idp23.identinetics.com/idp.xml\" xmlns=\"urn:oasis:names:tc:SAML:2.0:metadata\"\n        xmlns:md=\"urn:oasis:names:tc:SAML:2.0:metadata\"\n        xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\"\n        xmlns:pvzd=\"http://egov.gv.at/pvzd1.xsd\"\n        pvzd:disposition=\"delete\">\n      <md:IDPSSODescriptor protocolSupportEnumeration=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n        <md:SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST\" Location=\"https://idp23.identinetics.com/idp.xml/idp/unused\"/>\n      </md:IDPSSODescriptor>\n    </md:EntityDescriptor>",
+  "ed_uploaded_filename": "/Users/admin/devl/python/identinetics/PVZDweb/portaladmin/tests/saml/unsigned_ed/23_idp23_delete.xml",
+  "entityID": "https://idp23.identinetics.com/idp.xml",
+  "status": "uploaded"
+}

@@ -13,47 +13,52 @@ def assert_equal(expected, actual, fn=''):
     msg = fn+"\n'"+actual+"' != '"+expected+"' "
     assert expected == actual, msg
 
-
-@pytest.fixture
-def testdata_basedir():
+# work-around for lack of pytest's ability to use fixtures in @pytest.mark.parametrize
+def fixture_testdata_basedir():
     return opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
     # return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', ])
 
 
-
-@pytest.fixture
-def ed_path01(testdata_basedir):
-    return ed_path(1, dir=testdata_basedir)
-
-
-@pytest.fixture
-def result01():
-    with open(opj(settings.BASE_DIR, *['portaladmin', 'tests'], path_expected_results, 'insert01.json')) as fd:
+# work-around for lack of pytest's ability to use fixtures in @pytest.mark.parametrize
+def fixture_result(filename):
+    with open(opj(settings.BASE_DIR, *['portaladmin', 'tests'], path_expected_results, filename)) as fd:
         return fd.read()
 
-
-def test_insert01(ed_path01, result01):
-    mds = MDstatement(ed_file_upload=ed_path01)
+@pytest.mark.parametrize('expected_result_fn, ed_path_no',
+                         [('insert01.json', 1),
+                          ('insert02.json', 2),
+                          ('insert03.json', 3),
+                          ('insert04.json', 4),
+                          ('insert05.json', 5),
+                          ('insert06.json', 6),
+                          ('insert07.json', 7),
+                          ('insert08.json', 8),
+                          ('insert09.json', 9),
+                          ('insert10.json', 10),
+                          ('insert11.json', 11),
+                          ('insert12.json', 12),
+                          ('insert13.json', 13),
+                          ('insert14.json', 14),
+                          ('insert15.json', 15),
+                          ('insert16.json', 16),
+                          ('insert17.json', 17),
+                          ('insert18.json', 18),
+                          ('insert19.json', 19),
+                          ('insert20.json', 20),
+                          ('insert21.json', 21),
+                          ('insert22.json', 22),
+                          ('insert23.json', 23),
+                          ])
+def test_insert(expected_result_fn, ed_path_no):
+    edp = ed_path(ed_path_no, dir=fixture_testdata_basedir())
+    mds = MDstatement(ed_file_upload=edp)
     mds.save()
     assert 1 == len(MDstatement.objects.all())
-    assert_equal(result01, MDstatement.objects.all()[0].serialize_json())
-    pass
-
-
-@pytest.fixture
-def ed_path02():
-    return ed_path(2, dir=opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml'))
-
-
-@pytest.fixture
-def result02():
-    with open(opj(path_expected_results, 'insert02.json')) as fd:
-        return fd.read()
-
-def test_insert02(ed_path02, result02):
-    mds = MDstatement(ed_file_upload=ed_path02)
-    mds.save()
-    assert 1 == len(MDstatement.objects.all())
-    assert_equal(result02, MDstatement.objects.all()[0].serialize_json())
-    pass
-
+    expected_result = fixture_result(expected_result_fn)
+    assert_equal(expected_result, MDstatement.objects.all()[0].serialize_json())
+    #try:
+    #    expected_result = fixture_result(expected_result_fn)
+    #    assert_equal(expected_result, MDstatement.objects.all()[0].serialize_json())
+    #except Exception:
+    #    with open('/Users/admin/devl/python/identinetics/PVZDweb/portaladmin/tests/testout/' + expected_result_fn, 'w') as fd:
+    #        fd.write(MDstatement.objects.all()[0].serialize_json())
