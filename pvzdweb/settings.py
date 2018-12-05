@@ -1,4 +1,5 @@
 import os
+from os.path import join as opj
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -121,7 +122,7 @@ PORTALADMIN_CHECKOUT_MINUTES = 15
 
 PVZD_SETTINGS = {
     'policyjournal': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/pol_journal_sig_rh.xml',
-    'policydir': 'PVZDlib/PVZDpy/tests/testdata/saml/poldir1.json',
+    'policydir': opj(BASE_DIR, 'PVZDlib/PVZDpy/tests/testdata/saml/poldir1.json'),
     'trustedcerts': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/trustedcerts_rh.json',
     'pepoutdir': 'PVZDlib/PVZDpy/tests/testdout/pepout',
     'superuser': True,  # allow signer in trustedcerts to skip authorization check

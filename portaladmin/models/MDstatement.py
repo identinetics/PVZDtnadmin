@@ -201,6 +201,14 @@ class MDstatementAbstract(models.Model):
             self.signer_subject = getattr(self.ed_val, 'signer_cert_cn', '')
             self.statusgroup = self._get_statusgroup()
             self.validation_message = self._get_validation_message()
+        def _enforce_unique_constraint():
+            qs = MDstatement.objects.filter(
+                entityID=self.entityID,
+                make_blank_entityid_unique=self.make_blank_entityid_unique,
+                statusgroup=self.statusgroup)
+            if qs:
+                raise ValidationError('Der EntityDescriptor ist mit dem Status'
+                                      ' "{}" ist bereits vorhanden'.format(qs[0].status))
 
         if kwargs.get('operation', '') == 'mds_sign_and_update':
             super().save(*args, {})
@@ -210,6 +218,7 @@ class MDstatementAbstract(models.Model):
             _read_uploaded_file()
             _set_status_on_upload()
             _set_computed_fields()
+            _enforce_unique_constraint()
             super().save(*args, **kwargs)
 
     def _get_make_blank_entityid_unique(self):
@@ -217,7 +226,7 @@ class MDstatementAbstract(models.Model):
             return None
         else:
             hashobj = hashlib.md5()
-            hashobj.update(self.ed_uploaded)
+            hashobj.update(self.ed_uploaded.encode('utf-8'))
             return hashobj.digest()
 
     def _get_entityID(self):
@@ -238,7 +247,10 @@ class MDstatementAbstract(models.Model):
     def _get_namespace_id(self):
         if getattr(self.ed_val, 'ed', False):
             ns = self.ed_val.ed.get_namespace()
-            return Namespaceobj.objects.filter(fqdn=ns)[0].id
+            if ns:
+                return Namespaceobj.objects.filter(fqdn=ns)[0].id
+            else:
+                return None
 
 
     def _get_operation(self):
