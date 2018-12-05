@@ -6,4 +6,4 @@ from fedop.models.issuer import *
 @admin.register(Issuer)
 class IssuerAdmin(admin.ModelAdmin):
     actions = None
-    list_display = ['subjectCN', 'pvprole']
+    list_display = ['subject_cn', 'pvprole']

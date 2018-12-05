@@ -15,6 +15,7 @@ class Namespaceobj(models.Model):
         max_length=30)
     gvOuIdParent = models.ForeignKey(
         STPbetreiber,
+        verbose_name='gvOuID',
         on_delete=models.PROTECT,
         help_text='OrgID des Portalbetreibers')
 
@@ -24,3 +25,6 @@ class Namespaceobj(models.Model):
 
     def __str__(self):
         return str(self.fqdn)
+
+    def org_cn(self):
+        return self.gvOuIdParent.cn

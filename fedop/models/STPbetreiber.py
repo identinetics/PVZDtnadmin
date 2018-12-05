@@ -27,4 +27,4 @@ class STPbetreiber(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return str('{} {}'.format(self.gvOuID, self.cn)[:30])
+        return self.gvOuID

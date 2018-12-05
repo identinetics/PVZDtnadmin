@@ -15,7 +15,7 @@ class Issuer(models.Model):
         default='STP', null=True,
         choices=PVPROLE_CHOICES,
         max_length=3)
-    subjectCN = models.CharField(
+    subject_cn = models.CharField(
         help_text='Issuer X.509 SubjectCN (TLS CA)',
         max_length=128)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum',) #default=django.utils.timezone.now())
