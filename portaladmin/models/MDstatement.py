@@ -38,7 +38,7 @@ class MDstatementAbstract(models.Model):
         default=False, null=True,
         verbose_name='Deletion Request (unpublish Entity)', )
     ed_file_upload = models.FileField(
-        upload_to='upload/', default='', null=True, blank=True,
+        upload_to='portaladmin', default='', null=True, blank=True,
         verbose_name='EntityDescriptor hochladen',)
     ed_signed = models.TextField(
         blank=True, null=True,
@@ -132,13 +132,12 @@ class MDstatementAbstract(models.Model):
 
 #-------
     def serialize_json(self):
+        """ serialize stable values for unit tests """
         dictfilt = lambda d, filter: dict([(k, d[k]) for k in d if k in set(filter)])
-
         wanted_keys = (
             'admin_note',
             'ed_signed',
             'ed_uploaded',
-            'ed_uploaded_filename',
             'entityID',
             'status',
         )
@@ -248,9 +247,10 @@ class MDstatementAbstract(models.Model):
         if getattr(self.ed_val, 'ed', False):
             ns = self.ed_val.ed.get_namespace()
             if ns:
-                return Namespaceobj.objects.filter(fqdn=ns)[0].id
-            else:
-                return None
+                qs = Namespaceobj.objects.filter(fqdn=ns)
+                if qs:
+                    return qs[0].id
+        return None
 
 
     def _get_operation(self):

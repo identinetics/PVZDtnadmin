@@ -19,11 +19,3 @@ DATABASES = {
     }
 }
 
-
-#MEDIA_ROOT = [
-#    os.path.join(BASE_DIR, 'PVZDlib/PVZDpy/tests/testdata/saml'),
-#]
-
-PVZD_SETTINGS = {
-    'policydir': 'saml/poldir1.json',
-}

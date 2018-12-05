@@ -23,3 +23,5 @@ PUB_STATUS_CHOICES = ((PUB_STATUS_PUBLISHED, 'veröffentlicht'),
                       (PUB_STATUS_UNPUBLISHED, 'zurückgezogen'),
                      )
 
+class UnittestException(Exception):
+    pass

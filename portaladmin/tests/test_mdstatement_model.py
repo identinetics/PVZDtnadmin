@@ -1,5 +1,7 @@
+import os.path
 from os.path import join as opj
 import pytest
+import django.core.files
 from django.conf import settings
 from portaladmin.models import MDstatement
 from PVZDpy.tests.common_fixtures import ed_path
@@ -15,8 +17,8 @@ def assert_equal(expected, actual, fn=''):
 
 # work-around for lack of pytest's ability to use fixtures in @pytest.mark.parametrize
 def fixture_testdata_basedir():
-    return opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
-    # return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', ])
+    #return opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
+    return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', ])
 
 
 # work-around for lack of pytest's ability to use fixtures in @pytest.mark.parametrize
@@ -51,9 +53,15 @@ def fixture_result(filename):
                           ('insert23.json', 23),
                           ])
 def test_insert(expected_result_fn, ed_path_no):
-    edp = ed_path(ed_path_no, dir=fixture_testdata_basedir())
-    mds = MDstatement(ed_file_upload=edp)
-    mds.save()
+    fn = ed_path(ed_path_no, dir=fixture_testdata_basedir())
+    with open(fn) as fd:
+        django_file = django.core.files.File(fd)
+        mds = MDstatement()
+        mds.ed_file_upload.save(os.path.basename(fn), django_file, save=True)
     assert 1 == len(MDstatement.objects.all())
     expected_result = fixture_result(expected_result_fn)
+    with open('/Users/admin/devl/python/identinetics/PVZDweb/portaladmin/tests/testout/'+os.path.basename(expected_result_fn), 'w') as fd:
+        fd.write(MDstatement.objects.all()[0].serialize_json())
     assert_equal(expected_result, MDstatement.objects.all()[0].serialize_json())
+
+#def test_unique_constraint() # TODO

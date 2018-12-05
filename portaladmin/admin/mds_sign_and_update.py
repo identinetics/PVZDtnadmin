@@ -9,8 +9,9 @@ from PVZDpy.policystore import PolicyStore
 from PVZDpy.samled_validator import SamlEdValidator
 from PVZDpy.samlentitydescriptor import SAMLEntityDescriptorFromStrFactory
 
-def mds_sign_and_update(_modeladmin, request, queryset, used_uploaded_as_signed=False):
-    mds = _get_selected_record_from_queryset(request, queryset)
+def mds_sign_and_update(_modeladmin, request, queryset,
+                        used_uploaded_as_signed=False, unittest=True):
+    mds = _get_selected_record_from_queryset(request, queryset, unittest)
     if used_uploaded_as_signed:
         mds.ed_signed = mds.ed_uploaded
     else:
@@ -19,20 +20,22 @@ def mds_sign_and_update(_modeladmin, request, queryset, used_uploaded_as_signed=
     _revalidate_after_signing(mds)
     mds.save(operation='mds_sign_and_update')
 
-def _get_selected_record_from_queryset(request, queryset) -> MDstatement:
+def _get_selected_record_from_queryset(request, queryset, unittest) -> MDstatement:
     if len(queryset.all()) > 1:
-        messages.error(request, "Bitte genau einen EntityDescriptor auswählen")
+        _set_message_error(request, "Bitte genau einen EntityDescriptor auswählen", unittest)
     if len(queryset.all()) == 0:
-        messages.error(request, "Kein EntityDescriptor ausgewählt/übergeben")
+        _set_message_error(request, "Kein EntityDescriptor ausgewählt/übergeben", unittest)
     this_rec = queryset.all()[0]
     if this_rec.status in (STATUS_REQUEST_QUEUE, STATUS_SIGNATURE_APPLIED, STATUS_ACCEPTED):
-        messages.error(request, "EntityDescriptor wurde bereits signiert")
+        _set_message_error(request, "EntityDescriptor wurde bereits signiert", unittest)
         raise CancelRequest
     if this_rec.status != STATUS_UPLOADED:
-        messages.error(request, "Vor dem Signieren muss ein neuer Entityescriptor hochgeladen werden")
+        _set_message_error(request, "Vor dem Signieren muss ein neuer Entityescriptor hochgeladen "
+                                    "werden", unittest)
         raise CancelRequest
     if not this_rec.content_valid:
-        messages.error(request, "Nur ein gültiger EntityDescriptor kann signiert werden")
+        _set_message_error(request, "Nur ein gültiger EntityDescriptor kann signiert werden",
+                           unittest)
         raise CancelRequest
     return MDstatement.objects.get(pk=this_rec.pk)
 
@@ -60,3 +63,9 @@ def _revalidate_after_signing(mds):
         mds.status = STATUS_REJECTED
         mds.signer_authorized = False
         mds.validation_message = json.dumps(ed_val.val_mesg_dict, indent=2)
+
+def _set_message_error(request, msg, unittest=False):
+    if unittest:
+        raise UnittestException(msg)
+    else:
+        messages.error(request, msg)
