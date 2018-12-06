@@ -3,6 +3,8 @@
 !.idea/runConfigurations/
 db.sqlite3
 __pycache__
+.pytest_cache
+.cache
 work/
 venv/
 database/db.sqlite3
