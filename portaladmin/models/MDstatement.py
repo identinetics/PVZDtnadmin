@@ -145,11 +145,7 @@ class MDstatement(models.Model):
         return json.dumps(self_dict, sort_keys=True, indent=2)
 
     def __str__(self):
-        self.validate()
-        if getattr(self.ed_val, 'entityID', False):
-            return str(self.ed_val.entityID)
-        else:
-            return ''
+        return self.entityID
 
     def validate(self):
         if not getattr(self, 'ed_val', None):
@@ -200,13 +196,14 @@ class MDstatement(models.Model):
             self.statusgroup = self._get_statusgroup()
             self.validation_message = self._get_validation_message()
         def _enforce_unique_constraint():
-            qs = MDstatement.objects.filter(
-                entityID=self.entityID,
-                make_blank_entityid_unique=self.make_blank_entityid_unique,
-                statusgroup=self.statusgroup)
-            if qs:
-                raise ValidationError('Der EntityDescriptor ist mit dem Status'
-                                      ' "{}" ist bereits vorhanden'.format(qs[0].status))
+            if self._state.adding:
+                qs = MDstatement.objects.filter(
+                    entityID=self.entityID,
+                    make_blank_entityid_unique=self.make_blank_entityid_unique,
+                    statusgroup=self.statusgroup)
+                if qs:
+                    raise ValidationError('Der EntityDescriptor ist mit dem Status'
+                                          ' "{}" ist bereits vorhanden'.format(qs[0].status))
 
         if kwargs.get('operation', '') == 'mds_sign_and_update':
             super().save(*args, {})
@@ -259,6 +256,8 @@ class MDstatement(models.Model):
             return ''
         if self.ed_val.deletionRequest:
             return 'delete'
+        if self.status == STATUS_ACCEPTED:
+            return 'published'
         return 'add/mod'
 
     def _get_orgid(self):

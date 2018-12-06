@@ -1,3 +1,4 @@
+import logging
 import os
 from os.path import join as opj
 
@@ -33,8 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fedop',
-    # 'portaladmin',
-    'portaladmin.apps.PortaladminConfig',
+    'portaladmin',
+    #'portaladmin.apps.PortaladminConfig',
     'tnadmin',
 ]
 
@@ -121,13 +122,16 @@ MEDIA_URL = '/media/'
 PORTALADMIN_CHECKOUT_MINUTES = 15
 
 PVZD_SETTINGS = {
-    'policyjournal': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/pol_journal_sig_rh.xml',
-    'policydir': opj(BASE_DIR, 'PVZDlib/PVZDpy/tests/testdata/saml/poldir1.json'),
-    'trustedcerts': 'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/trustedcerts_rh.json',
-    'pepoutdir': 'PVZDlib/PVZDpy/tests/testdout/pepout',
+    'logfilepep': opj(*'PVZDlib/PVZDpy/tests/testdout/pep.log'.split('/')),
+    'loglevelpep': logging.DEBUG,
+    'loglevelweb': logging.DEBUG,
+    'pepoutdir': opj(*'PVZDlib/PVZDpy/tests/testout/pepout'.split('/')),
+    'poldirhtml': opj(*'PVZDlib/PVZDpy/tests/testout/poldir/poldir.html'.split('/')),
+    'poldirjson': opj(*'PVZDlib/PVZDpy/tests/testout/poldir/poldir.json'.split('/')),
+    'policydir': opj(BASE_DIR, *'PVZDlib/PVZDpy/tests/testdata/saml/poldir1.json'.split('/')),
+    'policyjournal': opj(*'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/pol_journal_sig_rh.xml'.split('/')),
+    'regauthority': 'Bundeskanzleramt',
+    'shibacl': opj(*'PVZDlib/PVZDpy/tests/testdout/poldir/shibacl.xml'.split('/')),
     'superuser': True,  # allow signer in trustedcerts to skip authorization check
-    'loglevel': 'DEBUG',
-    'poldirhtml': 'PVZDlib/PVZDpy/tests/testdout/poldir/poldir.html',
-    'poldirjson': 'PVZDlib/PVZDpy/tests/testdout/poldir/poldir.json',
-    'shibacl': 'PVZDlib/PVZDpy/tests/testdout/poldir/shibacl.xml',
+    'trustedcerts': opj(*'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/trustedcerts_rh.json'.split('/')),
 }

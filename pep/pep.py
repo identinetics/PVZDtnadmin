@@ -1,87 +1,77 @@
 import logging
 import os
-import re
 import sys
-import tempfile
+import django
+if __name__ == '__main__':
+    django_proj_path = os.path.dirname(os.path.dirname(os.getcwd()))
+    sys.path.append(django_proj_path)
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
+    django.setup()
+from django.conf import settings
 from PVZDpy.constants import *
-from PVZDpy.invocation.abstractinvocation import AbstractInvocation
-from PVZDpy.policydict import PolicyDict
 from PVZDpy.samled_validator import SamlEdValidator
 from PVZDpy.userexceptions import *
-from pvzdweb.app_settings import get_aodslhInvocation
 from portaladmin.models import MDstatement
-from .loggingconfig import LoggingConfig
+from portaladmin.constants import STATUS_REQUEST_QUEUE, STATUS_REJECTED, STATUS_ACCEPTED
+
+from get_pep_logger import get_pep_logger
+from get_policystore import get_policystore
 
 
 __author__ = 'r2h2'
 
 
-""" The PEP (Policy Enforcement Point) performs for each invocation:
+class PEP:
+    """ The PEP (Policy Enforcement Point) performs for each invocation:
 
-    for each MDstatement with status = request_queue
-        check if it conforms to the policy
-        if it is OK
-            set status to "accepted"
-            publish/unpublish the EntityDescriptor
-        else
-            set the status to "rejected"
-"""
+        for each MDstatement with status = request_queue
+            if it conforms to the policy
+                set status to "accepted"
+                publish/unpublish the EntityDescriptor
+            else
+                set the status to "rejected"
+    """
+    def __init__(self):
+        self.logger = get_pep_logger()
+        self.logfilepep = settings.PVZD_SETTINGS['logfilepep']
+        self.loglevelpep = settings.PVZD_SETTINGS['loglevelpep']
+        self.pepoutdir = settings.PVZD_SETTINGS['pepoutdir']
+        self.regauthority = settings.PVZD_SETTINGS['regauthority']
+        self.ed_val = SamlEdValidator(get_policystore(debug_speedup=True))  # TODO: False for qa+prod
 
-request_counter = 0
-request_counter_accepted = 0
-request_counter_rejected = 0
-try:
-    policyDict = PolicyDict(get_aodslhInvocation())
-    ed_validator = SamlEdValidator(policyDict.get_policydir())
-except Exception as e:
-    logging.log(LOGLEVELS['CRITICAL'], str(e) + '\nterminating PEP.')
-    raise
-
-
-def _update_mds_status(pk, entityid, status):
-    MDstatement.objects.filter(pk=pk).update(status=status)
-    logging.info('request for {} {}'.format(entityid, status))
-
-
-def _update_pepout(request):
-    fn = SAMLEntityDescriptor.get_filename_from_entityid(request.get_entityID())
-    if request.is_delete():
-
-        unlink
-
-def pep(testrunnerInvocation=None):
-    if testrunnerInvocation:
-        # CLI args and logger set by unit test
-        invocation = testrunnerInvocation
-        exception_lvl = LOGLEVELS['DEBUG']
-    else:
-        invocation = CliPep()
-        logbasename = re.sub(r'\.py$', '', os.path.basename(__file__))
-        logging_config = LoggingConfig(logbasename,
-                                       console=True,
-                                       console_level=invocation.args.loglevel,
-                                       file_level=invocation.args.loglevel)
-        exception_lvl = LOGLEVELS['ERROR']
-        #logging.debug('logging level=' + LOGLEVELS_BY_INT[invocation.args.loglevel])
-
-    for request in MDstatement.objects.filter(status='request_queue'):
-        ed_validator.validate_entitydescriptor(ed_str_new=request.ed_signed)
-        if ed_validator.content_val_ok and ed_validator.authz_ok:
-            _update_mds_status(request_pk, request.get_entityID(), STATUS_ACCEPTED)
-            _update_pepout(request)
+    def _update_pepout(self, mds):
+        ed = mds.ed_val.ed
+        fn = os.path.join(self.pepoutdir, ed.get_filename_from_entityid())
+        if request.is_delete():
+            os.unlink(fn)  # TODO: save logging, handle exceptions
+            logging.info('Entity {} unpublished'.format(entityid))
         else:
-            _update_mds_status(request_pk, request.get_entityID(), STATUS_REJECTED)
+            ed.remove_enveloped_signature()
+            ed.set_registrationinfo(self.regauthority)
+            ed.write(new_filename=fn)
+            logging.info('Entity {} published'.format(entityid))
 
-    if pep.request_counter == 0 or testrunnerInvocation:
-        summary_loglevel = LOGLEVELS['DEBUG']
-    else:
-        summary_loglevel = LOGLEVELS['INFO']
-    logging.log(summary_loglevel, 'files in request queue processed: ' + str(pep.request_counter) + \
-                '; accepted: ' + str(pep.request_counter_accepted) + \
-                '; rejected: ' + str(pep.request_counter_rejected) + '.')
+    def process_new_input(self):
+        count_accepted = 0
+        count_rejected = 0
+        for mds_rec in MDstatement.objects.filter(status=STATUS_REQUEST_QUEUE):
+            mds = MDstatement.objects.get(pk=mds_rec.pk)
+            mds.validate()
+            if mds.content_valid and mds.signer_authorized:
+                mds.status = STATUS_ACCEPTED
+                mds.save()
+                self._update_pepout(mds)
+                count_accepted += 1
+            else:
+                mds.status = STATUS_REJECTED
+                mds.save()
+                count_rejected += 1
+                logging.info('Metadata Statement {} rejected'.format(entityid))
+        logging.debug('accepted: {}, rejected: {}')
 
 
 if __name__ == '__main__':
-    if sys.version_info < (3, 4):
-        raise "must use python 3.4 or higher"
-    pep()
+    pep = PEP()
+    pep.process_new_input()
+else:
+    assert False

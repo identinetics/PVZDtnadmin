@@ -5,7 +5,7 @@ from pvzdweb.settings import PVZD_SETTINGS
 
 def get_aodsfhInvocation(aods_filename, trustedcerts_filename):
     return aodsfhInvocation(
-        journal =      PVZD_SETTINGS['policyjournal']
+        journal =      PVZD_SETTINGS['policyjournal'],
         trustedcerts = PVZD_SETTINGS['trustedcerts']
     )
 
@@ -16,10 +16,10 @@ def get_aodslhInvocation(journal = None,
                          shibacl = None,
                          trustedcerts = None):
     return aodsfhInvocation(
-        journal =      PVZD_SETTINGS['policyjournal']
-        poldirhtml =   PVZD_SETTINGS['poldirhtml']
-        poldirjson =   PVZD_SETTINGS['poldirjson']
-        shibacl =      PVZD_SETTINGS['shibacl']
-        trustedcerts = PVZD_SETTINGS['trustedcerts']
+        journal =      PVZD_SETTINGS['policyjournal'],
+        poldirhtml =   PVZD_SETTINGS['poldirhtml'],
+        poldirjson =   PVZD_SETTINGS['poldirjson'],
+        shibacl =      PVZD_SETTINGS['shibacl'],
+        trustedcerts = PVZD_SETTINGS['trustedcerts'],
     )
 
