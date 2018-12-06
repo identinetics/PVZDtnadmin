@@ -11,20 +11,20 @@ from PVZDpy.samled_validator import SamlEdValidator
 from fedop.models.namespace import Namespaceobj
 
 
-class CheckOut(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    checkout_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#class CheckOut(models.Model):
+#    created_at = models.DateTimeField(auto_now_add=True)
+#    checkout_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
-class MDstatementAbstract(models.Model):
+class MDstatement(models.Model):
     class Meta:
-        abstract = True
+        #abstract = True
         ordering = ['-updated_at']
         verbose_name = 'Metadaten Statement'
         unique_together = (('entityID', 'make_blank_entityid_unique', 'statusgroup'), )
 
     def __init__(self, *args, **kw):
-        super(MDstatementAbstract, self).__init__(*args, **kw)
+        super(MDstatement, self).__init__(*args, **kw)
         self._ed_uploaded_old = self.ed_uploaded
 
     admin_note = models.TextField(
@@ -97,14 +97,14 @@ class MDstatementAbstract(models.Model):
         blank=True, null=True,
         verbose_name='Error Messages',
         max_length=100000)
-#    namespace = models.CharField(
-#        blank=True, null=True,
-#        max_length=30)
-    namespace = models.ForeignKey(
-        Namespaceobj,
+    namespace = models.CharField(
         blank=True, null=True,
-        on_delete=models.PROTECT,
-        help_text='Namespace')
+        max_length=30)
+#    namespace = models.ForeignKey(
+#        Namespaceobj,
+#        blank=True, null=True,
+#        on_delete=models.PROTECT,
+#        help_text='Namespace')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum', )
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Änderungsdatum', )
 
@@ -161,7 +161,6 @@ class MDstatementAbstract(models.Model):
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)
         elif self.ed_uploaded:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_uploaded, sigval=False)
-        pass
 
     def clean(self):
         def _fail_if_updating_not_allowed():
@@ -297,8 +296,7 @@ class MDstatementAbstract(models.Model):
             return False
 
 
-class MDstatement(MDstatementAbstract):
-
-    checkout_status = models.ForeignKey(CheckOut, blank=True,
-                                        related_name="md_statements",
-                                        null=True, on_delete=models.SET_NULL)
+#class MDstatement(MDstatementAbstract):
+#    checkout_status = models.ForeignKey(CheckOut, blank=True,
+#                                        related_name="md_statements",
+#                                        null=True, on_delete=models.SET_NULL)
