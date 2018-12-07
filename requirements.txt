@@ -4,7 +4,6 @@ django
 #django-admin-menu>=1.1
 GitPython
 gunicorn
-javabridge
 json2html
 lxml
 pyOpenSSL
