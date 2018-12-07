@@ -19,7 +19,7 @@ export PYJNIUS_ACTIVATE=     # remove this line to use javabridge instead of pyj
 
 # --- do not change below this line for target system configuration
 export PATH=$PATH:$PROJ_HOME/bin
-export PYTHONPATH=$PYTHONPATH:$PROJ_HOME:$PROJ_HOME/PVZDlib/PVZDpy:.
+export PYTHONPATH=$PYTHONPATH:$PROJ_HOME:$PROJ_HOME/PVZDlib:.
 export CLASSPATH="\
 $PROJ_HOME/PVZDlib/MOA-SPSS/moa-sig-lib-latest.jar:\
 $PROJ_HOME/PVZDlib/MOA-SPSS/lib/*:\

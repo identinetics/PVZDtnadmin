@@ -45,7 +45,7 @@ def add_stpbetreiber():
             s.gvOuID = o
             s.cn = org_recs[o][0]
             s.save()
-            print('added STPbetreiber %s (%s)' % (s.gvOuID, s.cn))
+            print('added STPbetreiber %s' % s.gvOuID)
         else:
             print('skipped duplicate STPbetreiber entry %s' % o)
 
