@@ -15,8 +15,6 @@ elif [[ ! "$JAVA_HOME" ]]; then
     exit 1
 fi
 
-export PYJNIUS_ACTIVATE=     # remove this line to use javabridge instead of pyjnius
-
 # --- do not change below this line for target system configuration
 export PATH=$PATH:$PROJ_HOME/bin
 export PYTHONPATH=$PYTHONPATH:$PROJ_HOME:$PROJ_HOME/PVZDlib:.
