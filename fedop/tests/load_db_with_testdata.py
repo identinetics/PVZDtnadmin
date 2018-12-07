@@ -32,8 +32,7 @@ def main():
 
 
 def poldir1():
-    fn = os.path.join(settings.BASE_DIR, 'portaladmin', 'tests', 'saml', 'poldir1.json')
-    # fn = os.path.join(settings.BASE_DIR, 'PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', 'poldir1.json')
+    fn = os.path.join(settings.BASE_DIR, 'PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', 'poldir1.json')
     with open(fn) as fd:
         return json.loads(fd.read())
 
