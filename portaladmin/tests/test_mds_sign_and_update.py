@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path
 from os.path import join as opj
 import pytest
@@ -41,7 +42,7 @@ def test_insert22(ed_path22):
         if mds:
             mds[0].delete()
     def _insert_as_if_unsigned():
-        with open(ed_path22) as fd:
+        with open(ed_path22, 'rb') as fd:
             django_file = django.core.files.File(fd)
             mds = MDstatement()
             mds.ed_file_upload.save(os.path.basename(ed_path22), django_file, save=True)
@@ -52,7 +53,7 @@ def test_insert22(ed_path22):
 
 
 def test_sign22(ed_path22):
-    with open(ed_path22) as fd:
+    with open(ed_path22, 'rb') as fd:
         django_file = django.core.files.File(fd)
         mds = MDstatement()
         mds.ed_file_upload.save(os.path.basename(ed_path22), django_file, save=True)
