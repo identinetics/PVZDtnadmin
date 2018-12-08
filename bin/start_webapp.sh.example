@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# The details of the gunicorn configuration are
+
 scriptsdir=$(cd "$(dirname ${BASH_SOURCE[0]})" && pwd)
 source $scriptsdir/setenv.sh
 

@@ -1,6 +1,3 @@
-# Notes: execute from Pycharm/run or CLI causes django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-# Work around: run from Pycharm/Python Console
-
 from os.path import join as opj
 from PVZDpy.tests.common_fixtures import ed_path
 
@@ -19,18 +16,14 @@ else:
 from portaladmin.models import MDstatement
 from django.conf import settings
 
-#basedir = settings.BASE_DIR
-basedir = '/Users/admin/devl/python/identinetics/PVZDweb'
-
 
 def fixture_testdata_basedir():
-    return opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
-    # return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', ])
+    return opj(settings.BASE_DIR, 'PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml')
 
 
 for testno in range(1, 23):
     fn = ed_path(testno, dir=fixture_testdata_basedir())
-    with open(fn) as fd:
+    with open(fn, 'rb') as fd:
         django_file = django.core.files.File(fd)
         mds = MDstatement(admin_note='load_db_with_testdata')
         mds.ed_file_upload.save(os.path.basename(fn), django_file, save=False)
