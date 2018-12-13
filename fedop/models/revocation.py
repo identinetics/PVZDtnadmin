@@ -1,6 +1,7 @@
 from django.db import models
 from PVZDpy.xy509cert import XY509cert
 
+
 class Revocation(models.Model):
     cert = models.CharField(
         unique=True,
@@ -14,3 +15,4 @@ class Revocation(models.Model):
 
     def save(self, *args, **kwargs):
         self.subject_cn = XY509cert(self.cert).getSubjectCN()
+        super().save(*args, **kwargs)
