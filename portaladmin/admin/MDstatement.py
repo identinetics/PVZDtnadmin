@@ -1,15 +1,20 @@
 from datetime import timedelta
 
 from django import forms
+from django.urls import path
 from django.contrib import admin
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.contrib.admin import site
 from django.utils import timezone
 from django.conf import settings
 from django.http import Http404
+from django.template.response import TemplateResponse
+
 from django.db import models
 from django.forms.widgets import ClearableFileInput
 from .mds_sign_and_update import mds_sign_and_update
+from .mds_sign_and_update import get_selected_record_from_queryset
 from ..constants import *
 from ..exceptions import CancelRequest
 from ..models import MDstatement
@@ -129,6 +134,24 @@ class MDstatementAdmin(admin.ModelAdmin):
         }),
     )
 
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('get_sign_form/<int:id>/', self.get_sign_form_view, name = 'portaladmin_get_sign_form'),
+            # TODO add return_path for revalidate
+        ]
+        return custom_urls + urls
+
+    def get_sign_form_view(self, request, id):
+        record = get_selected_record_from_queryset(request, MDstatement.objects.filter(id=id), False)
+        context = dict(
+            # Include common variables for rendering the admin template.
+            self.admin_site.each_context(request),
+            # Anything else you want in the context...
+            record=record,
+        )
+        return TemplateResponse(request, "portaladmin/sign_form.html", context)
+
     # def change_view(self, request, object_id, form_url='', extra_context=None):
     #
     #     extra_context = extra_context or {}
@@ -161,13 +184,15 @@ class MDstatementAdmin(admin.ModelAdmin):
     #actions = ['sign_and_update_action']
 
     def sign_and_update_action(self, request, queryset):
-        try:
-            mds_sign_and_update(self, request, queryset)
-            messages.info(request, "EntityDescriptor signiert")
-        except CancelRequest:
-            pass
-        except(Exception) as e:
-            messages.error(request, str(e))
+        # try:
+        #     mds_sign_and_update(self, request, queryset)
+        #     messages.info(request, "EntityDescriptor signiert")
+        # except CancelRequest:
+        #     pass
+        # except(Exception) as e:
+        #     messages.error(request, str(e))
+        record = get_selected_record_from_queryset(request, queryset, False)
+        return redirect('admin:portaladmin_get_sign_form', id=record.id)
     sign_and_update_action.short_description = "EntityDescriptor mit lokaler BKU signieren"
 
     def get_action_choices(self, request):

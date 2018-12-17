@@ -20,6 +20,9 @@ def mds_sign_and_update(_modeladmin, request, queryset,
     _revalidate_after_signing(mds)
     mds.save(operation='mds_sign_and_update')
 
+def get_selected_record_from_queryset(request, queryset, unittest) -> MDstatement:
+    return _get_selected_record_from_queryset(request, queryset, unittest)
+
 def _get_selected_record_from_queryset(request, queryset, unittest) -> MDstatement:
     if len(queryset.all()) > 1:
         _set_message_error(request, "Bitte genau einen EntityDescriptor auswählen", unittest)
