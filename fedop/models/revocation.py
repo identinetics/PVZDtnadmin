@@ -14,3 +14,4 @@ class Revocation(models.Model):
 
     def save(self, *args, **kwargs):
         self.subject_cn = XY509cert(self.cert).getSubjectCN()
+        super().save(*args, **kwargs)
