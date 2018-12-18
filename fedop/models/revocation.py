@@ -1,6 +1,7 @@
 from django.db import models
 from PVZDpy.xy509cert import XY509cert
 
+
 class Revocation(models.Model):
     cert = models.CharField(
         unique=True,

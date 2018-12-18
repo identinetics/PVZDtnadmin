@@ -112,20 +112,23 @@ def add_issuers():
             print('skipped duplicate Issuer entry %s' % subject_cn)
 
 
-
 def add_revocation():
     r_recs = policystore1(poldir1()).get_revoked_certs()
     for cert in r_recs:
-        if not Revocation.objects.filter(cert=cert):
+        # if not Revocation.objects.filter(cert=cert):
+        #     r = Revocation(cert=cert)
+        #     r.save()
+        #     print('added revocation_cert %s' % cert)
+        # else:
+        #     print('skipped duplicate revocation_cert %s' % cert)
+        try:
+            Revocation.objects.get(cert=cert)
+            print('skipped duplicate revocation_cert %s' % cert)
+        except Revocation.DoesNotExist:
+            # obj = Revocation.objects.create(cert=cert)
             r = Revocation(cert=cert)
             r.save()
             print('added revocation_cert %s' % cert)
-        else:
-            print('skipped duplicate revocation_cert %s' % cert)
-
 
 
 main()
-
-
-
