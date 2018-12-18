@@ -25,7 +25,7 @@ basedir = '/Users/admin/devl/python/identinetics/PVZDweb'
 
 def fixture_testdata_basedir():
     return opj(settings.BASE_DIR, 'portaladmin', 'tests', 'saml')
-    # return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', ])
+    # return opj(settings.BASE_DIR, *['PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml,', ])
 
 
 for testno in range(1, 23):
