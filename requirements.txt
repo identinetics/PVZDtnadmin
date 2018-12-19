@@ -11,3 +11,5 @@ requests
 pyjnius
 pytest
 pytest-django
+psycopg2
+

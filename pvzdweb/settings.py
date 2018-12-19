@@ -75,10 +75,15 @@ WSGI_APPLICATION = 'pvzdweb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'database', 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pvzddb',
+        'USER': 'postgres',
+        'PASSWORD': 'changeit',  # superuser password for PostgreSQL
+        'HOST': 'postgres',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation

@@ -6,6 +6,7 @@ __pycache__
 .pytest_cache
 database/db.sqlite3
 database/db.test.sqlite3
+database/db.test.sqlite3-journal
 pep/tests/testout/
 portaladmin/tests/testout/
 media/

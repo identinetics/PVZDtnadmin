@@ -1,3 +1,6 @@
+# Notes: execute from Pycharm/run or CLI causes django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
+# Work around: run from Pycharm/Python Console
+
 from os.path import join as opj
 from PVZDpy.tests.common_fixtures import ed_path
 
