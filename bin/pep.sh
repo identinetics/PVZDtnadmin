@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/bash -e
 
 scriptsdir=$(cd "$(dirname ${BASH_SOURCE[0]})" && pwd)
 source $scriptsdir/setenv.sh
-PROJ_HOME=$(dirname $scriptsdir)
+APP_HOME=$(dirname $scriptsdir)
 
-python $PROJ_HOME/pep/pep.py
+python $APP_HOME/pep/pep.py

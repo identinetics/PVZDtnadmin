@@ -14,10 +14,11 @@ else:
 
 from django.conf import settings
 from PVZDpy.tests.common_fixtures import policydir1, policystore1
-from fedop.models.issuer import *
-from fedop.models.namespace import *
-from fedop.models.revocation import *
-from fedop.models.STPbetreiber import *
+from fedop.models.issuer import Issuer
+from fedop.models.namespace import Namespaceobj
+from fedop.models.revocation import Revocation
+from fedop.models.STPbetreiber import STPbetreiber
+from fedop.models.userprivilege import Userprivilege
 
 basedir = settings.BASE_DIR
 #basedir = os.path.join('Users', 'admin', 'devl', 'python', 'identinetics', 'PVZDweb')
@@ -85,17 +86,17 @@ def add_userprivileges():
             return None
         return qs[0]
 
-    u_recs = policystore1(poldir1()).get_userprivileges()
-    for cert in u_recs:
-        u_orgid = u_recs[cert][0]
-        parent_o = _get_foreign_key(u_orgid, cert)
-        if parent_o:
-            u = Userprivilege(gvOuIdParent=parent_o, cert=cert)
-            if not Userprivilege.objects.filter(cert=cert):  # assume base64 without whitespace
-                u.save()
-                print("added userprivilege %s" % cert)
-            else:
-                print("skipped duplicate userprivilege entry %s" % cert)
+        u_recs = policystore1(poldir1()).get_userprivileges()
+        for cert in u_recs:
+            u_orgid = u_recs[cert][0]
+            parent_o = _get_foreign_key(u_orgid, cert)
+            if parent_o:
+                u = Userprivilege(gvOuIdParent=parent_o, cert=cert)
+                if not Userprivilege.objects.filter(cert=cert):  # assume base64 without whitespace
+                    u.save()
+                    print("added userprivilege %s" % cert)
+                else:
+                    print("skipped duplicate userprivilege entry %s" % cert)
 
 
 def add_issuers():

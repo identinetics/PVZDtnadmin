@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 ''' Create Postgres ~/.pgpass file from django settings '''
 
 import os
@@ -8,7 +6,6 @@ import sys
 import django
 if __name__ == '__main__':
     django_proj_home = Path(sys.argv[0]).parent.parent.resolve()
-    print('proj_home {}'.format(django_proj_home))
     sys.path.append(django_proj_home)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
     django.setup()
