@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 ''' Create Postgres ~/.pgpass file from django settings '''
 
 import os
