@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -e
+#!/bin/bash -e
 
 # delay until postgres is ready, up to PGSTARTUP_RETRIES seconds
 [[ "$PGSTARTUP_RETRIES" ]] || PGSTARTUP_RETRIES=30

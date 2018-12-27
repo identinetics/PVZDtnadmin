@@ -16,4 +16,3 @@ echo "from django.contrib.auth.models import User; "\
      "'$DEFAULT_EMAIL', '$DEFAULT_PASS')" |\
      $APP_HOME/manage.py shell && echo 'DB superuser created'
 
-touch $APP_HOME/database/database_initialized
