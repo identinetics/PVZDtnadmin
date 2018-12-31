@@ -10,7 +10,7 @@ class STPbetreiber(models.Model):
         verbose_name = 'STPbetreiber'
         verbose_name_plural = 'STPbetreiber'
 
-    gvOuID = models.CharField(
+    gvOuId = models.CharField(
         unique=True,
         verbose_name='gvOuId',
         max_length=32)
@@ -23,8 +23,8 @@ class STPbetreiber(models.Model):
 
 
     def save(self, *args, **kwargs):
-        self.gvOuID = self.gvOuID.upper()
+        self.gvOuId = self.gvOuId.upper()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.gvOuID
+        return self.gvOuId

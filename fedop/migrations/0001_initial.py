@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
             name='STPbetreiber',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('gvOuID', models.CharField(max_length=32, unique=True, verbose_name='gvOuId')),
+                ('gvOuId', models.CharField(max_length=32, unique=True, verbose_name='gvOuId')),
                 ('cn', models.CharField(help_text='Bezeichnung der Organisationseinheit (ausgeschrieben). (Abt. ITMS/Ref. NIK - \u2028Referat nationale und internationale Koordination)', max_length=64, verbose_name='Bezeichnung (cn)')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum')),
                 ('updated_at', models.DateTimeField(auto_now=True)),

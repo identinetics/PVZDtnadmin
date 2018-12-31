@@ -2,7 +2,8 @@ cffi
 Cython
 django
 #django-admin-menu>=1.1
-GitPython
+django-ldapdb
+#GitPython
 gunicorn
 json2html
 lxml
@@ -11,5 +12,5 @@ requests
 pyjnius
 pytest
 pytest-django
-psycopg2
-
+#psycopg2
+psycopg2-binary

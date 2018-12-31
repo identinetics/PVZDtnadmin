@@ -6,22 +6,20 @@ from tnadmin.models import *
 
 class GvOrgAbstract(GvAdminAbstract):
     '''
-    Gemeinsame Basisklasse für gvOu und gvOrganization
+    Gemeinsame Basisklasse für gvOrgUnit und gvOrganization
     Wird benötigt, weil gvOrganization nicht das Feld 'ou' erbt (weil es mandatory wäre).
     '''
     class Meta:
         abstract = True
 
-    gvOuID = models.CharField(
+    gvOuId = models.CharField(
         unique=True,
         verbose_name='gvOuId',
-        db_column='gvOuVKZ',
-        help_text='Syntax: gvOuID::= Landeskennung ":" ID ID::= "VKZ:" VKZ | Org-Id  (z.B. AT:VKZ:GGA1234, AT:L9:9876)',
+        help_text='Syntax: gvOuId::= Landeskennung ":" ID; ID::= "VKZ:" VKZ | Org-Id  (z.B. AT:VKZ:GGA1234, AT:L9:9876)',
         max_length=32)  # dbcol vertauscht mit gvOuVKZ
     gvOuVKZ = models.CharField(
         unique=True,
         verbose_name='Verwaltungskennz (gvOuVKZ)',
-        db_column='gvOuID',
         help_text='Organisationskennzeichen (OKZ) gemäß der Spezifikation [VKZ]. Das Organisationskennzeichen ist für die Verwendung auf Ausdrucken, als Suchbegriff bzw. zur Anzeige vorgesehen. Das OKZ enthält Semantik und ist nur für österreichische Organisationen definiert. Für Referenzen in elektronischen Datenbeständen soll dieses Kennzeichen NICHT verwendet werden, sondern ausschließlich die gvOuId. Das VKZ kann aufgrund von Namensänderungen angepasst werden müssen. (z.B. BMEIA statt BMAA für das Außenministerium)  (z.B. GGA-12345)',
         max_length=32)  # dbcol vertauscht mit gvOuId
     gvOuIdParent = models.ForeignKey(
@@ -29,20 +27,17 @@ class GvOrgAbstract(GvAdminAbstract):
         on_delete=models.CASCADE,
         verbose_name='Übergeordnete OE; (gvOuIdParent)',
         null=True, blank=True,
-        db_column='gvOuIdParent',
         help_text='gvOuId der übergeordneten OEs (kein dn!)')
-    cn = models.CharField(
-        verbose_name='Bezeichnung (cn)',
-        db_column='cn',
-        help_text='Bezeichnung der Organisationseinheit (ausgeschrieben). (Abt. ITMS/Ref. NIK -  Referat nationale und internationale Koordination)',
-        max_length=64)
     gvOuCn = models.TextField(
         verbose_name='Gesamtbezeichnung (gvOuCn)',
-        db_column='gvOuCn',
         help_text='Gesamtbezeichnung der Organisationseinheit für die Anschrift ohne Adressteil. (Bundesministerium für Inneres Sektion IV / Abt.ITMS / Ref.NIK)', )
+    cn = models.CharField(
+        verbose_name='Bezeichnung (cn)',
+        help_text='Bezeichnung der Organisationseinheit (ausgeschrieben). (Abt. ITMS/Ref. NIK -  Referat nationale und internationale Koordination)',
+        max_length=64)
     mail = models.CharField(
         null=True, blank=True,
-        db_column='mail', help_text='RFC 822 [RFC882] E-Mail-Adresse  (helpdesk@xyz.gv.at)',
+        help_text='RFC 822 [RFC882] E-Mail-Adresse  (helpdesk@xyz.gv.at)',
         max_length=256)
     location = models.CharField(
         verbose_name='Ort (l)',
@@ -52,26 +47,77 @@ class GvOrgAbstract(GvAdminAbstract):
         max_length=64)
     description = models.TextField(
         null=True, blank=True,
-        db_column='description',
         help_text='Beschreibung',
         max_length=1024)
     gvNotValidBefore = models.CharField(
         verbose_name='gültig ab',
         null=True, blank=True,
-        db_column='gvNotValidBefore',
         help_text='JJJJ-MM-TT',
         max_length=10)
     gvNotValidAfter = models.CharField(
         verbose_name='gültig bis',
         null=True, blank=True,
-        db_column='gvNotValidAfter',
         help_text='Format JJJJ-MM-TT',
         max_length=10)
+    c = models.CharField(max_length=250,default='AT')
+    co = models.CharField(max_length=250, default='')
+    facsimileTelephoneNumber = models.CharField(max_length=250, default='')
+    l = models.CharField(db_column='location', max_length=250, default='')
+    ou = models.CharField(max_length=250, default='')
+    postalAddress = models.CharField(max_length=250, default='')
+    postalCode = models.CharField(max_length=250, default='')
+    postOfficeBox = models.CharField(max_length=250, default='')
+    street = models.CharField(max_length=250, default='')
+    telephoneNumber = models.CharField(max_length=250, default='')
+    gvImageRef = models.CharField(max_length=250, default='')
+    gvLegalSuccessor = models.CharField(max_length=250, default='')
+    gvOtherID = models.CharField(max_length=250, default='')
+    gvOuId = models.CharField(max_length=250, default='')
+    gvOuIdParent = models.CharField(max_length=250, default='')
+    gvPhysicalAddress = models.CharField(max_length=250, default='')
+    gvSortkey = models.CharField(max_length=250, default='')
+    gvWebAddress = models.CharField(max_length=250, default='')
 
     def save(self, *args, **kwargs):
-        self.gvOuID = self.gvOuID.upper()
+        self.gvOuId = self.gvOuId.upper()
         self.gvOuVKZ = self.gvOuVKZ.upper()
         super(GvOrgAbstract, self).save(*args, **kwargs)
+
+    # attributes defined in LDAP-gvat_2-5-1_20171222.pdf
+    @staticmethod
+    def defined_attr() -> list:
+        combined_list = GvAdminAbstract().defined_attr()    # cannot super() in static method
+        combined_list += [
+            'cn',
+            'co',
+            'description',
+            'facsimileTelephoneNumber',
+            'gvImageRef',
+            'gvLegalSuccessor',
+            'gvNotValidAfter',
+            'gvNotValidBefore',
+            'gvOtherID',
+            'gvOuCn',
+            'gvOuId',
+            'gvOuId',
+            'gvOuIdParent',
+            'gvOuIdParent',
+            'gvOuVKZ',
+            'gvPhysicalAddress',
+            'gvScope',
+            'gvSortkey',
+            'gvSource',
+            'gvStatus',
+            'gvWebAddress',
+            'l',
+            'mail',
+            'postalAddress',
+            'postalCode',
+            'postOfficeBox',
+            'street',
+            'telephoneNumber',
+        ]
+        return combined_list
 
 
 class GvOrgUnit(GvOrgAbstract):
@@ -93,10 +139,11 @@ class GvOrgUnit(GvOrgAbstract):
         help_text='Kurzbezeichnung der Organisationseinheit (z.B. IV/2b)',
         max_length=64)
 
-
-    def __str__(self):
-        return self.gvOuID
-
+    @staticmethod
+    def defined_attr() -> list:
+        combined_list = GvOrgAbstract().defined_attr()   # cannot super() in static method
+        combined_list += ['ou',]
+        return combined_list
 
 
 class GvOrganisation(GvOrgAbstract):
@@ -104,17 +151,15 @@ class GvOrganisation(GvOrgAbstract):
         ordering = ['o']
         verbose_name = 'Organisation'
         verbose_name_plural = 'Organisationen'
-    # LDAP meta-data
-    #base_dn = "dc=at"
-    #object_classes = ['gvOrganisation']
-    actions = None
 
     o = models.CharField(
-        unique=True,
+        unique=False,
         verbose_name='Kurzbezeichnung (o)',
-        db_column='ou',
         help_text='Kurzbezeichnung der Organisation (z.B. BMI)',
         max_length=64)
 
-    def __str__(self):
-        return self.gvOuID
+    @staticmethod
+    def defined_attr() -> list:
+        combined_list = GvOrgAbstract().defined_attr()   # cannot super() in static method
+        combined_list += ['o',]
+        return combined_list

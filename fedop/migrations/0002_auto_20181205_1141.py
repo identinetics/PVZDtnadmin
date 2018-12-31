@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='namespaceobj',
             name='gvOuIdParent',
-            field=models.ForeignKey(help_text='OrgID des Portalbetreibers', on_delete=django.db.models.deletion.PROTECT, to='fedop.STPbetreiber', verbose_name='gvOuID'),
+            field=models.ForeignKey(help_text='OrgID des Portalbetreibers', on_delete=django.db.models.deletion.PROTECT, to='fedop.STPbetreiber', verbose_name='gvOuId'),
         ),
     ]

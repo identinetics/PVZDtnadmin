@@ -41,19 +41,19 @@ def poldir1():
 def add_stpbetreiber():
     org_recs = policystore1(poldir1()).get_all_orgids()
     for o in org_recs.keys():
-        if not STPbetreiber.objects.filter(gvOuID__iexact=o):
+        if not STPbetreiber.objects.filter(gvOuId__iexact=o):
             s = STPbetreiber()
-            s.gvOuID = o
+            s.gvOuId = o
             s.cn = org_recs[o][0]
             s.save()
-            print('added STPbetreiber %s' % s.gvOuID)
+            print('added STPbetreiber %s' % s.gvOuId)
         else:
             print('skipped duplicate STPbetreiber entry %s' % o)
 
 
 def add_namespaces():
     def _get_foreign_key(gvOuIdParent, ns_name) -> int:
-        qs = STPbetreiber.objects.filter(gvOuID__iexact=gvOuIdParent)
+        qs = STPbetreiber.objects.filter(gvOuId__iexact=gvOuIdParent)
         if len(qs) > 1:
             print('Importing namespace %s has more than one parent (org)' % ns_name)
             return None
@@ -77,7 +77,7 @@ def add_namespaces():
 
 def add_userprivileges():
     def _get_foreign_key(gvOuIdParent, cert) -> int:
-        qs = STPbetreiber.objects.filter(gvOuID__iexact=gvOuIdParent)
+        qs = STPbetreiber.objects.filter(gvOuId__iexact=gvOuIdParent)
         if len(qs) > 1:
             print('Importing userprivilege %s has more than one parent (org)' % cert)
             return None

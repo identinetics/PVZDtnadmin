@@ -4,7 +4,7 @@ import tempfile
 from django.conf import settings
 from django.db import models
 
-from ..constants import *
+from portaladmin.constants import *
 from django.core.exceptions import ValidationError
 from PVZDpy.policystore import PolicyStore
 from PVZDpy.samled_validator import SamlEdValidator

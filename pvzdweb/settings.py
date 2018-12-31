@@ -1,6 +1,7 @@
 import logging
 import os
 from os.path import join as opj
+import ldap
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fedop',
+    'ldapgvat',
     'portaladmin',
     #'portaladmin.apps.PortaladminConfig',
     'tnadmin',
@@ -81,27 +83,29 @@ DATABASES = {
         'PASSWORD': 'changeit',  # superuser password for PostgreSQL
         'HOST': 'postgres',
         'PORT': '5432',
-    }
+    },
+    'ldap': {
+        'ENGINE': 'ldapdb.backends.ldap',
+        'NAME': 'ldap://openldap_pv:8389',
+        'USER': 'cn=admin,dc=at',
+        'PASSWORD': 'changeit',
+        # 'TLS': ,
+        'CONNECTION_OPTIONS': {
+            ldap.OPT_X_TLS_DEMAND: False,
+        }
+    },
 }
-
+DATABASE_ROUTERS = ['ldapdb.router.Router']
 
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
 

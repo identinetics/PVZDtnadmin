@@ -5,7 +5,7 @@ from tnadmin.models.gvOrg import *
 # class GvOrgUnitForm(forms.ModelForm):
 #     class Meta(object):
 #         widgets = {
-#             'gvOuID': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
+#             'gvOuId': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
 #             'gvOuVKZ': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
 #             'gvOuCn': forms.Textarea(attrs={'rows':2, 'cols':80}),
 #             'description': forms.Textarea(attrs={'rows':2, 'cols':80}),
@@ -15,7 +15,7 @@ from tnadmin.models.gvOrg import *
 # class GvOrgUnitAdmin(admin.ModelAdmin):
 #     actions = None
 #     fields = (
-#         'gvOuID',
+#         'gvOuId',
 #         'gvOuVKZ',
 #         'ou',
 #         'cn',
@@ -30,7 +30,7 @@ from tnadmin.models.gvOrg import *
 #         'gvSource',
 #     )
 #     form = GvOrgUnitForm
-#     list_display = ['gvOuID', 'gvOuVKZ', 'ou']
+#     list_display = ['gvOuId', 'gvOuVKZ', 'ou']
 #     readonly_fields = ('gvSource', )
     #search_fields = ['first_name', 'last_name', 'full_name']
 
@@ -38,7 +38,7 @@ class GvOrganisationForm(forms.ModelForm):
     class Meta(object):
         #model = gvOrganisation
         widgets = {
-            'gvOuID': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
+            'gvOuId': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
             'gvOuVKZ': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
             'gvOuCn': forms.Textarea(attrs={'rows':2, 'cols':80}),
             'description': forms.Textarea(attrs={'rows':2, 'cols':80}),
@@ -49,7 +49,7 @@ class GvOrganisationAdmin(admin.ModelAdmin):
     actions = None
     exclude = ('gvOuIdParent', )
     fields = (
-        'gvOuID',
+        'gvOuId',
         'gvOuVKZ',
         'o',
         'cn',
@@ -62,12 +62,12 @@ class GvOrganisationAdmin(admin.ModelAdmin):
         'gvSource',
     )
     form = GvOrganisationForm
-    list_display = ['gvOuID', 'gvOuVKZ', 'o', 'cn', 'gvStatus', 'gvSource']
-    #list_editable = ['gvOuID', 'gvOuVKZ', 'cn']
+    list_display = ['gvOuId', 'gvOuVKZ', 'o', 'cn', 'gvStatus', 'gvSource']
+    #list_editable = ['gvOuId', 'gvOuVKZ', 'cn']
     #list_display_links = ['o' ]
     readonly_fields = ('gvSource', )
     search_fields = (
-        'gvOuID',
+        'gvOuId',
         'gvOuVKZ',
         'o',
         'cn',

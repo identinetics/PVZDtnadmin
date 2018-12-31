@@ -6,8 +6,8 @@ from fedop.models.STPbetreiber import *
 @admin.register(STPbetreiber)
 class STPbetreiberAdmin(admin.ModelAdmin):
     actions = None
-    list_display = ['gvOuID', 'cn']
+    list_display = ['gvOuId', 'cn']
     #readonly_fields = ('gvSource', 'cn')
     #search_fields = (
-    #    'gvOuID',
+    #    'gvOuId',
     #)
