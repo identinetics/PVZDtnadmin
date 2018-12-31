@@ -3,3 +3,4 @@ from tnadmin.models.gvFederation import *
 from tnadmin.models.gvOrg import *
 from tnadmin.models.gvFederationOrg import *
 from tnadmin.models.gvUserPortal import *
+from tnadmin.models.ldapSync import *

@@ -16,25 +16,26 @@ class GvOrgAbstract(GvAdminAbstract):
         unique=True,
         verbose_name='gvOuId',
         help_text='Syntax: gvOuId::= Landeskennung ":" ID; ID::= "VKZ:" VKZ | Org-Id  (z.B. AT:VKZ:GGA1234, AT:L9:9876)',
-        max_length=32)  # dbcol vertauscht mit gvOuVKZ
+        max_length=32)
     gvOuVKZ = models.CharField(
         unique=True,
         verbose_name='Verwaltungskennz (gvOuVKZ)',
         help_text='Organisationskennzeichen (OKZ) gemäß der Spezifikation [VKZ]. Das Organisationskennzeichen ist für die Verwendung auf Ausdrucken, als Suchbegriff bzw. zur Anzeige vorgesehen. Das OKZ enthält Semantik und ist nur für österreichische Organisationen definiert. Für Referenzen in elektronischen Datenbeständen soll dieses Kennzeichen NICHT verwendet werden, sondern ausschließlich die gvOuId. Das VKZ kann aufgrund von Namensänderungen angepasst werden müssen. (z.B. BMEIA statt BMAA für das Außenministerium)  (z.B. GGA-12345)',
-        max_length=32)  # dbcol vertauscht mit gvOuId
+        max_length=32)
     gvOuIdParent = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
         verbose_name='Übergeordnete OE; (gvOuIdParent)',
         null=True, blank=True,
         help_text='gvOuId der übergeordneten OEs (kein dn!)')
-    gvOuCn = models.TextField(
+    gvOuCn = models.CharField(
         verbose_name='Gesamtbezeichnung (gvOuCn)',
+        max_length=1024,
         help_text='Gesamtbezeichnung der Organisationseinheit für die Anschrift ohne Adressteil. (Bundesministerium für Inneres Sektion IV / Abt.ITMS / Ref.NIK)', )
     cn = models.CharField(
         verbose_name='Bezeichnung (cn)',
         help_text='Bezeichnung der Organisationseinheit (ausgeschrieben). (Abt. ITMS/Ref. NIK -  Referat nationale und internationale Koordination)',
-        max_length=64)
+        max_length=120)
     mail = models.CharField(
         null=True, blank=True,
         help_text='RFC 822 [RFC882] E-Mail-Adresse  (helpdesk@xyz.gv.at)',
