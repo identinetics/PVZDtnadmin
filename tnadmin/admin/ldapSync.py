@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import reverse
-from django.utils.html import escape
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from tnadmin.models.ldapSync import *
 
 @admin.register(LdapSyncJob)
@@ -19,11 +18,11 @@ class LdapSyncJobAdmin(admin.ModelAdmin):
 
     def link_to_detail(self, obj: LdapSyncJob):
         #link = reverse("admin:tnadmin_model_change", args=[obj.id])
-        return mark_safe(f'<a href="">{escape(obj.__str__())}</a>')
+        return format_html(f'<a href="/admin/tnadmin/ldapsyncerror/?job_id__id__exact={obj.id}">{obj.id} (details)</a>')
 
     link_to_detail.allow_tags=True
     link_to_detail.short_description = 'List errors'
-    link_to_detail.admin_order_field = 'list errors'  # Make row sortable
+    link_to_detail.admin_order_field = 'errors'  # Make row sortable
 
 
 @admin.register(LdapSyncError)
@@ -37,5 +36,6 @@ class LdapSyncErrorAdmin(admin.ModelAdmin):
     )
     # list_display_links = ['o' ]
     readonly_fields = list_display
-    search_fields = list_display
+    list_filter = ('job_id', 'op')
+    search_fields = ( 'op', 'ldap_dn',)
 
