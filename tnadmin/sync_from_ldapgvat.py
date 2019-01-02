@@ -144,6 +144,7 @@ class LdapSync:
             job_id = self.ldapSyncJob
         )
         ldapSyncError.save()
+        pass
 
 
 
