@@ -1,38 +1,6 @@
 from django import forms
 from django.contrib import admin
-from tnadmin.models.gvOrg import *
-
-# class GvOrgUnitForm(forms.ModelForm):
-#     class Meta(object):
-#         widgets = {
-#             'gvOuId': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
-#             'gvOuVKZ': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
-#             'gvOuCn': forms.Textarea(attrs={'rows':2, 'cols':80}),
-#             'description': forms.Textarea(attrs={'rows':2, 'cols':80}),
-#         }
-#
-# @admin.register(GvOrgUnit)
-# class GvOrgUnitAdmin(admin.ModelAdmin):
-#     actions = None
-#     fields = (
-#         'gvOuId',
-#         'gvOuVKZ',
-#         'ou',
-#         'cn',
-#         'gvOuCn',
-#         'gvOuIdParent',
-#         'location',
-#         'mail',
-#         'description',
-#         'gvNotValidBefore',
-#         'gvNotValidAfter',
-#         'gvStatus',
-#         'gvSource',
-#     )
-#     form = GvOrgUnitForm
-#     list_display = ['gvOuId', 'gvOuVKZ', 'ou']
-#     readonly_fields = ('gvSource', )
-    #search_fields = ['first_name', 'last_name', 'full_name']
+from tnadmin.models.gvorg import *
 
 class GvOrganisationForm(forms.ModelForm):
     class Meta(object):
@@ -53,7 +21,7 @@ class GvOrganisationAdmin(admin.ModelAdmin):
         'gvOuVKZ',
         'o',
         'cn',
-        'location',
+        'l',
         'mail',
         'description',
         'gvNotValidBefore',
@@ -71,7 +39,7 @@ class GvOrganisationAdmin(admin.ModelAdmin):
         'gvOuVKZ',
         'o',
         'cn',
-        'location',
+        'l',
         'mail',
         'gvNotValidBefore',
         'gvNotValidAfter',

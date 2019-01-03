@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from tnadmin.models.gvOrg import *
+from tnadmin.models.gvorg import *
 from tnadmin.models.gvFederationOrg import *
 
 
@@ -8,12 +8,12 @@ from tnadmin.models.gvFederationOrg import *
 
 @admin.register(GvFederationOrg)
 class GvFederationOrgAdmin(admin.ModelAdmin):
-    actions = None
-    autocomplete_fields = ('gvOuId', 'gvCaseOrg', 'gvOuId2', 'gvOuId3')
+    #actions = None
+    autocomplete_fields = ('gvouid', 'gvCaseOrg', 'gvouid2', 'gvouid3')
     fields = (
-        'gvOuId',
-        'gvOuId2',
-        'gvOuId3',
+        'gvouid',
+        'gvouid2',
+        'gvouid3',
         'gvContractStatus',
         'gvDateEffective',
         'gvDateTerminated',
@@ -23,10 +23,14 @@ class GvFederationOrgAdmin(admin.ModelAdmin):
         'gvStatus',
         'gvSource',
     )
-    list_display = ('gvOuId', 'get_org_o', 'gvContractStatus', 'get_org_o2', 'gvStatus', 'gvSource')
+    list_display = ('gvouid', 'get_org_o', 'gvContractStatus', 'get_org_o2', 'gvStatus', 'gvSource')
     readonly_fields = ('gvSource', )
+    list_filter = (
+        'gvContractStatus',
+        'gvStatus',
+    )
     search_fields = (
-        'gvOuId',
+        'gvouid',
         'gvContractStatus',
         'gvDateEffective',
         'gvDateTerminated',
@@ -36,19 +40,19 @@ class GvFederationOrgAdmin(admin.ModelAdmin):
     )
 
     def get_org_o(self, inst):
-        return inst.gvOuId.o
+        return inst.gvouid.o
     get_org_o.short_description = 'Kurzbezeichnung'
 
     def get_org_o2(self, inst):
-        if inst.gvOuId2 is not None:
-            return "%s (%s)" % (inst.gvOuId2, inst.gvOuId2.o)
+        if inst.gvouid2 is not None:
+            return "%s (%s)" % (inst.gvouid2, inst.gvouid2.o)
         else:
             return ''
     get_org_o2.short_description = 'Vertragspartei (Aufsicht)'
 
     def get_org_o3(self, inst):
-        if inst.gvOuId3 is not None:
-            return "%s (%s)" % (inst.gvOuId3, inst.gvOuId3.o)
+        if inst.gvouid3 is not None:
+            return "%s (%s)" % (inst.gvouid3, inst.gvouid3.o)
         else:
             return ''
     get_org_o3.short_description = 'Dienstleister'

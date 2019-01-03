@@ -10,12 +10,11 @@ if __name__ == '__main__':
     django.setup()
 else:
     assert False
-
+from django.core.exceptions import ObjectDoesNotExist
 from ldapgvat.models import GvOrganisation as LdapGvOrg
 from tnadmin.models import GvOrganisation as DbGvOrg
 from tnadmin.models.ldapSync import LdapSyncError, LdapSyncJob
-import tnadmin.models.gvOrg
-
+import tnadmin.models.gvorg
 
 class LdapSync:
     def __init__(self):
@@ -45,9 +44,14 @@ class LdapSync:
         max_input_rec = 0
         for ldapOrg in LdapGvOrg.objects.all():
             self.ldapSyncJob.add_upd_ldap_records_read += 1
+            #if ldapOrg.gvOuId in ('AT:L6', 'AT:VKZ:XFN-295183v', 'AT:VKZ:UFB-262918w', 'AT:VKZ:XFN-213441i', 'AT:VKZ:XFN-160573m'):
+            #    print(f'debug: missing {ldapOrg.gvOuId}?')
+            create = False
             try:
                 dbOrg = DbGvOrg.objects.get(ldap_dn=ldapOrg.dn)
-            except tnadmin.models.gvOrg.GvOrganisation.DoesNotExist:
+            except tnadmin.models.gvorg.GvOrganisation.DoesNotExist:
+                create = True
+            if create:
                 self.create_dbGvOrg_from_LdapGvOrg(ldapOrg)
             else:
                 self.update_dbGvOrg_from_LdapGvOrg(dbOrg, ldapOrg)
@@ -62,8 +66,8 @@ class LdapSync:
             self.ldapSyncJob.del_db_records_read += 1
             try:
                 dbOrg = DbGvOrg.objects.get(dn=dbOrg.ldap_dn)
-            except Exception:    # TODO test for 'not-found' only
-                self.del_dbOrg(dbOrg)
+            except tnadmin.models.gvorg.GvOrganisation.DoesNotExist:
+                self.create_dbGvOrg_from_LdapGvOrg(ldapOrg)
             else:
                 self.update_dbGvOrg_from_LdapGvOrg(dbOrg, ldapOrg)
             max_input_rec += 1
@@ -100,12 +104,16 @@ class LdapSync:
 
     def update_dbGvOrg_from_LdapGvOrg(self, dbOrg: DbGvOrg, ldapOrg: LdapGvOrg):
         changed_attr = 0
+        changed_attr_list = ''
         for attrib in DbGvOrg().defined_attr():
-            source_attr = getattr(ldapOrg, attrib, None)
-            if getattr(dbOrg, attrib) != source_attr:
-                setattr(dbOrg, attrib, source_attr)
+            source_val = getattr(ldapOrg, attrib, None)
+            dest_val = getattr(dbOrg, attrib)
+            if dest_val != source_val:
+                setattr(dbOrg, attrib, source_val)
                 changed_attr += 1
+                changed_attr_list += f'{attrib}: "{source_val}"/"{dest_val}", '
         if changed_attr > 0:
+            print(f'debug: updating {ldapOrg.gvOuId} because of {changed_attr_list}')
             self.save_dbOrg(dbOrg, 'update')
         else:
             if self.args.verbose: print(f'skipped {ldapOrg.dn}')

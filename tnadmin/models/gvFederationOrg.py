@@ -1,9 +1,10 @@
 import datetime
 from django.db import models
 from django.core.validators import MaxValueValidator
+from tnadmin.models.constants import *
 from tnadmin.models.gvAdminAbstract import GvAdminAbstract
 from tnadmin.models.gvFederation import GvFederation
-from tnadmin.models.gvOrg import GvOrganisation
+from tnadmin.models.gvorg import GvOrganisation
 from tnadmin.models.gvUserPortal import *
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
@@ -15,11 +16,6 @@ def get_default_federationname() -> int:
         defaultFedName = ''
     return defaultFedName
 
-LEGAL_BASIS_PVV = 'PVV'
-LEGAL_BASIS_ENTITLED_ORG = 'PV-Zugriff'
-LEGAL_BASIS_ENTITLED_ORG_PROCESSOR = 'PV-Zugriff-DL'
-LEGAL_BASIS_PROCESSOR_IDP = 'PV-DL-STP'
-LEGAL_BASIS_EXTERNAL_SP = 'Externer Anwendungsbetreiber'
 LEGAL_BASIS_CHOICES = (
     (LEGAL_BASIS_PVV, LEGAL_BASIS_PVV),
     (LEGAL_BASIS_ENTITLED_ORG, LEGAL_BASIS_ENTITLED_ORG),
@@ -34,24 +30,25 @@ LEGAL_BASIS_IDP_OP = (LEGAL_BASIS_PVV,
 
 class GvFederationOrg(GvAdminAbstract):
     class Meta:
-        ordering = ('gvOuId',)
+        ordering = ('gvouid',)
+        unique_together = (('gvouid', 'gvouid2', 'gvouid3'),)
         verbose_name = 'Federation Member'
         verbose_name_plural = 'Federation Members'
 
-    gvOuId = models.ForeignKey(
+    gvouid = models.ForeignKey(
         GvOrganisation,
         related_name='Vertragspartei',
         on_delete=models.CASCADE,
         verbose_name='Vertragspartei (berechtigt)',
         help_text='gvOuId der Vertragspartei in der Rolle Teilnehmer, zugriffsberechtige Stelle oder Dienstleister')
-    gvOuId2 = models.ForeignKey(
+    gvouid2 = models.ForeignKey(
         GvOrganisation,
         related_name='VertragsparteiPVV',
         on_delete=models.PROTECT,
         null=True, blank=True,
         verbose_name='Vertragspartei (Aufsicht)',
         help_text='gvOuId der Vertragspartei in der Rolle "Vertreter des Depositars"')
-    gvOuId3 = models.ForeignKey(
+    gvouid3 = models.ForeignKey(
         GvOrganisation,
         related_name='Dienstleister',
         on_delete=models.PROTECT,
@@ -88,7 +85,7 @@ class GvFederationOrg(GvAdminAbstract):
 
 
     #def __str__(self):
-    #    return self.gvOuId + '/' + self.gvContractStatus + ' (' + self.gvUserPortalName + ')'
+    #    return self.gvouid + '/' + self.gvContractStatus + ' (' + self.gvUserPortalName + ')'
 
 
 class GvParticipantManager(models.Manager):

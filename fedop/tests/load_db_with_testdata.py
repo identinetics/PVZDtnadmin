@@ -52,7 +52,7 @@ def add_stpbetreiber():
 
 
 def add_namespaces():
-    def _get_foreign_key(gvOuIdParent, ns_name) -> int:
+    def _get_foreign_key_parent_obj(gvOuIdParent, ns_name) -> int:
         qs = STPbetreiber.objects.filter(gvOuId__iexact=gvOuIdParent)
         if len(qs) > 1:
             print('Importing namespace %s has more than one parent (org)' % ns_name)
@@ -65,7 +65,7 @@ def add_namespaces():
     ns_recs = policystore1(poldir1()).get_registered_namespace_objs()
     for fqdn in ns_recs:
         ns_orgid = ns_recs[fqdn][0]
-        parent_o = _get_foreign_key(ns_orgid, fqdn)
+        parent_o = _get_foreign_key_parent_obj(ns_orgid, fqdn)
         if parent_o:
             ns = Namespaceobj(gvOuIdParent=parent_o, fqdn=fqdn)
             if not Namespaceobj.objects.filter(fqdn__iexact=fqdn):
@@ -76,7 +76,7 @@ def add_namespaces():
 
 
 def add_userprivileges():
-    def _get_foreign_key(gvOuIdParent, cert) -> int:
+    def _get_foreign_key_parent_obj(gvOuIdParent, cert) -> int:
         qs = STPbetreiber.objects.filter(gvOuId__iexact=gvOuIdParent)
         if len(qs) > 1:
             print('Importing userprivilege %s has more than one parent (org)' % cert)
@@ -89,7 +89,7 @@ def add_userprivileges():
         u_recs = policystore1(poldir1()).get_userprivileges()
         for cert in u_recs:
             u_orgid = u_recs[cert][0]
-            parent_o = _get_foreign_key(u_orgid, cert)
+            parent_o = _get_foreign_key_parent_obj(u_orgid, cert)
             if parent_o:
                 u = Userprivilege(gvOuIdParent=parent_o, cert=cert)
                 if not Userprivilege.objects.filter(cert=cert):  # assume base64 without whitespace

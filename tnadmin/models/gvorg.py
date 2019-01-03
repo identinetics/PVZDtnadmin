@@ -1,5 +1,6 @@
+import re
 from django.db import models
-from django.core.validators import MaxLengthValidator
+from django.core.validators import MaxLengthValidator, RegexValidator
 from tnadmin.models import *
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
@@ -9,55 +10,57 @@ class GvOrgAbstract(GvAdminAbstract):
     '''
     Gemeinsame Basisklasse für gvOrgUnit und gvOrganization
     Wird benötigt, weil gvOrganization nicht das Feld 'ou' erbt (weil es mandatory wäre).
+    (db_column setzt eineige Felder auf Lowercase zur Vereinfachung von Abfragen in Postgresql.)
     '''
     class Meta:
         abstract = True
 
-    gvOuId = models.CharField(
+    gvOuId = models.CharField(max_length=32,
         unique=True,
         verbose_name='gvOuId',
         db_column='gvouid',
-        help_text='Syntax: gvOuId::= Landeskennung ":" ID; ID::= "VKZ:" VKZ | Org-Id  (z.B. AT:VKZ:GGA1234, AT:L9:9876)',
-        max_length=32)
-    gvOuVKZ = models.CharField(
+        validators=[RegexValidator(regex=r'^[A-Z:]{10,10}.*', message='OuId erlaubt Kleinbuchstaben erst ab Position 11')],
+        help_text='Syntax: gvOuId::= Landeskennung ":" ID; ID::= "VKZ:" VKZ | Org-Id  (z.B. AT:VKZ:GGA1234, AT:L9:9876)',)
+    gvOuVKZ = models.CharField(max_length=79,
         unique=True,
         verbose_name='Verwaltungskennz (gvOuVKZ)',
         db_column='gvouvkz',
-        help_text='Organisationskennzeichen (OKZ) gemäß der Spezifikation [VKZ]. Das Organisationskennzeichen ist für die Verwendung auf Ausdrucken, als Suchbegriff bzw. zur Anzeige vorgesehen. Das OKZ enthält Semantik und ist nur für österreichische Organisationen definiert. Für Referenzen in elektronischen Datenbeständen soll dieses Kennzeichen NICHT verwendet werden, sondern ausschließlich die gvOuId. Das VKZ kann aufgrund von Namensänderungen angepasst werden müssen. (z.B. BMEIA statt BMAA für das Außenministerium)  (z.B. GGA-12345)',
-        validators=[MaxLengthValidator(32, '"gvOuVKZ " Limit: 32 char')],
-        max_length=79)
-    gvOuIdParent = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
+        validators=[RegexValidator(regex=r'^[A-Z:]{2,2}.*', message='VKZ erlaubt Kleinbuchstaben erst ab Position 3'),
+                    MaxLengthValidator(32, '"gvOuVKZ " Limit: 32 char')],
+        help_text='Organisationskennzeichen (OKZ) gemäß der Spezifikation [VKZ]. Das Organisationskennzeichen ist für '
+                  'die Verwendung auf Ausdrucken, als Suchbegriff bzw. zur Anzeige vorgesehen. Das OKZ enthält Semantik'
+                  ' und ist nur für österreichische Organisationen definiert. Für Referenzen in elektronischen '
+                  'Datenbeständen soll dieses Kennzeichen NICHT verwendet werden, sondern ausschließlich die gvOuId. '
+                  'Das VKZ kann aufgrund von Namensänderungen angepasst werden müssen. (z.B. BMEIA statt BMAA für das '
+                  'Außenministerium)  (z.B. GGA-12345)')
+    gvOuIdParent = models.CharField(max_length=32,
+        default='',
         verbose_name='Übergeordnete OE; (gvOuIdParent)',
         db_column='gvouidparent',
         null=True, blank=True,
-        help_text='gvOuId der übergeordneten OEs (kein dn!)')
-    gvOuCn = models.CharField(
+        help_text='gvOuId der übergeordneten OEs (kein dn!)')  # Foreign Key hier nicht implementiert
+    gvOuCn = models.CharField(max_length=1024,
         verbose_name='Gesamtbezeichnung (gvOuCn)',
         db_column='gvoucn',
-        max_length=1024,
         help_text='Gesamtbezeichnung der Organisationseinheit für die Anschrift ohne Adressteil. (Bundesministerium für Inneres Sektion IV / Abt.ITMS / Ref.NIK)', )
-    gvNotValidBefore = models.CharField(
+    gvNotValidBefore = models.CharField(max_length=10,
         verbose_name='gültig ab',
         db_column='gvnotvalidbefore',
         null=True, blank=True,
-        help_text='JJJJ-MM-TT',
-        max_length=10)
-    gvNotValidAfter = models.CharField(
+        help_text='JJJJ-MM-TT',)
+    gvNotValidAfter = models.CharField(max_length=10,
         verbose_name='gültig bis',
         db_column='gvnotvalidafter',
         null=True, blank=True,
-        help_text='Format JJJJ-MM-TT',
-        max_length=10)
+        help_text='Format JJJJ-MM-TT',)
     gvImageRef = models.CharField(max_length=250, default='')
     gvLegalSuccessor = models.CharField(max_length=250, default='')
     gvOtherID = models.CharField(max_length=250, default='')
-    gvOuId = models.CharField(max_length=250, default='')
-    gvOuIdParent = models.CharField(max_length=250, default='')
     gvPhysicalAddress = models.CharField(max_length=250, default='')
     gvSortkey = models.CharField(max_length=250, default='')
     gvWebAddress = models.CharField(max_length=250, default='')
+    gvouid_upper = models.CharField(max_length=250, default='', unique=True)
+    gvouvkz_upper = models.CharField(max_length=250, default='', unique=True)
 
     c = models.CharField(max_length=250,default='AT')
     cn = models.CharField(max_length=120,
@@ -85,8 +88,8 @@ class GvOrgAbstract(GvAdminAbstract):
     telephoneNumber = models.CharField(max_length=250, default='')
 
     def save(self, *args, **kwargs):
-        self.gvOuId = self.gvOuId.upper()
-        self.gvOuVKZ = self.gvOuVKZ.upper()
+        self.gvouid_upper = self.gvOuId.upper()
+        self.gvouvkz_upper = self.gvOuVKZ.upper()
         super(GvOrgAbstract, self).save(*args, **kwargs)
 
     # attributes defined in LDAP-gvat_2-5-1_20171222.pdf

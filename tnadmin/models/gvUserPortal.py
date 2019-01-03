@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator
 from tnadmin.models.gvAdminAbstract import GvAdminAbstract
 from tnadmin.models.gvFederation import GvFederation
-from tnadmin.models.gvOrg import GvOrganisation
+from tnadmin.models.gvorg import GvOrganisation
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
 

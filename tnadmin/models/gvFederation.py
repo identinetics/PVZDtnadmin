@@ -1,6 +1,6 @@
 from django.db import models
 from tnadmin.models.gvAdminAbstract import *
-from tnadmin.models.gvOrg import GvOrganisation
+from tnadmin.models.gvorg import GvOrganisation
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
 

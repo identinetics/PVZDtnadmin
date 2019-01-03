@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 import ldapdb.models
 from ldapdb.models.fields import CharField, ImageField, IntegerField, ListField
 
@@ -32,6 +33,7 @@ class OrganizationalUnit(ldapdb.models.Model):
 class gvOrgUnit(OrganizationalUnit):
     base_dn = "dc=at"
     object_classes = ['gvOrgUnit']
+    # RDN == Primary Key
 
     gvImageRef = CharField(db_column='gvImageRef', max_length=250)
     gvLegalSuccessor = CharField(db_column='gvLegalSuccessor', max_length=250)
@@ -53,3 +55,30 @@ class gvOrgUnit(OrganizationalUnit):
 
 class GvOrganisation(gvOrgUnit):
     o  = CharField(db_column='o', max_length=250)
+
+
+class GvUserPortal(ldapdb.models.Model):
+    base_dn = "dc=at"
+    object_classes = ['gvUserPortal']
+    # RDN == Primary Key: cn is list field _only_ using a single value by convention
+
+    cn = CharField(db_column='cn', max_length=250, primary_key=True)
+    description = CharField(db_column='description', max_length=1024)
+    gvAdminContactMail = ArrayField(CharField(db_column='gvadmincontactmail ', max_length=256),)
+    gvAdminContactName = ArrayField(CharField(db_column='gvadmincontactname', max_length=256),)
+    gvAdminContactTel = ArrayField(CharField(db_column='gvadmincontacttel', max_length=32),)
+    gvDefaultParticipant = CharField(db_column='gvdefaultparticipant', max_length=32)
+    gvMaxSecClass = IntegerField(db_column='gvmaxsecclass')
+    gvParticipants = ArrayField(CharField(db_column='gvparticipants', max_length=32), size=5000)
+    gvPortalHotlineMail = ArrayField(CharField(db_column='gvportalhotlinemail', max_length=250),)
+    gvSupportedPvpProfile = ArrayField(CharField(db_column='gvsupportedpvpprofile', max_length=1024),)
+
+    gvScope = CharField(db_column='gvScope', max_length=250)
+    gvSource = CharField(db_column='gvSource', max_length=250)
+    gvStatus = CharField(db_column='gvStatus', max_length=250)
+
+    def __str__(self):
+        return self.cn
+
+    def __repl__(self):
+        return self.dn
