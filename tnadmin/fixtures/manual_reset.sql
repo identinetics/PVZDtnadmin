@@ -2,7 +2,7 @@ DROP TABLE    "tnadmin_gvfederation";
 DROP TABLE    "tnadmin_ldapsyncerror";
 DROP TABLE    "tnadmin_ldapsyncjob";
 DROP TABLE    "tnadmin_gvfederationorg";
-DROP TABLE    "tnadmin_gvuserportal_gvOuIdParticipant";
+DROP TABLE    "tnadmin_gvuserportal_gvouid_participant";
 DROP TABLE    "tnadmin_gvuserportal" CASCADE;
 DROP TABLE    "tnadmin_gvorganisation" CASCADE;
 

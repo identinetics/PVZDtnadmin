@@ -1,4 +1,4 @@
-from pvzdweb.settings import *
+from pvzdweb.settings_dev import *
 
 # remove portaladmin (and thererfore dependency)
 

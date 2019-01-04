@@ -1,5 +1,5 @@
 from django.db import models
-from fedop.models import STPbetreiber
+from tnadmin.models import GvUserPortalOperator
 
 
 class Userprivilege(models.Model):
@@ -12,7 +12,8 @@ class Userprivilege(models.Model):
         help_text='X.509 cert PEM ohen Whitespace',
         max_length=20000)
     gvOuIdParent = models.ForeignKey(
-        STPbetreiber,
+        GvUserPortalOperator,
+        db_column='gvouid_parent',
         on_delete=models.PROTECT,
         help_text='OrgID des Portalbetreibers')
     cn = models.CharField(

@@ -31,6 +31,7 @@ class OrganizationalUnit(ldapdb.models.Model):
 
 
 class gvOrgUnit(OrganizationalUnit):
+    managed = False
     base_dn = "dc=at"
     object_classes = ['gvOrgUnit']
     # RDN == Primary Key
@@ -54,24 +55,26 @@ class gvOrgUnit(OrganizationalUnit):
 
 
 class GvOrganisation(gvOrgUnit):
+    managed = False
     o  = CharField(db_column='o', max_length=250)
 
 
 class GvUserPortal(ldapdb.models.Model):
+    managed = False
     base_dn = "dc=at"
     object_classes = ['gvUserPortal']
     # RDN == Primary Key: cn is list field _only_ using a single value by convention
 
     cn = CharField(db_column='cn', max_length=250, primary_key=True)
     description = CharField(db_column='description', max_length=1024)
-    gvAdminContactMail = ArrayField(CharField(db_column='gvadmincontactmail ', max_length=256),)
-    gvAdminContactName = ArrayField(CharField(db_column='gvadmincontactname', max_length=256),)
-    gvAdminContactTel = ArrayField(CharField(db_column='gvadmincontacttel', max_length=32),)
-    gvDefaultParticipant = CharField(db_column='gvdefaultparticipant', max_length=32)
-    gvMaxSecClass = IntegerField(db_column='gvmaxsecclass')
-    gvParticipants = ArrayField(CharField(db_column='gvparticipants', max_length=32), size=5000)
-    gvPortalHotlineMail = ArrayField(CharField(db_column='gvportalhotlinemail', max_length=250),)
-    gvSupportedPvpProfile = ArrayField(CharField(db_column='gvsupportedpvpprofile', max_length=1024),)
+    gvAdminContactMail = ArrayField(CharField(db_column='gvAdminContactMail ', max_length=256),)
+    gvAdminContactName = ArrayField(CharField(db_column='gvAdminContactName', max_length=256),)
+    gvAdminContactTel = ArrayField(CharField(db_column='gvAdminContactTel', max_length=32),)
+    gvDefaultParticipant = CharField(db_column='gvDefaultParticipant', max_length=32)
+    gvMaxSecClass = IntegerField(db_column='gvMaxSecClass')
+    gvParticipants = ListField(db_column='gvParticipants', )
+    gvPortalHotlineMail = ArrayField(CharField(db_column='gvPortalHotlineMail', max_length=250),)
+    gvSupportedPvpProfile = ArrayField(CharField(db_column='gvSupportedPvpProfile', max_length=1024),)
 
     gvScope = CharField(db_column='gvScope', max_length=250)
     gvSource = CharField(db_column='gvSource', max_length=250)

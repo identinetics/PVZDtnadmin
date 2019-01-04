@@ -7,14 +7,20 @@ from tnadmin.models.gvFederation import *
 class GvFederationAdmin(admin.ModelAdmin):
     actions = None
     fields = (
-        'gvFederationName',
-        'gvMetaDataURL',
+        'gvfederationname',
+        'gvmetadataurl',
         'gvStatus',
         'gvSource',
     )
-    list_display = ['gvFederationName', 'gvMetaDataURL', 'gvStatus', 'gvSource']
+    list_display = ['gvfederationname', 'gvmetadataurl', 'gvStatus', 'gvSource']
     readonly_fields = ('gvSource', )
 
     def has_add_permission(self, request):
+        return False
+
+    # Make model change-only. Initial insert by migration
+    def has_add_permission(self, request):
+        return False
+    def has_delete_permission(self, request, obj=None):
         return False
 

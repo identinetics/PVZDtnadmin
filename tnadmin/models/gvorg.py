@@ -15,6 +15,7 @@ class GvOrgAbstract(GvAdminAbstract):
     class Meta:
         abstract = True
 
+    ldap_dn = models.CharField(max_length=250, default='')
     gvOuId = models.CharField(max_length=32,
         unique=True,
         verbose_name='gvOuId',
@@ -36,7 +37,7 @@ class GvOrgAbstract(GvAdminAbstract):
     gvOuIdParent = models.CharField(max_length=32,
         default='',
         verbose_name='Übergeordnete OE; (gvOuIdParent)',
-        db_column='gvouidparent',
+        db_column='gvouid_parent',
         null=True, blank=True,
         help_text='gvOuId der übergeordneten OEs (kein dn!)')  # Foreign Key hier nicht implementiert
     gvOuCn = models.CharField(max_length=1024,

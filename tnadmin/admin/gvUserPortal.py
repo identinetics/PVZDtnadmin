@@ -20,8 +20,8 @@ class GvUserPortalAdmin(admin.ModelAdmin):
     actions = None
     fields = (
         'cn',
-        'gvOuIdOwner',
-        'gvOuIdParticipant',
+        'gvouid_owner',
+        'gvouid_participant',
         'gvSamlIdpEntityId',
         'gvMaxSecClass',
         'description',
@@ -32,8 +32,8 @@ class GvUserPortalAdmin(admin.ModelAdmin):
         'gvStatus',
         'gvSource',
     )
-    autocomplete_fields = ('gvOuIdOwner', )
-    filter_horizontal = ('gvOuIdParticipant', )
+    autocomplete_fields = ('gvouid_owner', )
+    filter_horizontal = ('gvouid_participant', )
     form = GvUserPortalForm
-    list_display = ['cn', 'gvOuIdOwner', 'gvStatus', 'gvSource']
+    list_display = ['cn', 'gvouid_owner', 'gvStatus', 'gvSource']
     readonly_fields = ('gvSource', )

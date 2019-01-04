@@ -3,12 +3,13 @@ from django.db import models
 
 class STPbetreiber(models.Model):
     '''
-    Stammportalbetreiber als Teilmenge von gvOrg.
+    Stammportalbetreiber als Teilmenge von gvFederationOrg
     '''
-
     class Meta:
         verbose_name = 'STPbetreiber'
         verbose_name_plural = 'STPbetreiber'
+        managed = False
+        db_table = 'tnadmin_gvorganisation'
 
     gvOuId = models.CharField(
         unique=True,

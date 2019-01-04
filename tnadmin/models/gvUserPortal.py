@@ -13,19 +13,20 @@ class GvUserPortal(GvAdminAbstract):
         verbose_name = 'Stammportal'
         verbose_name_plural = 'Stammportale'
 
+    ldap_dn = models.CharField(max_length=250, default='')
     cn = models.CharField(
         unique=True,
         verbose_name='Bezeichnung',
         help_text='Eindeutige Bezeichnung des Stammportals im Email-Format (pvpportal@noel.gv.at)',
         max_length=64)
-    gvOuIdOwner = models.ForeignKey(
+    gvouid_owner = models.ForeignKey(
         GvOrganisation,
         related_name='STPbetreiber',
         on_delete=models.CASCADE,
         verbose_name='STPbetreiber',
         null=True, blank=True,
         help_text='gvOuId des Stammportalbetreibers (Organisation des Portalverantwortlichen')
-    gvOuIdParticipant = models.ManyToManyField(
+    gvouid_participant = models.ManyToManyField(
         GvOrganisation,
         verbose_name='Participant',
         help_text='Liste der Participants, die am Stammportal berechtigt sind')
@@ -69,7 +70,7 @@ class GvUserPortal(GvAdminAbstract):
 #         verbose_name = 'Stammportal-Federationobject'
 #         verbose_name_plural = 'Stammportal-Federationobjects'
 #
-#     gvFederationName = models.ForeignKey(
+#     gvfederationname = models.ForeignKey(
 #         GvFederation,
 #         on_delete=models.CASCADE,
 #         verbose_name='Federation',

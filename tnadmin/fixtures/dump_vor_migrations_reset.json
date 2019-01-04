@@ -626,8 +626,8 @@
       "gvStatus": "active",
       "gvSource": "",
       "gvScope": "gv.at",
-      "gvFederationName": "test.portalverbund.gv.at",
-      "gvMetaDataURL": "http://metadata.test.portalverbund.gv.at/metadata.xml"
+      "gvfederationname": "test.portalverbund.gv.at",
+      "gvmetadataurl": "http://metadata.test.portalverbund.gv.at/metadata.xml"
     }
   },
   {
@@ -638,7 +638,7 @@
       "gvSource": "",
       "gvScope": "gv.at",
       "cn": "BKA Mitarbeiter Stammportal (Entwicklung, extern)",
-      "gvOuIdOwner": 1,
+      "gvouid_owner": 1,
       "gvSamlIdpEntityId": "https://stp.entw.portal.bka.gv.at/stdportal-idp/portalverbund.gv.at",
       "gvMaxSecClass": 1,
       "description": "",
@@ -646,7 +646,7 @@
       "gvAdminContactName": null,
       "gvAdminContactMail": null,
       "gvAdminContactTel": null,
-      "gvOuIdParticipant": []
+      "gvouid_participant": []
     }
   },
   {
@@ -657,7 +657,7 @@
       "gvSource": "",
       "gvScope": "gv.at",
       "cn": "STP Wien",
-      "gvOuIdOwner": 2,
+      "gvouid_owner": 2,
       "gvSamlIdpEntityId": null,
       "gvMaxSecClass": 3,
       "description": "",
@@ -665,7 +665,7 @@
       "gvAdminContactName": "",
       "gvAdminContactMail": "",
       "gvAdminContactTel": "",
-      "gvOuIdParticipant": [
+      "gvouid_participant": [
         1,
         29,
         28,

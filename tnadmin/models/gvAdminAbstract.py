@@ -9,23 +9,22 @@ class GvAdminAbstract(models.Model):
     class Meta:
         abstract = True
 
-    ldap_dn = models.CharField(max_length=250, default='')
     STATUS_ACTIVE = 'active'
     STATUS_CHOICES = ((STATUS_ACTIVE, STATUS_ACTIVE), ('inactive', 'inactive'))
     gvStatus = models.CharField(
         verbose_name='Status',
         default=STATUS_ACTIVE, null=True,
         choices=STATUS_CHOICES,
-        db_column='gvStatus',
+        db_column='gvstatus',
         max_length=8)
     gvSource = models.CharField(
         verbose_name='Änderung am/durch',
         default='', null=True, blank=True,
-        db_column='gvSource',
+        db_column='gvsource',
         max_length=100)
     gvScope = models.CharField(
         default='gv.at', null=True,
-        db_column='gvScope',
+        db_column='gvscope',
         max_length=32)
 
     def defined_attr(self) -> list:

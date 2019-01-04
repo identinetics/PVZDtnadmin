@@ -9,11 +9,11 @@ from tnadmin.models.gvFederationOrg import *
 @admin.register(GvFederationOrg)
 class GvFederationOrgAdmin(admin.ModelAdmin):
     #actions = None
-    autocomplete_fields = ('gvouid', 'gvCaseOrg', 'gvouid2', 'gvouid3')
+    autocomplete_fields = ('gvouid', 'gvCaseOrg', 'gvouid_aufsicht', 'gvouid_dl')
     fields = (
         'gvouid',
-        'gvouid2',
-        'gvouid3',
+        'gvouid_aufsicht',
+        'gvouid_dl',
         'gvContractStatus',
         'gvDateEffective',
         'gvDateTerminated',
@@ -44,15 +44,15 @@ class GvFederationOrgAdmin(admin.ModelAdmin):
     get_org_o.short_description = 'Kurzbezeichnung'
 
     def get_org_o2(self, inst):
-        if inst.gvouid2 is not None:
-            return "%s (%s)" % (inst.gvouid2, inst.gvouid2.o)
+        if inst.gvouid_aufsicht is not None:
+            return "%s (%s)" % (inst.gvouid_aufsicht, inst.gvouid_aufsicht.o)
         else:
             return ''
     get_org_o2.short_description = 'Vertragspartei (Aufsicht)'
 
     def get_org_o3(self, inst):
-        if inst.gvouid3 is not None:
-            return "%s (%s)" % (inst.gvouid3, inst.gvouid3.o)
+        if inst.gvouid_dl is not None:
+            return "%s (%s)" % (inst.gvouid_dl, inst.gvouid_dl.o)
         else:
             return ''
     get_org_o3.short_description = 'Dienstleister'

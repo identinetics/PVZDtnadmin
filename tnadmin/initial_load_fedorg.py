@@ -15,7 +15,8 @@ sys.path.append(projhome)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
 django.setup()
 
-from ldapgvat.models import GvUserPortal
+#from ldapgvat.models import GvUserPortal as LdapUserPortal
+import ldapgvat.models
 from tnadmin.models.constants import *
 from tnadmin.models.gvFederationOrg import *
 from tnadmin.models.gvorg import *
@@ -26,7 +27,6 @@ class InitialLoadFedOrg:
         self.exit_code = 0
         self.load_PVV_org()
         self.load_STP_DL_org()
-        self.load_PV_ZUGRIFF_org()
         self.load_PV_ZUGRIFF_org()
         sys.exit(self.exit_code)
 
@@ -52,19 +52,24 @@ class InitialLoadFedOrg:
                 gvorg = self.get_gvorg_by_ouid(ouid, cn)
                 if gvorg:
                     fedorg = GvFederationOrg(gvouid=gvorg)
-                    fedorg.gvContractStatus = LEGAL_BASIS_ENTITLED_ORG
+                    fedorg.gvContractStatus = LEGAL_BASIS_PROCESSOR_IDP
                     fedorg.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
                     fedorg.save()
 
     def load_PV_ZUGRIFF_org(self):
-        for userportal in GvUserPortal.objects.all():
-            if 'gvUserPortal' in userportal.object_classes:
-                print('found {ldaporg}')
-                for ouid in userportal.gvparticipants:
-                    fedorg = GvFederationOrg(gvouid=gvouid)
-                    fedorg.gvContractStatus = LEGAL_BASIS_ENTITLED_ORG
-                    fedorg.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
-                    fedorg.save()
+        for userportal in ldapgvat.models.GvUserPortal.objects.all():
+            if 'gvUserPortal' in userportal.object_classes and \
+                userportal.gvParticipants:
+                print('found {ldaporg} with {len(userportal.gvParticipants)} participants')
+                for ouid in userportal.gvParticipants:
+                    gvorg = self.get_gvorg_by_ouid(ouid, '')
+                    if gvorg:
+                        fedorg = GvFederationOrg(gvouid=gvorg)
+                        fedorg.gvContractStatus = LEGAL_BASIS_ENTITLED_ORG
+                        fedorg.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
+                        fedorg.save()
+                    else:
+                        print(f'participant {ouid} registered in {userportal.dn} not found in gvOrganisation')
 
     def get_gvorg_by_ouid(self, ouid: str, cn: str) -> GvOrganisation:
         try:
