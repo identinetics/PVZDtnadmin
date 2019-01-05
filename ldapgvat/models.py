@@ -42,8 +42,8 @@ class gvOrgUnit(OrganizationalUnit):
     gvNotValidBefore = CharField(db_column='gvNotValidBefore', max_length=12)
     gvOtherID = CharField(db_column='gvOtherID', max_length=250)
     gvOuCn = CharField(db_column='gvOuCn', max_length=250)
-    gvOuId = CharField(db_column='gvOuId', max_length=250, primary_key=True)  # this maps to the LDAP RDN
-    gvOuIdParent = CharField(db_column='gvOuIdParent', max_length=250)
+    gvouid = CharField(db_column='gvOuId', max_length=250, primary_key=True)  # this maps to the LDAP RDN
+    gvouidparent = CharField(db_column='gvOuIdParent', max_length=250)
     gvOuVKZ = CharField(db_column='gvOuVKZ', max_length=250)
     gvPhysicalAddress = CharField(db_column='gvPhysicalAddress', max_length=250)
     gvSortkey = CharField(db_column='gvSortkey', max_length=25)

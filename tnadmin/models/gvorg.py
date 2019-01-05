@@ -107,8 +107,6 @@ class GvOrgAbstract(GvAdminAbstract):
             'gvOtherID',
             'gvOuCn',
             'gvouid',
-            'gvouid',
-            'gvouidparent',
             'gvouidparent',
             'gvOuVKZ',
             'gvPhysicalAddress',

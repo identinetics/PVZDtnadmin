@@ -5,5 +5,5 @@ from ldapgvat.models import GvOrganisation
 @admin.register(GvOrganisation)
 class GvOrganisationAdmin(admin.ModelAdmin):
     exclude = ['dn']
-    list_display = ['gvOuId', 'cn']
-    search_fields = ['gvOuId', 'cn', 'o']
+    list_display = ['gvouid', 'cn']
+    search_fields = ['gvouid', 'cn', 'o']

@@ -21,6 +21,7 @@ class LdapSync:
         self.args = self.get_args()
         self.ldapSyncJob = LdapSyncJob()
         self.ldapSyncJob.save()
+        self.ldapgvat_entries = set()
 
     def get_args(self):
         parser = argparse.ArgumentParser(description='Sync TNAdmin database with LdapGvAt')
@@ -43,6 +44,7 @@ class LdapSync:
     def add_and_update(self):
         max_input_rec = 0
         for ldapOrg in LdapGvOrg.objects.all():
+            self.ldapgvat_entries.add(ldapOrg.dn) # later use: delete orphans
             self.ldapSyncJob.add_upd_ldap_records_read += 1
             #if ldapOrg.gvOuId in ('AT:L6', 'AT:VKZ:XFN-295183v', 'AT:VKZ:UFB-262918w', 'AT:VKZ:XFN-213441i', 'AT:VKZ:XFN-160573m'):
             #    print(f'debug: missing {ldapOrg.gvOuId}?')
@@ -64,12 +66,8 @@ class LdapSync:
         max_input_rec = 0
         for dbOrg in DbGvOrg.objects.all():
             self.ldapSyncJob.del_db_records_read += 1
-            try:
-                dbOrg = DbGvOrg.objects.get(dn=dbOrg.ldap_dn)
-            except tnadmin.models.gvorg.GvOrganisation.DoesNotExist:
-                self.create_dbGvOrg_from_LdapGvOrg(ldapOrg)
-            else:
-                self.update_dbGvOrg_from_LdapGvOrg(dbOrg, ldapOrg)
+            if dbOrg.ldap_dn not in self.ldapgvat_entries:
+                self.del_dbOrg(dbOrg)
             max_input_rec += 1
             if max_input_rec == self.args.max_input_rec and self.args.max_input_rec > 0:
                 print(f'processing stopped after reading {max_input_rec} records from db.')
