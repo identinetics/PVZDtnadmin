@@ -6,7 +6,7 @@ class GvOrganisationForm(forms.ModelForm):
     class Meta(object):
         #model = gvOrganisation
         widgets = {
-            'gvOuId': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
+            'gvouid': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
             'gvOuVKZ': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
             'gvOuCn': forms.Textarea(attrs={'rows':2, 'cols':80}),
             'description': forms.Textarea(attrs={'rows':2, 'cols':80}),
@@ -15,9 +15,9 @@ class GvOrganisationForm(forms.ModelForm):
 @admin.register(GvOrganisation)
 class GvOrganisationAdmin(admin.ModelAdmin):
     actions = None
-    exclude = ('gvOuIdParent', )
+    exclude = ('gvouidparent', )
     fields = (
-        'gvOuId',
+        'gvouid',
         'gvOuVKZ',
         'o',
         'cn',
@@ -30,12 +30,12 @@ class GvOrganisationAdmin(admin.ModelAdmin):
         'gvSource',
     )
     form = GvOrganisationForm
-    list_display = ['gvOuId', 'gvOuVKZ', 'o', 'cn', 'gvStatus', 'gvSource']
-    #list_editable = ['gvOuId', 'gvOuVKZ', 'cn']
+    list_display = ['gvouid', 'gvOuVKZ', 'o', 'cn', 'gvStatus', 'gvSource']
+    #list_editable = ['gvouid', 'gvOuVKZ', 'cn']
     #list_display_links = ['o' ]
     readonly_fields = ('gvSource', )
     search_fields = (
-        'gvOuId',
+        'gvouid',
         'gvOuVKZ',
         'o',
         'cn',

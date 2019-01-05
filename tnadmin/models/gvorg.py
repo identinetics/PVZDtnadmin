@@ -15,11 +15,9 @@ class GvOrgAbstract(GvAdminAbstract):
     class Meta:
         abstract = True
 
-    ldap_dn = models.CharField(max_length=250, default='')
-    gvOuId = models.CharField(max_length=32,
+    gvouid = models.CharField(max_length=32,
         unique=True,
         verbose_name='gvOuId',
-        db_column='gvouid',
         validators=[RegexValidator(regex=r'^[A-Z:]{10,10}.*', message='OuId erlaubt Kleinbuchstaben erst ab Position 11')],
         help_text='Syntax: gvOuId::= Landeskennung ":" ID; ID::= "VKZ:" VKZ | Org-Id  (z.B. AT:VKZ:GGA1234, AT:L9:9876)',)
     gvOuVKZ = models.CharField(max_length=79,
@@ -34,7 +32,7 @@ class GvOrgAbstract(GvAdminAbstract):
                   'Datenbeständen soll dieses Kennzeichen NICHT verwendet werden, sondern ausschließlich die gvOuId. '
                   'Das VKZ kann aufgrund von Namensänderungen angepasst werden müssen. (z.B. BMEIA statt BMAA für das '
                   'Außenministerium)  (z.B. GGA-12345)')
-    gvOuIdParent = models.CharField(max_length=32,
+    gvouidparent = models.CharField(max_length=32,
         default='',
         verbose_name='Übergeordnete OE; (gvOuIdParent)',
         db_column='gvouid_parent',
@@ -89,7 +87,7 @@ class GvOrgAbstract(GvAdminAbstract):
     telephoneNumber = models.CharField(max_length=250, default='')
 
     def save(self, *args, **kwargs):
-        self.gvouid_upper = self.gvOuId.upper()
+        self.gvouid_upper = self.gvouid.upper()
         self.gvouvkz_upper = self.gvOuVKZ.upper()
         super(GvOrgAbstract, self).save(*args, **kwargs)
 
@@ -108,10 +106,10 @@ class GvOrgAbstract(GvAdminAbstract):
             'gvNotValidBefore',
             'gvOtherID',
             'gvOuCn',
-            'gvOuId',
-            'gvOuId',
-            'gvOuIdParent',
-            'gvOuIdParent',
+            'gvouid',
+            'gvouid',
+            'gvouidparent',
+            'gvouidparent',
             'gvOuVKZ',
             'gvPhysicalAddress',
             'gvScope',
@@ -129,6 +127,12 @@ class GvOrgAbstract(GvAdminAbstract):
         ]
         return combined_list
 
+    def __str__(self):
+        return f"{self.gvouid} {self.cn}"
+
+    def __repr__(self):
+        return self.ldap_dn
+
 
 class GvOrganisation(GvOrgAbstract):
     class Meta:
@@ -136,6 +140,7 @@ class GvOrganisation(GvOrgAbstract):
         verbose_name = 'Organisation'
         verbose_name_plural = 'Organisationen'
 
+    ldap_dn = models.CharField(max_length=250, default='')
     o = models.CharField(
         unique=False,
         verbose_name='Kurzbezeichnung (o)',

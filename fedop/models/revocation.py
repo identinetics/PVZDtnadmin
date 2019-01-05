@@ -12,7 +12,11 @@ class Revocation(models.Model):
         help_text='Issuer X.509 SubjectCN (TLS CA)',
         default='',
         max_length=128)
+    pubkey = models.CharField(
+        help_text='Issuer X.509 Public Key',
+        default='',
+        max_length=1000)
 
     def save(self, *args, **kwargs):
-        self.subject_cn = XY509cert(self.cert).getSubjectCN()
+        self.subject_cn = XY509cert(self.cert).get_pubkey()
         super().save(*args, **kwargs)

@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
-from tnadmin.models.gvAdminAbstract import GvAdminAbstract
-from tnadmin.models.gvFederation import GvFederation
+from tnadmin.models.gvadminabstract import GvAdminAbstract
+from tnadmin.models.gvfederation import GvFederation
 from tnadmin.models.gvorg import GvOrganisation
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
@@ -76,7 +76,7 @@ class GvUserPortal(GvAdminAbstract):
 #         verbose_name='Federation',
 #         null=True, blank=True,
 #         help_text='Federation')
-#     gvUserPortal = models.ForeignKey(
+#     gvuserportal = models.ForeignKey(
 #         GvUserPortal,
 #         on_delete=models.CASCADE,
 #         verbose_name='Federation',

@@ -11,7 +11,7 @@ class Userprivilege(models.Model):
         verbose_name='Portaladminsitrator-Zertifikat',
         help_text='X.509 cert PEM ohen Whitespace',
         max_length=20000)
-    gvOuIdParent = models.ForeignKey(
+    gvouid_parent = models.ForeignKey(
         GvUserPortalOperator,
         db_column='gvouid_parent',
         on_delete=models.PROTECT,
@@ -24,7 +24,7 @@ class Userprivilege(models.Model):
 
     @property
     def org_cn(self):
-        return self.gvOuIdParent.cn
+        return self.gvouidparent.cn
 
     @property
     def cert_teaser(self):

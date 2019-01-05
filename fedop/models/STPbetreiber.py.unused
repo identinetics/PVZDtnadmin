@@ -3,7 +3,7 @@ from django.db import models
 
 class STPbetreiber(models.Model):
     '''
-    Stammportalbetreiber als Teilmenge von gvFederationOrg
+    Stammportalbetreiber als Teilmenge von gvfederationorg
     '''
     class Meta:
         verbose_name = 'STPbetreiber'
@@ -11,7 +11,7 @@ class STPbetreiber(models.Model):
         managed = False
         db_table = 'tnadmin_gvorganisation'
 
-    gvOuId = models.CharField(
+    gvouid = models.CharField(
         unique=True,
         verbose_name='gvOuId',
         max_length=32)
@@ -24,8 +24,8 @@ class STPbetreiber(models.Model):
 
 
     def save(self, *args, **kwargs):
-        self.gvOuId = self.gvOuId.upper()
+        self.gvouid = self.gvouid.upper()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.gvOuId
+        return self.gvouid

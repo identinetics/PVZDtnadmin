@@ -2,10 +2,10 @@ import datetime
 from django.db import models
 from django.core.validators import MaxValueValidator
 from tnadmin.models.constants import *
-from tnadmin.models.gvAdminAbstract import GvAdminAbstract
-from tnadmin.models.gvFederation import GvFederation
+from tnadmin.models.gvadminabstract import GvAdminAbstract
+from tnadmin.models.gvfederation import GvFederation
 from tnadmin.models.gvorg import GvOrganisation
-from tnadmin.models.gvUserPortal import *
+from tnadmin.models.gvuserportal import *
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
 
@@ -15,18 +15,6 @@ def get_default_federationname() -> int:
     except IndexError:
         defaultFedName = ''
     return defaultFedName
-
-LEGAL_BASIS_CHOICES = (
-    (LEGAL_BASIS_PVV, LEGAL_BASIS_PVV),
-    (LEGAL_BASIS_ENTITLED_ORG, LEGAL_BASIS_ENTITLED_ORG),
-    (LEGAL_BASIS_PROCESSOR_IDP, LEGAL_BASIS_PROCESSOR_IDP),
-    (LEGAL_BASIS_ENTITLED_ORG_PROCESSOR, LEGAL_BASIS_ENTITLED_ORG_PROCESSOR),
-)
-LEGAL_BASIS_PARTICIPANT = (LEGAL_BASIS_PVV,
-                           LEGAL_BASIS_ENTITLED_ORG,
-                           LEGAL_BASIS_ENTITLED_ORG_PROCESSOR)
-LEGAL_BASIS_IDP_OP = (LEGAL_BASIS_PVV,
-                      LEGAL_BASIS_PROCESSOR_IDP)
 
 class GvFederationOrg(GvAdminAbstract):
     class Meta:
@@ -88,19 +76,22 @@ class GvFederationOrg(GvAdminAbstract):
         help_text='Kommentare',
         max_length=10000)
 
+    def __str__(self):
+        return f"{self.gvouid.gvouid} {self.gvouid.cn}"
 
-    #def __str__(self):
-    #    return self.gvouid + '/' + self.gvContractStatus + ' (' + self.gvUserPortalName + ')'
+    def __repr__(self):
+        return f"id={self.id}; {self.gvouid.gvouid}"
 
 
 class GvParticipantManager(models.Manager):
     def get_queryset(self):
-        return super(GvParticipantManager, self).get_queryset().filter(gvContractStatus__in=LEGAL_BASIS_PARTICIPANT)
+        return super().get_queryset().filter(gvContractStatus__in=LEGAL_BASIS_PARTICIPANT).order_by('gvouid__gvouid')
 
 
 class GvParticipant(GvFederationOrg):
     objects = GvParticipantManager()
     class Meta:
+        ordering = ('gvouid',)
         proxy = True
         verbose_name = 'Participant'
         verbose_name_plural = 'Participants'
@@ -108,7 +99,7 @@ class GvParticipant(GvFederationOrg):
 
 class GvUserPortalOperatorManager(models.Manager):
     def get_queryset(self):
-        return super(GvUserPortalOperatorManager, self).get_queryset().filter(gvContractStatus__in=LEGAL_BASIS_IDP_OP)
+        return super().get_queryset().filter(gvContractStatus__in=LEGAL_BASIS_IDP_OP).order_by('gvouid__gvouid')
 
 
 class GvUserPortalOperator(GvFederationOrg):

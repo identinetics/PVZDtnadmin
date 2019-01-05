@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
-from tnadmin.models.ldapSync import *
+from tnadmin.models.ldapsync import *
 
 @admin.register(LdapSyncJob)
 class LdapSyncJobAdmin(admin.ModelAdmin):

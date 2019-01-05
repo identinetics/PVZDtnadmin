@@ -18,7 +18,7 @@ django.setup()
 #from ldapgvat.models import GvUserPortal as LdapUserPortal
 import ldapgvat.models
 from tnadmin.models.constants import *
-from tnadmin.models.gvFederationOrg import *
+from tnadmin.models.gvfederationorg import *
 from tnadmin.models.gvorg import *
 import tnadmin.models.gvorg
 
@@ -58,7 +58,7 @@ class InitialLoadFedOrg:
 
     def load_PV_ZUGRIFF_org(self):
         for userportal in ldapgvat.models.GvUserPortal.objects.all():
-            if 'gvUserPortal' in userportal.object_classes and \
+            if 'gvuserportal' in [oc.lower() for oc in userportal.object_classes] and \
                 userportal.gvParticipants:
                 print('found {ldaporg} with {len(userportal.gvParticipants)} participants')
                 for ouid in userportal.gvParticipants:

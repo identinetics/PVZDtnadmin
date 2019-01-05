@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from tnadmin.models.gvFederation import *
+from tnadmin.models.gvfederation import *
 
 
 @admin.register(GvFederation)

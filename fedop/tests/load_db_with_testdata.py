@@ -17,43 +17,43 @@ from PVZDpy.tests.common_fixtures import policydir1, policystore1
 from fedop.models.issuer import Issuer
 from fedop.models.namespace import Namespaceobj
 from fedop.models.revocation import Revocation
-from fedop.models.STPbetreiber import STPbetreiber
 from fedop.models.userprivilege import Userprivilege
+from tnadmin.models.gvfederationorg import GvUserPortalOperator
 
 basedir = settings.BASE_DIR
 #basedir = os.path.join('Users', 'admin', 'devl', 'python', 'identinetics', 'PVZDweb')
 
 
 def main():
-    add_stpbetreiber()
     add_namespaces()
     add_userprivileges()
     add_issuers()
     add_revocation()
 
 
-def poldir1():
-    fn = os.path.join(settings.BASE_DIR, 'PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml', 'poldir1.json')
+def poldir2():
+    fn = os.path.join(settings.BASE_DIR, 'fedop', 'tests', 'data', 'poldir2.json')
     with open(fn) as fd:
         return json.loads(fd.read())
 
 
-def add_stpbetreiber():
-    org_recs = policystore1(poldir1()).get_all_orgids()
-    for o in org_recs.keys():
-        if not STPbetreiber.objects.filter(gvOuId__iexact=o):
-            s = STPbetreiber()
-            s.gvOuId = o
-            s.cn = org_recs[o][0]
-            s.save()
-            print('added STPbetreiber %s' % s.gvOuId)
-        else:
-            print('skipped duplicate STPbetreiber entry %s' % o)
+# replaced by tnadmin.gvuserportalOperator
+#def add_stpbetreiber():
+#    org_recs = policystore1(poldir2()).get_all_orgids()
+#    for o in org_recs.keys():
+#        if not GvUserPortalOperator.objects.filter(gvouid__iexact=o):
+#            s = GvUserPortalOperator()
+#            s.gvouid = o
+#            s.cn = org_recs[o][0]
+#            s.save()
+#            print('added GvUserPortalOperator %s' % s.gvouid)
+#        else:
+#            print('skipped duplicate GvUserPortalOperator entry %s' % o)
 
 
 def add_namespaces():
-    def _get_foreign_key_parent_obj(gvOuIdParent, ns_name) -> int:
-        qs = STPbetreiber.objects.filter(gvOuId__iexact=gvOuIdParent)
+    def _get_foreign_key_parent_obj(gvouid_parent, ns_name) -> int:
+        qs = GvUserPortalOperator.objects.filter(gvouid__gvouid=gvouid_parent)
         if len(qs) > 1:
             print('Importing namespace %s has more than one parent (org)' % ns_name)
             return None
@@ -62,12 +62,12 @@ def add_namespaces():
             return None
         return qs[0]
 
-    ns_recs = policystore1(poldir1()).get_registered_namespace_objs()
+    ns_recs = policystore1(poldir2()).get_registered_namespace_objs()
     for fqdn in ns_recs:
         ns_orgid = ns_recs[fqdn][0]
         parent_o = _get_foreign_key_parent_obj(ns_orgid, fqdn)
         if parent_o:
-            ns = Namespaceobj(gvOuIdParent=parent_o, fqdn=fqdn)
+            ns = Namespaceobj(gvouid_parent=parent_o, fqdn=fqdn)
             if not Namespaceobj.objects.filter(fqdn__iexact=fqdn):
                 ns.save()
                 print("added namespace %s" % fqdn)
@@ -76,8 +76,8 @@ def add_namespaces():
 
 
 def add_userprivileges():
-    def _get_foreign_key_parent_obj(gvOuIdParent, cert) -> int:
-        qs = STPbetreiber.objects.filter(gvOuId__iexact=gvOuIdParent)
+    def _get_foreign_key_parent_obj(gvouid_parent, cert) -> int:
+        qs = GvUserPortalOperator.objects.filter(gvouid__gvouid=gvouid_parent)
         if len(qs) > 1:
             print('Importing userprivilege %s has more than one parent (org)' % cert)
             return None
@@ -86,21 +86,21 @@ def add_userprivileges():
             return None
         return qs[0]
 
-        u_recs = policystore1(poldir1()).get_userprivileges()
-        for cert in u_recs:
-            u_orgid = u_recs[cert][0]
-            parent_o = _get_foreign_key_parent_obj(u_orgid, cert)
-            if parent_o:
-                u = Userprivilege(gvOuIdParent=parent_o, cert=cert)
-                if not Userprivilege.objects.filter(cert=cert):  # assume base64 without whitespace
-                    u.save()
-                    print("added userprivilege %s" % cert)
-                else:
-                    print("skipped duplicate userprivilege entry %s" % cert)
+    u_recs = policystore1(poldir2()).get_userprivileges()
+    for cert in u_recs:
+        u_orgid = u_recs[cert][0]
+        parent_o = _get_foreign_key_parent_obj(u_orgid, cert)
+        if parent_o:
+            u = Userprivilege(gvouid_parent=parent_o, cert=cert)
+            if not Userprivilege.objects.filter(cert=cert):  # assume base64 without whitespace
+                u.save()
+                print("added userprivilege %s" % cert)
+            else:
+                print("skipped duplicate userprivilege entry %s" % cert)
 
 
 def add_issuers():
-    i_recs = policystore1(poldir1()).get_issuers()
+    i_recs = policystore1(poldir2()).get_issuers()
     for subject_cn in i_recs.keys():
         if not Issuer.objects.filter(subject_cn=subject_cn):
             i = Issuer(subject_cn=subject_cn)
@@ -113,9 +113,9 @@ def add_issuers():
 
 
 def add_revocation():
-    r_recs = policystore1(poldir1()).get_revoked_certs()
+    r_recs = policystore1(poldir2()).get_revoked_certs()
     for cert in r_recs:
-        # if not Revocation.objects.filter(cert=cert):
+        # if not Revocation.objects.filter(cert=cert):   # TODO: compare only public key
         #     r = Revocation(cert=cert)
         #     r.save()
         #     print('added revocation_cert %s' % cert)

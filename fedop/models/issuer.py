@@ -1,5 +1,6 @@
 from django.db import models
-#import django.utils.timezone
+from PVZDpy.xy509cert import XY509cert
+
 
 class Issuer(models.Model):
     cacert = models.CharField(
@@ -21,4 +22,17 @@ class Issuer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum',) #default=django.utils.timezone.now())
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        xy509cert = XY509cert(self.cacert)
+        self.subject_cn = xy509cert.getSubjectCN
 
+# Test
+class IssuerSTPManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(pvprole='STP')
+
+
+class IssuerSTP(Issuer):
+    objects = IssuerSTPManager()
+    class Meta:
+        proxy = True

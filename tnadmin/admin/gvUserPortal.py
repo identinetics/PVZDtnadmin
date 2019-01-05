@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from tnadmin.models.gvUserPortal import *
+from tnadmin.models.gvuserportal import *
 
 
 class GvUserPortalForm(forms.ModelForm):

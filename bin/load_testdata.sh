@@ -13,6 +13,8 @@ fi
 
 # load testdata
 cd $APP_HOME
+python ./tnadmin/tests/sync_gvOrg_from_ldapgvat.py
+python ./tnadmin/tests/initial_load_fedorg.py
 python ./fedop/tests/load_db_with_testdata.py
 python ./portaladmin/tests/load_db_with_testdata.py
 cd -

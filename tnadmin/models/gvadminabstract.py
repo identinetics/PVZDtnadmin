@@ -34,9 +34,3 @@ class GvAdminAbstract(models.Model):
             'gvSource',
             'gvStatus',
         ]
-
-    def __str__(self):
-        return self.gvOuId
-
-    def __repr__(self):
-        return self.ldap_dn

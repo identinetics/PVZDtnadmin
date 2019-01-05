@@ -1,5 +1,5 @@
 from django.db import models
-from fedop.models import STPbetreiber
+from tnadmin.models import GvUserPortalOperator
 
 
 class Namespaceobj(models.Model):
@@ -13,8 +13,8 @@ class Namespaceobj(models.Model):
         verbose_name='Namespace',
         help_text='fully qualified domain name or domain with * for any hostname, such as "*.sso.xyz.org"',
         max_length=30)
-    gvOuIdParent = models.ForeignKey(
-        STPbetreiber,
+    gvouid_parent = models.ForeignKey(
+        GvUserPortalOperator,
         verbose_name='gvOuId',
         on_delete=models.PROTECT,
         help_text='OrgID des Portalbetreibers')
@@ -27,4 +27,4 @@ class Namespaceobj(models.Model):
         return str(self.fqdn)
 
     def org_cn(self):
-        return self.gvOuIdParent.cn
+        return self.gvouidparent.cn

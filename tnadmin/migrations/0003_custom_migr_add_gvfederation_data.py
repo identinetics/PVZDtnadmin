@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tnadmin', '0002_add_constraints_gvorganisation'),
+        ('tnadmin', '0002_custom_migr_add_constraints'),
     ]
 
     operations = [

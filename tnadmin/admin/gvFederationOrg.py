@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from tnadmin.models.gvorg import *
-from tnadmin.models.gvFederationOrg import *
+from tnadmin.models.gvfederationorg import *
 
 
 
