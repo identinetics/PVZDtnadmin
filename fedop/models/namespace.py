@@ -27,4 +27,4 @@ class Namespaceobj(models.Model):
         return str(self.fqdn)
 
     def org_cn(self):
-        return self.gvouidparent.cn
+        return self.gvouid_parent.gvouid.cn

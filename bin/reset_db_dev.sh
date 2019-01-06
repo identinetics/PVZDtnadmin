@@ -6,8 +6,8 @@ source $scriptsdir/setenv.sh
 export DJANGO_SETTINGS_MODULE=pvzdweb.settings_dev
 
 ssh devl11 /home/r2h2/devl/docker/c-pvzdweb-pg-dev/reset_pg_data.sh
-sleep 2 && wait_pg_become_ready.sh
+sleep 2 && $APPHOME/pvzdweb/wait_pg_become_ready.sh
 
 $APPHOME/manage.py migrate
-#manage.py createsuperuser --email rainer@hoerbe.at
+$APPHOME/bin/init_database.sh
 $APPHOME/bin/load_testdata.sh

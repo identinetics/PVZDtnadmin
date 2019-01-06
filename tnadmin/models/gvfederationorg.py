@@ -19,7 +19,7 @@ def get_default_federationname() -> int:
 class GvFederationOrg(GvAdminAbstract):
     class Meta:
         ordering = ('gvouid',)
-        unique_together = (('gvouid', 'gvouid_aufsicht', 'gvouid_dl'),)
+        unique_together = (('gvouid', 'gvouid_aufsicht', 'gvouid_dl', 'gvContractStatus'),)
         verbose_name = 'Federation Member'
         verbose_name_plural = 'Federation Members'
 

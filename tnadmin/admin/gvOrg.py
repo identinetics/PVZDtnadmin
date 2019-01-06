@@ -7,18 +7,19 @@ class GvOrganisationForm(forms.ModelForm):
         #model = gvOrganisation
         widgets = {
             'gvouid': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
-            'gvOuVKZ': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
+            'gvouvkz': forms.TextInput(attrs={'style': 'text-transform:uppercase;'}),
             'gvOuCn': forms.Textarea(attrs={'rows':2, 'cols':80}),
             'description': forms.Textarea(attrs={'rows':2, 'cols':80}),
         }
 
 @admin.register(GvOrganisation)
 class GvOrganisationAdmin(admin.ModelAdmin):
-    actions = None
+    #actions = None
     exclude = ('gvouidparent', )
     fields = (
         'gvouid',
-        'gvOuVKZ',
+        'gvouvkz',
+        'ldap_dn',
         'o',
         'cn',
         'l',
@@ -30,13 +31,13 @@ class GvOrganisationAdmin(admin.ModelAdmin):
         'gvSource',
     )
     form = GvOrganisationForm
-    list_display = ['gvouid', 'gvOuVKZ', 'o', 'cn', 'gvStatus', 'gvSource']
-    #list_editable = ['gvouid', 'gvOuVKZ', 'cn']
+    list_display = ['ldap_dn', 'gvouid', 'gvouvkz', 'o', 'cn', 'gvStatus', 'gvSource']
+    #list_editable = ['gvouid', 'gvouvkz', 'cn']
     #list_display_links = ['o' ]
     readonly_fields = ('gvSource', )
     search_fields = (
         'gvouid',
-        'gvOuVKZ',
+        'gvouvkz',
         'o',
         'cn',
         'l',

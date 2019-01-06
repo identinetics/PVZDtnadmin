@@ -60,7 +60,7 @@ class InitialLoadFedOrg:
         for userportal in ldapgvat.models.GvUserPortal.objects.all():
             if 'gvuserportal' in [oc.lower() for oc in userportal.object_classes] and \
                 userportal.gvParticipants:
-                print('found {ldaporg} with {len(userportal.gvParticipants)} participants')
+                print(f'{len(userportal.gvParticipants)} participant(s) declared in "{userportal.cn}"')
                 for ouid in userportal.gvParticipants:
                     gvorg = self.get_gvorg_by_ouid(ouid, '')
                     if gvorg:
@@ -69,21 +69,21 @@ class InitialLoadFedOrg:
                         fedorg.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
                         fedorg.save()
                     else:
-                        print(f'participant {ouid} registered in {userportal.dn} not found in gvOrganisation')
+                        print(f'participant {ouid} registered in {userportal.dn} not found in gvOrganisation', file=sys.stderr)
 
     def get_gvorg_by_ouid(self, ouid: str, cn: str) -> GvOrganisation:
         try:
-            gvorg = GvOrganisation.objects.get(gvOuId=ouid)
+            gvorg = GvOrganisation.objects.get(gvouid=ouid)
             return gvorg
         except tnadmin.models.gvorg.GvOrganisation.DoesNotExist:
-            print(f"gvOrganisation '{cn}' not found via gvOuId='{ouid}'", file=sys.stderr)
+            #print(f"gvOrganisation '{cn}' not found via gvOuId='{ouid}'", file=sys.stderr)
             self.exit_code = 1
             return None
 
 
     def get_gvorg_by_vkz(self, vkz: str) -> GvOrganisation:
         try:
-            gvorg = GvOrganisation.objects.get(gvOuVKZ=vkz)
+            gvorg = GvOrganisation.objects.get(gvouvkz=vkz)
             return gvorg
         except tnadmin.models.gvorg.GvOrganisation.DoesNotExist:
             print(f"gvOrganisation not found via gvOuVKZ='{vkz}'", file=sys.stderr)
@@ -91,14 +91,14 @@ class InitialLoadFedOrg:
         return None
 
 
-    def map_gvorg_to_fedorg_legal_basis(self, gvorg: GvOrganisation):
-        if re.search(r'^L\d$', gvOuVKZ):
-            return LEGAL_BASIS_PVV
-        if re.search(r'^B[A-Za-z]', gvOuVKZ):
-            if gvOuVKZ != 'BPDION':
-                return LEGAL_BASIS_PVV
-        if gvOuVKZ in ('BBA-STA', ):
-                return LEGAL_BASIS_PVV
+    #def map_gvorg_to_fedorg_legal_basis(self, gvorg: GvOrganisation):
+    #    if re.search(r'^L\d$', gvouvkz):
+    #        return LEGAL_BASIS_PVV
+    #    if re.search(r'^B[A-Za-z]', gvouvkz):
+    #        if gvOuVKZ != 'BPDION':
+    #            return LEGAL_BASIS_PVV
+    #    if gvOuVKZ in ('BBA-STA', ):
+    #            return LEGAL_BASIS_PVV
 
 
 InitialLoadFedOrg().main()

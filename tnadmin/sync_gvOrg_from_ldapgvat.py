@@ -46,8 +46,6 @@ class LdapSync:
         for ldapOrg in LdapGvOrg.objects.all():
             self.ldapgvat_entries.add(ldapOrg.dn) # later use: delete orphans
             self.ldapSyncJob.add_upd_ldap_records_read += 1
-            #if ldapOrg.gvOuId in ('AT:L6', 'AT:VKZ:XFN-295183v', 'AT:VKZ:UFB-262918w', 'AT:VKZ:XFN-213441i', 'AT:VKZ:XFN-160573m'):
-            #    print(f'debug: missing {ldapOrg.gvOuId}?')
             create = False
             try:
                 dbOrg = DbGvOrg.objects.get(ldap_dn=ldapOrg.dn)

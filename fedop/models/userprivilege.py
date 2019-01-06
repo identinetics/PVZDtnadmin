@@ -9,7 +9,7 @@ class Userprivilege(models.Model):
     cert = models.TextField(
         unique=True,
         verbose_name='Portaladminsitrator-Zertifikat',
-        help_text='X.509 cert PEM ohen Whitespace',
+        help_text='X.509 cert PEM ohne Whitespace',
         max_length=20000)
     gvouid_parent = models.ForeignKey(
         GvUserPortalOperator,

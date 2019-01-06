@@ -11,8 +11,14 @@ else
     echo 'database already initialized'
 fi
 
-# load testdata
+echo 'loading gvOrganisation'
 python $APPHOME/tnadmin/sync_gvOrg_from_ldapgvat.py
+printf "\n\n\n"
+echo 'loading gvFederationOrg'
 python $APPHOME/tnadmin/initial_load_fedorg.py
+printf "\n\n\n"
+echo 'loading fedop test data'
 python $APPHOME/fedop/tests/load_db_with_testdata.py
+printf "\n\n\n"
+echo 'loading test federation entities'
 python $APPHOME/portaladmin/tests/load_db_with_testdata.py

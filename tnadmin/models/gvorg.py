@@ -15,15 +15,14 @@ class GvOrgAbstract(GvAdminAbstract):
     class Meta:
         abstract = True
 
-    gvouid = models.CharField(max_length=32,
+    gvouid = models.CharField(max_length=32, primary_key=True,
         unique=True,
         verbose_name='gvOuId',
         validators=[RegexValidator(regex=r'^[A-Z:]{10,10}.*', message='OuId erlaubt Kleinbuchstaben erst ab Position 11')],
         help_text='Syntax: gvOuId::= Landeskennung ":" ID; ID::= "VKZ:" VKZ | Org-Id  (z.B. AT:VKZ:GGA1234, AT:L9:9876)',)
-    gvOuVKZ = models.CharField(max_length=79,
+    gvouvkz = models.CharField(max_length=79,
         unique=True,
         verbose_name='Verwaltungskennz (gvOuVKZ)',
-        db_column='gvouvkz',
         validators=[RegexValidator(regex=r'^[A-Z:]{2,2}.*', message='VKZ erlaubt Kleinbuchstaben erst ab Position 3'),
                     MaxLengthValidator(32, '"gvOuVKZ " Limit: 32 char')],
         help_text='Organisationskennzeichen (OKZ) gemäß der Spezifikation [VKZ]. Das Organisationskennzeichen ist für '
@@ -88,7 +87,7 @@ class GvOrgAbstract(GvAdminAbstract):
 
     def save(self, *args, **kwargs):
         self.gvouid_upper = self.gvouid.upper()
-        self.gvouvkz_upper = self.gvOuVKZ.upper()
+        self.gvouvkz_upper = self.gvouvkz.upper()
         super(GvOrgAbstract, self).save(*args, **kwargs)
 
     # attributes defined in LDAP-gvat_2-5-1_20171222.pdf
@@ -108,7 +107,7 @@ class GvOrgAbstract(GvAdminAbstract):
             'gvOuCn',
             'gvouid',
             'gvouidparent',
-            'gvOuVKZ',
+            'gvouvkz',
             'gvPhysicalAddress',
             'gvScope',
             'gvSortkey',
