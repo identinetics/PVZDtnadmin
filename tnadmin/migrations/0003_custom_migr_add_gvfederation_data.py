@@ -11,6 +11,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            "INSERT  INTO tnadmin_gvfederation (gvfederationname, gvmetadataurl, gvScope) VALUES ('Verwaltungsportalverbund (Test)', 'http://mdfeed.test.portalverbund.gv.at/metadata.xml', 'initial');"
+            "INSERT  INTO tnadmin_gvfederation (gvfederationname, gvmetadataurl, gvScope) "
+            "VALUES ('Verwaltungsportalverbund (Test)', 'http://mdfeed.test.portalverbund.gv.at/metadata.xml', 'initial');"
+        ),
+        migrations.RunSQL(
+            "INSERT  INTO tnadmin_gvOrganisation (cn, gvouid, gvOuCn, gvouvkz, gvScope, ldap_dn, o) "
+            "VALUES ('Verwaltungsportalverbund (Depositar innerhalb der TNV)', 'AT:PVP:0', 'nicht ändern', 'AG-IZ', 'intern', 'dummy', 'AG-IZ')"
+            "ON CONFLICT DO NOTHING;"
         ),
     ]

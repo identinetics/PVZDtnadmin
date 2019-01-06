@@ -6,6 +6,7 @@ APPHOME=$(dirname $scriptsdir)
 if [[ ! -e "$APPHOME/database/database_initialized" ]]; then
     echo 'database schema has not been created yet'
     $scriptsdir/init_database.sh
+    mkdir -p $APPHOME/database
     touch $APPHOME/database/database_initialized
 else
     echo 'database already initialized'

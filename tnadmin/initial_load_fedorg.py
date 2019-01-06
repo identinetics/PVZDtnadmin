@@ -18,6 +18,7 @@ django.setup()
 #from ldapgvat.models import GvUserPortal as LdapUserPortal
 import ldapgvat.models
 from tnadmin.models.constants import *
+from tnadmin.models.get_defaults import *
 from tnadmin.models.gvfederationorg import *
 from tnadmin.models.gvorg import *
 import tnadmin.models.gvorg
@@ -42,6 +43,7 @@ class InitialLoadFedOrg:
                     fedorg.gvContractStatus = LEGAL_BASIS_PVV
                     fedorg.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
                     fedorg.save()
+            pass
 
     def load_STP_DL_org(self):
         fedorg_stp_dl = pathlib.Path(sys.argv[0]).parent / 'tests' / 'data' / 'fedorg_stp_dl.json'
@@ -64,12 +66,33 @@ class InitialLoadFedOrg:
                 for ouid in userportal.gvParticipants:
                     gvorg = self.get_gvorg_by_ouid(ouid, '')
                     if gvorg:
-                        fedorg = GvFederationOrg(gvouid=gvorg)
-                        fedorg.gvContractStatus = LEGAL_BASIS_ENTITLED_ORG
-                        fedorg.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
-                        fedorg.save()
+                        fedorg_new = GvFederationOrg(gvouid=gvorg)
+                        fedorg_new.gvouid_aufsicht_id = get_default_org()
+                        fedorg_new.gvouid_dl_id = get_default_org()
+                        fedorg_new.gvContractStatus = LEGAL_BASIS_ENTITLED_ORG
+                        if not self.is_already_on_db_or_pvv(fedorg_new):
+                            fedorg_new.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
+                            fedorg_new.save()
                     else:
                         print(f'participant {ouid} registered in {userportal.dn} not found in gvOrganisation', file=sys.stderr)
+
+    def is_already_on_db_or_pvv(self, new: GvFederationOrg):
+        try:
+            GvFederationOrg.objects.get(gvouid_id=new.gvouid_id,
+                                        gvouid_aufsicht_id=new.gvouid_aufsicht_id,
+                                        gvouid_dl_id = new.gvouid_dl_id,
+                                        gvContractStatus = new.gvContractStatus)
+            return True
+        except Exception:
+            pass
+        try:
+            GvFederationOrg.objects.get(gvouid_id=new.gvouid_id,
+                                        gvouid_aufsicht_id=new.gvouid_aufsicht_id,
+                                        gvouid_dl_id=new.gvouid_dl_id,
+                                        gvContractStatus=LEGAL_BASIS_PVV)
+            return True
+        except Exception:
+            return False
 
     def get_gvorg_by_ouid(self, ouid: str, cn: str) -> GvOrganisation:
         try:

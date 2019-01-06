@@ -1,3 +1,4 @@
+from tnadmin.models.get_defaults import *
 from tnadmin.models.gvadminabstract import *
 from tnadmin.models.gvfederation import *
 from tnadmin.models.gvorg import *

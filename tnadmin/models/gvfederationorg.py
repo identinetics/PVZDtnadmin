@@ -2,19 +2,14 @@ import datetime
 from django.db import models
 from django.core.validators import MaxValueValidator
 from tnadmin.models.constants import *
+from tnadmin.models.get_defaults import *
 from tnadmin.models.gvadminabstract import GvAdminAbstract
 from tnadmin.models.gvfederation import GvFederation
 from tnadmin.models.gvorg import GvOrganisation
 from tnadmin.models.gvuserportal import *
 
-#  Attributdefinitionen laut LDAP-gvat_2-5-1
 
-def get_default_federationname() -> int:
-    try:
-        defaultFedName = GvFederation.objects.filter(gvDefaultFederation=True)[0].id
-    except IndexError:
-        defaultFedName = ''
-    return defaultFedName
+#  Attributdefinitionen laut LDAP-gvat_2-5-1
 
 class GvFederationOrg(GvAdminAbstract):
     class Meta:
@@ -27,20 +22,23 @@ class GvFederationOrg(GvAdminAbstract):
         GvOrganisation,
         related_name='Vertragspartei',
         on_delete=models.CASCADE,
+        null=False,
         verbose_name='Vertragspartei (berechtigt)',
         help_text='gvOuId der Vertragspartei in der Rolle Teilnehmer, zugriffsberechtige Stelle oder Dienstleister')
     gvouid_aufsicht = models.ForeignKey(
         GvOrganisation,
         related_name='VertragsparteiPVV',
         on_delete=models.PROTECT,
-        null=True, blank=True,
+        null=False, blank=True,
+        default=get_default_org(),
         verbose_name='Vertragspartei (Aufsicht)',
         help_text='gvOuId der Vertragspartei in der Rolle "Vertreter des Depositars"')
     gvouid_dl = models.ForeignKey(
         GvOrganisation,
         related_name='Dienstleister',
         on_delete=models.PROTECT,
-        null=True, blank=True,
+        null=False, blank=True,
+        default=get_default_org(),
         verbose_name='Dienstleister',
         help_text='gvOuId des Dienstleister')
     gvContractStatus = models.CharField(

@@ -27,3 +27,4 @@ DATABASES = {
     },
 }
 
+os.environ['SQLLITE'] = 'True'   # signal tnadmin migration not to add postgres-specific constraints

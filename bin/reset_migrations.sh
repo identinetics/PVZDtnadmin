@@ -9,7 +9,7 @@ export DJANGO_SETTINGS_MODULE=pvzdweb.settings_dev
 
 echo 'reset DB to remove migration history and app schema'
 ssh devl11 /home/r2h2/devl/docker/c-pvzdweb-pg-dev/reset_pg_data.sh
-sleep 2 && $APPHOME/pvzdweb/wait_pg_become_ready.sh
+sleep 5 # && $APPHOME/pvzdweb/wait_pg_become_ready.sh
 
 echo 'temporarily removing custom migration code (tnadmin/migrations/*_custom_migr_*)'
 mkdir -p $APPHOME/tnadmin/tmp_makemigrations

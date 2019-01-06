@@ -65,11 +65,16 @@ class LdapSync:
         for dbOrg in DbGvOrg.objects.all():
             self.ldapSyncJob.del_db_records_read += 1
             if dbOrg.ldap_dn not in self.ldapgvat_entries:
-                self.del_dbOrg(dbOrg)
+                if not self.is_fixed_record(dbOrg):
+                    self.del_dbOrg(dbOrg)
             max_input_rec += 1
             if max_input_rec == self.args.max_input_rec and self.args.max_input_rec > 0:
                 print(f'processing stopped after reading {max_input_rec} records from db.')
                 break
+
+    def is_fixed_record(self, dbOrg: DbGvOrg) -> bool:
+        return dbOrg.id == 1  # AT:PVP:0 is hard coded, not synced to LDAP
+
 
     def ldapSyncJob_housekeeping(self):
         qs = LdapSyncJob.objects.order_by('-started_at')
