@@ -13,7 +13,7 @@ else
 fi
 
 echo 'loading gvOrganisation'
-python $APPHOME/tnadmin/sync_gvOrg_from_ldapgvat.py
+python $APPHOME/tnadmin/sync_gvOrg_from_ldapgvat.py --select-all
 printf "\n\n\n"
 echo 'loading gvFederationOrg'
 python $APPHOME/tnadmin/initial_load_fedorg.py

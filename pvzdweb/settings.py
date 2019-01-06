@@ -26,6 +26,7 @@ ALLOWED_HOSTS = ['*']
 #    'GvFederation': 5
 #}
 
+# Add apps according to the instance
 INSTALLED_APPS = [
     # 'admin_menu',
     'django.contrib.admin',
@@ -34,11 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'fedop',
-    'ldapgvat',
-    'portaladmin',
-    #'portaladmin.apps.PortaladminConfig',
-    'tnadmin',
 ]
 
 MIDDLEWARE = [

@@ -31,3 +31,4 @@ DATABASES = {
     },
 }
 
+INSTALLED_APPS += ('fedop', 'ldapgvat', 'portaladmin', 'tnadmin')

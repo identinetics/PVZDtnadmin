@@ -12,25 +12,28 @@ else:
     assert False
 from django.core.exceptions import ObjectDoesNotExist
 from ldapgvat.models import GvOrganisation as LdapGvOrg
+from tnadmin.models.get_defaults import get_default_org
 from tnadmin.models import GvOrganisation as DbGvOrg
-from tnadmin.models.ldapsync import LdapSyncError, LdapSyncJob
+from tnadmin.models.ldapsync import LdapSyncErrorPull, LdapSyncJobPull
 import tnadmin.models.gvorg
 
-class LdapSync:
+class LdapSyncPull:
     def __init__(self):
         self.args = self.get_args()
-        self.ldapSyncJob = LdapSyncJob()
+        self.ldapSyncJob = LdapSyncJobPull()
         self.ldapSyncJob.save()
         self.ldapgvat_entries = set()
 
     def get_args(self):
-        parser = argparse.ArgumentParser(description='Sync TNAdmin database with LdapGvAt')
+        parser = argparse.ArgumentParser(description='Sync TNAdmin database with LdapGvAt (Download from LDAP)')
         parser.add_argument('-c', '--max-inputrec', dest='max_input_rec', type=int, default=0,
                             help='Do not read more than <value> records from ldap')
         parser.add_argument('-D', '--no-delete', dest='nodelete', action="store_true",
                             help='Do not delete records in database that are missing in ldap')
         parser.add_argument('-j', '--max-jobhistory', dest='max_jobhistory', type=int, default=10,
                             help='Keep max, <jobhistory> jobs, delete oldest first.')
+        parser.add_argument('-s', '--select-all', dest='select_all', action="store_true",
+                            help='initial import: select all records from ldap (default: only gvOuId=AT:B:*')
         parser.add_argument('-v', '--verbose', dest='verbose', action="store_true")
         return parser.parse_args()
 
@@ -43,7 +46,11 @@ class LdapSync:
 
     def add_and_update(self):
         max_input_rec = 0
-        for ldapOrg in LdapGvOrg.objects.all():
+        if self.args.select_all:
+            queryset = LdapGvOrg.objects.all()
+        else:
+            queryset = LdapGvOrg.objects.filter(gvouid__startswith='AT:B:')
+        for ldapOrg in queryset:
             self.ldapgvat_entries.add(ldapOrg.dn) # later use: delete orphans
             self.ldapSyncJob.add_upd_ldap_records_read += 1
             create = False
@@ -62,7 +69,11 @@ class LdapSync:
 
     def delete_orphans(self):
         max_input_rec = 0
-        for dbOrg in DbGvOrg.objects.all():
+        if self.args.select_all:
+            queryset = DbGvOrg.objects.all()
+        else:
+            queryset = DbGvOrg.objects.filter(gvouid__startswith='AT:B:')
+        for dbOrg in queryset:
             self.ldapSyncJob.del_db_records_read += 1
             if dbOrg.ldap_dn not in self.ldapgvat_entries:
                 if not self.is_fixed_record(dbOrg):
@@ -73,22 +84,20 @@ class LdapSync:
                 break
 
     def is_fixed_record(self, dbOrg: DbGvOrg) -> bool:
-        return dbOrg.id == 1  # AT:PVP:0 is hard coded, not synced to LDAP
-
+        return dbOrg.id == get_default_org() # AT:PVP:0 is hard coded, not synced to LDAP
 
     def ldapSyncJob_housekeeping(self):
-        qs = LdapSyncJob.objects.order_by('-started_at')
+        qs = LdapSyncJobPull.objects.order_by('-started_at')
         for i in range(self.args.max_jobhistory, len(qs)):
             ldapSyncJob = qs[i]
-            if self.args.verbose: print(f'deleted LdapSyncJob {ldapSyncJob.id}')
+            if self.args.verbose: print(f'deleted LdapSyncJobPull {ldapSyncJob.id}')
             ldapSyncJob.delete()
-
 
     def write_summary(self):
         print(f'{self.ldapSyncJob.add_upd_ldap_records_read} ldap records read.')
         print(f'{self.ldapSyncJob.add_upd_records_skipped} ldap records skipped.')
-        print(f'{self.ldapSyncJob.add_upd_records_added} ldap records added to db.')
-        print(f'{self.ldapSyncJob.add_upd_records_updated} ldap records updated in db.')
+        print(f'{self.ldapSyncJob.add_upd_records_added} records added to db.')
+        print(f'{self.ldapSyncJob.add_upd_records_updated} records updated in db.')
         print(f'{self.ldapSyncJob.add_upd_records_update_failed} db updates failed.')
         print(f'{self.ldapSyncJob.del_db_records_read} db records read.')
         print(f'{self.ldapSyncJob.del_records_deleted } db records deleted.')
@@ -99,8 +108,8 @@ class LdapSync:
         dbOrg = DbGvOrg()
         dbOrg.ldap_dn = ldapOrg.dn
         for attrib in DbGvOrg().defined_attr():
-            source_attr = getattr(ldapOrg, attrib, None)
-            setattr(dbOrg, attrib, source_attr)
+            source_val = getattr(ldapOrg, attrib, None)
+            setattr(dbOrg, attrib, source_val)
         self.save_dbOrg(dbOrg, 'add')
 
     def update_dbGvOrg_from_LdapGvOrg(self, dbOrg: DbGvOrg, ldapOrg: LdapGvOrg):
@@ -114,7 +123,7 @@ class LdapSync:
                 changed_attr += 1
                 changed_attr_list += f'{attrib}: "{source_val}"/"{dest_val}", '
         if changed_attr > 0:
-            print(f'debug: updating {ldapOrg.gvOuId} because of {changed_attr_list}')
+            if self.args.verbose: print(f'updating {ldapOrg.gvOuId} because of {changed_attr_list}')
             self.save_dbOrg(dbOrg, 'update')
         else:
             if self.args.verbose: print(f'skipped {ldapOrg.dn}')
@@ -146,7 +155,7 @@ class LdapSync:
             if self.args.verbose: print(f'{op_message} {dbOrg.ldap_dn}')
 
     def save_error_to_db(self, op_message, ldap_dn, e):
-        ldapSyncError = LdapSyncError(
+        ldapSyncError = LdapSyncErrorPull(
             op = op_message,
             ldap_dn = ldap_dn,
             message = str(e),
@@ -158,5 +167,5 @@ class LdapSync:
 
 
 if __name__ == '__main__':
-    ldapSync = LdapSync()
+    ldapSync = LdapSyncPull()
     ldapSync.main()

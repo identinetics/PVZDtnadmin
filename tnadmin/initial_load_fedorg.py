@@ -114,14 +114,4 @@ class InitialLoadFedOrg:
         return None
 
 
-    #def map_gvorg_to_fedorg_legal_basis(self, gvorg: GvOrganisation):
-    #    if re.search(r'^L\d$', gvouvkz):
-    #        return LEGAL_BASIS_PVV
-    #    if re.search(r'^B[A-Za-z]', gvouvkz):
-    #        if gvOuVKZ != 'BPDION':
-    #            return LEGAL_BASIS_PVV
-    #    if gvOuVKZ in ('BBA-STA', ):
-    #            return LEGAL_BASIS_PVV
-
-
 InitialLoadFedOrg().main()
