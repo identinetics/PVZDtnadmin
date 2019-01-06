@@ -9,6 +9,8 @@ class Migration(migrations.Migration):
         ('tnadmin', '0001_initial'),
     ]
 
+
+    operations = []
     operations = [
         migrations.RunSQL(
             "ALTER TABLE tnadmin_gvorganisation ADD CONSTRAINT gvOuVKZ_maxlen_32 CHECK (length(gvOuVKZ) <= 32);"
@@ -22,4 +24,26 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             "ALTER TABLE tnadmin_gvorganisation ADD CONSTRAINT o_maxlen_64 CHECK (length(o) <= 64);"
         ),
-    ]
+        migrations.RunSQL("""
+            CREATE OR REPLACE FUNCTION tnadmin_gvfederationorg_ins_up_before()
+              RETURNS trigger AS
+            $func$
+            BEGIN            
+              -- enforce multi-comlumn unique-constraint when columns may be NULL              
+              IF EXISTS (SELECT 1 FROM tnadmin_gvfederationorg
+                         WHERE (gvouid_id,     COALESCE(gvouid_aufsicht_id, -1),     COALESCE(gvouid_dl_id, -1),     gvContractStatus)
+                         = (NEW.gvouid_id, COALESCE(NEW.gvouid_aufsicht_id, -1), COALESCE(NEW.gvouid_dl_id, -1), NEW.gvContractStatus)) THEN
+                 RAISE EXCEPTION 'duplicate gvfederationorg' USING ERRCODE = 'unique_violation';
+              END IF;               
+              RETURN NEW;                    
+            END
+            $func$  LANGUAGE plpgsql;
+        """
+        ),
+        migrations.RunSQL("""
+            CREATE TRIGGER ins_up_before
+            BEFORE INSERT OR UPDATE OF gvouid_id, gvouid_aufsicht_id, gvouid_dl_id, gvContractStatus -- fire only when relevant
+            ON tnadmin_gvfederationorg
+            FOR EACH ROW EXECUTE PROCEDURE tnadmin_gvfederationorg_ins_up_before();            
+            """
+            ]
