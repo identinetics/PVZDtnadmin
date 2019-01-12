@@ -77,12 +77,12 @@ DATABASES = {
         'NAME': 'pvzddb',
         'USER': 'postgres',
         'PASSWORD': 'changeit',  # superuser password for PostgreSQL
-        'HOST': 'postgres',
+        'HOST': 'postgres_ci',
         'PORT': '5432',
     },
     'ldap': {
         'ENGINE': 'ldapdb.backends.ldap',
-        'NAME': 'ldap://openldap_pv:8389',
+        'NAME': 'ldap://openldap_pv:12389',
         'USER': 'cn=admin,dc=at',
         'PASSWORD': 'changeit',
         # 'TLS': ,
