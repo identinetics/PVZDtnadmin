@@ -18,6 +18,13 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 
+# disable access control
+class AccessUser:
+    has_module_perms = has_perm = __getattr__ = lambda s,*a,**kw: True
+
+admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
