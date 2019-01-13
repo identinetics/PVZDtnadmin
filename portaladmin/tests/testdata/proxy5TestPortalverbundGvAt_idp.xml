@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor
+  entityID="https://proxy5.test.portalverbund.gv.at/sp"
+  xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport"
+  xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" 
+  xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" 
+  xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+  xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+  xmlns:disco="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol">
+  <md:Extensions>
+    <mdattr:EntityAttributes>
+      <saml:Attribute xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
+           Name="http://macedir.org/entity-category" 
+           NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://www.ref.gv.at/ns/names/agiz/pvp/egovtoken</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </md:Extensions>
+  <md:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:Extensions>
+      <disco:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://proxy1.test.portalverbund.gv.at/Saml2/disco" index="1"/>
+      <alg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+      <alg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+      <alg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
+      <alg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="de">SP5 Proxy mit IDP-Discovery(Dev)</mdui:DisplayName>
+        <mdui:Description xml:lang="de">IDP-Discovery Proxy für SP5 (Entwicklung)</mdui:Description>
+        <mdui:Logo xml:lang="en" height="150" width="50">https://fairchat.net/rcstatic/img/rot-weiss-rot-logo300x100px.png</mdui:Logo>
+      </mdui:UIInfo>
+    </md:Extensions>
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <ds:X509Certificate>
+            MIIDKjCCAhICCQDvIVkfS3qjXzANBgkqhkiG9w0BAQsFADBXMQswCQYDVQQGEwJB
+            VDENMAsGA1UECAwEV2llbjENMAsGA1UEBwwEV2llbjEMMAoGA1UECgwDQktBMQsw
+            CQYDVQQLDAJJVDEPMA0GA1UEAwwGU0FUT1NBMB4XDTE3MDkxNTE4MjcxMFoXDTI3
+            MDkxMzE4MjcxMFowVzELMAkGA1UEBhMCQVQxDTALBgNVBAgMBFdpZW4xDTALBgNV
+            BAcMBFdpZW4xDDAKBgNVBAoMA0JLQTELMAkGA1UECwwCSVQxDzANBgNVBAMMBlNB
+            VE9TQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANV9qqf1TfVXC/Gk
+            wC2JwWBluqP0R6L89fPTbR0+Fxg/O33rn+J3h+UN8Zd4SDCfbuTrk3J0amlTFSFW
+            JswbklqmObLjkECJo37dwSG+CNowhpdfJrjHXCEi84iN8inFGAbgUhOzzl1sLQnW
+            9HbCe9eSIXJC1fu8IISwk/Ax2YvvMcpP27iN70Al1UPQ2NcHoDS9HFCAwdrUzHdd
+            oYkR+Tc1XK3lNGZHiAutr1zXSHoI3nhcD17dQjfzZnanqs6xWX2x/PHxXlFRDgsj
+            XbR/wSOEtKMJcSQHjxALWzKaLdk7Erzq1d/MvEQPzAAlo2vTOELro8fx2krY7Trt
+            Nd960ykCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAyR5yPOWCY2fGINRfaRYRVfLC
+            9+vR1SWl0AY0kk5VEePNOqjIcRzqIJm6iPU/Mgpt8+BfJjBPvP7Eh5qetK+Ky3hB
+            /OB2hb5+uYGYR1Q6TshOOu+PVKOFPDzvtZVJWgbO5FSDv3ClErwavd8HRsd0Oc+R
+            2IulH7RCeRC4+XmrC/yq6ZNwjgp4wNO5XKF0RWcGzrxIP4UtvIMlaG39v/ekahLI
+            k6ky+ZqfAOjWUAjOw9MycmnNgfSDkpdFsbbuvfBXifLt/46cXDGA8dkbfb4ymbFO
+            7h+6xyqiMT8OdcfJQ/KSAYsFW0gXZDur7K3BGtiwCsvtQE9iFtUOorjhw/cJ0A==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>
+    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://proxy1.test.portalverbund.gv.at/Saml2/acs/post" index="1"/>
+    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://proxy1.test.portalverbund.gv.at/Saml2/acs/redirect" index="2"/>
+  </md:SPSSODescriptor>
+  <md:Organization>
+    <md:OrganizationName xml:lang="en">osAlliance</md:OrganizationName>
+    <md:OrganizationDisplayName xml:lang="en">osAlliance</md:OrganizationDisplayName>
+    <md:OrganizationURL xml:lang="en">https://www.osalliance.com/</md:OrganizationURL>
+  </md:Organization>
+  <md:ContactPerson contactType="technical">
+    <md:GivenName>Rainer</md:GivenName>
+    <md:SurName>Hoerbe</md:SurName>
+    <md:EmailAddress>rh_testfed_pv_at@mail.hoerbe.at</md:EmailAddress>
+  </md:ContactPerson>
+  <md:ContactPerson contactType="support">
+    <md:GivenName>Rainer</md:GivenName>
+    <md:SurName>Hoerbe</md:SurName>
+    <md:EmailAddress>rh_testfed_pv_at@mail.hoerbe.at</md:EmailAddress>
+  </md:ContactPerson>
+</md:EntityDescriptor>

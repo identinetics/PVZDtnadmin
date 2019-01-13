@@ -1,0 +1,66 @@
+<md:EntityDescriptor entityID="https://termino.gv.at/sp" 
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" 
+    xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" 
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <md:Extensions>
+    <mdattr:EntityAttributes xmlns="urn:oasis:names:tc:SAML:metadata:attribute">
+      <Attribute xmlns="urn:oasis:names:tc:SAML:2.0:assertion" Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <AttributeValue>http://www.ref.gv.at/ns/names/agiz/pvp/egovtoken</AttributeValue>
+      </Attribute>
+    </mdattr:EntityAttributes>
+  </md:Extensions>
+  <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:Extensions>
+      <DigestMethod xmlns="urn:oasis:names:tc:SAML:metadata:algsupport" Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
+      <SigningMethod xmlns="urn:oasis:names:tc:SAML:metadata:algsupport" Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256" MaxKeySize="511" MinKeySize="256"></SigningMethod>
+      <SigningMethod xmlns="urn:oasis:names:tc:SAML:metadata:algsupport" Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" MaxKeySize="4096" MinKeySize="2048"></SigningMethod>
+      <UIInfo xmlns="urn:oasis:names:tc:SAML:metadata:ui">
+        <DisplayName xml:lang="en">Termino</DisplayName>
+        <DisplayName xml:lang="de">Termino</DisplayName>
+        <Description xml:lang="en">Termino - Coordinate and share appointments</Description>
+        <Description xml:lang="de">Termino - Termine abstimmen und teilen</Description>
+      </UIInfo>
+      <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="https://termino.gv.at/Shibboleth.sso/Login"></init:RequestInitiator>
+      <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://termino.gv.at/Shibboleth.sso/Login" index="1"></idpdisc:DiscoveryResponse>
+    </md:Extensions>
+    <md:KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <ds:X509Certificate>
+            MIIEFDCCAnygAwIBAgIJAJyoDigFeu28MA0GCSqGSIb3DQEBCwUAMBwxGjAYBgNV BAMTEXd3dy50ZXJtaW5vLmd2LmF0MB4XDTE4MTAyMjEyNTQ1MVoXDTI4MTAxOTEy
+            NTQ1MVowHDEaMBgGA1UEAxMRd3d3LnRlcm1pbm8uZ3YuYXQwggGiMA0GCSqGSIb3 DQEBAQUAA4IBjwAwggGKAoIBgQC3YI/ijLkMAbgJS8apeYMAlZhRI2CJR5EZ00sb
+            JDDnSpTSzjL72h9ePaIoLrGhHm6yAWwDLI7CrDVZcty3bmWOgGUV5gWWkvL5dUHQ sweSXEQ4Rz4WR0XL1VlYTth4hv4Wv4uMPkTDwd1F7Gh95kuKNUihCmDaA/gUN7yB
+            VBUw3R9LxqJVx1G53F9FutXgmX9306PlN+2BsnV78u2JoGpzNflx1ueNezoJMRQH C4kAD4gdpmDK5OhOIYpKz9Db3vuLu7cOOz4buM5LQXUb4O9p6gB0JFC/dbkVzGAr
+            totZe8ORl0PkCLGGZVwgdZKJusOjD7XbjgK1nhRKUHZiF/G1+4jdBMhHmMPo4U9D RV5EhrOexjra1y209gRuX5Gt+YBNoh/M47dvzfsKQwB9KdSYqrY6Ti+ZNmrKwdpd
+            CEc21AZsfhoCnPCwi6d+nG7keci4jSvX96HFBd0/9oVzT22H66YQzSV+89GJFU9t TL+GZzBxizhW2h3qrLY2heZa/B8CAwEAAaNZMFcwNgYDVR0RBC8wLYIRd3d3LnRl
+            cm1pbm8uZ3YuYXSGGGh0dHBzOi8vdGVybWluby5ndi5hdC9zcDAdBgNVHQ4EFgQU kYXxEkMuyD2Vq4USBcSx1b9AYJkwDQYJKoZIhvcNAQELBQADggGBAJVYr8v46DkK
+            bcipdQHBy2pDS4rFO75LTpAuSFOEl5k68yYaCQRP1nMxlnKX12mXPX1lkpgjstFV o6IZMUulbohqcVyKHC4OVhNShIZJNcz2U9GjX8RPkvWIldkye1jt0F7lAuvgC5tG
+            Kn82706MUwPlnjHJoej0MccLjC7QTFeuRdqO86pHpFlMqKj3fqup9tRks8bbAMfB hwbSWe5T0opinSZPa5pLZhwZUTCvFQznuiq464WltpzeUv1pCawoMJSM7G0Wh/FV
+            w9a/fKvCYdhe+dvgZHerAsseBTmGsBeZSFYL+nTxzcey0SVvAThORU6sr53X17oq 8VdfQjzQ9bkp9m6HbH4sLp9l4txWttS20LsFwGlewTpHEzsZjQAnXqWfGnCHxXQ7
+            FdrvvrnSkHDdw3nWSEvBeX13mApfPtjZ+gL8Z32IvXO4xvKmgZqF5cfa/o0M4JDS lvCGkw0O8pN4sTRbhNKccEPPQ/oau288i7BGRKOHMx06zFKz1tb8PQ==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://termino.gv.at/Shibboleth.sso/SLO/Redirect"></md:SingleLogoutService>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>    
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>    
+    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://termino.gv.at/Shibboleth.sso/SAML2/POST" index="1"/>
+  </md:SPSSODescriptor>
+  <md:Organization>
+      <md:OrganizationName xml:lang="en">BKA</md:OrganizationName>
+      <md:OrganizationDisplayName xml:lang="en">Bundeskanzleramt</md:OrganizationDisplayName>
+      <md:OrganizationURL xml:lang="en">https://www.bka.gv.at</md:OrganizationURL>
+  </md:Organization>
+  <md:ContactPerson contactType="support">
+      <md:GivenName>Michael</md:GivenName>
+      <md:SurName>FREITTER</md:SurName>
+      <md:EmailAddress>michael.freitter@bka.gv.at</md:EmailAddress>
+  </md:ContactPerson>
+  <md:ContactPerson contactType="technical">
+      <md:GivenName>Oliver</md:GivenName>
+      <md:SurName>Petschk</md:SurName>
+      <md:EmailAddress>oliver.petschk@bka.gv.at</md:EmailAddress>
+  </md:ContactPerson>
+</md:EntityDescriptor>
+

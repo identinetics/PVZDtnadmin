@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntitiesDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" ID="_7ab6046ab09cdaf27d8d86c2a645a7dc" Name="MOA-ID 2.0 Demo IDP (Version: 3.3.0)" validUntil="2017-11-29T16:12:11.788Z">
+  <md:EntityDescriptor entityID="https://demo.egiz.gv.at/demoportal_moaid-2.0/pvp2/metadata">
+    <md:IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+      <md:Extensions>
+        <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+          <mdui:DisplayName xml:lang="en">EGIZ MOA-ID (Demo)</mdui:DisplayName>
+          <mdui:Description xml:lang="en">EGIZ MOA-ID (Demo)</mdui:Description>
+          <mdui:Logo xml:lang="en" height="100" width="35">https://www.egiz.gv.at/templates/egiz/images/logo.png</mdui:Logo>
+        </mdui:UIInfo>
+      </md:Extensions>
+      <md:KeyDescriptor use="signing">
+        <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+          <ds:X509Data>
+            <ds:X509Certificate>MIIDFTCCAf0CBFUBnL4wDQYJKoZIhvcNAQELBQAwTzELMAkGA1UEBhMCQVQxDTALBgNVBAcMBEdy
+              YXoxDTALBgNVBAoMBEVHSVoxIjAgBgNVBAMMGU1PQS1JRCBJRFAgKFRlc3QtVmVyc2lvbikwHhcN
+              MTUwMzEyMTQwMzQyWhcNMTcxMjA1MTQwMzQyWjBPMQswCQYDVQQGEwJBVDENMAsGA1UEBwwER3Jh
+              ejENMAsGA1UECgwERUdJWjEiMCAGA1UEAwwZTU9BLUlEIElEUCAoVGVzdC1WZXJzaW9uKTCCASIw
+              DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAIJv0qe9UdvFYSL5I02GokwEVfsIGc7I7EhVNOxY
+              9mtUenmhqNrLsLBFg1IiPbk0ISWhORwPyVp/P3+GyGP339qZ68UCGV361E0Qm7cjPe/O3+r3HAM2
+              ZBN8oAZoHmphrNS6fKfY58kygtrUa+ZyMzYWTTiS32SCM8H55bluEFbeZksnbP0Y94IjkfJdgvzl
+              MxzrlSyoV2ymWBjvS5welDHgbCKyjsjIhTRjJu/olGJyen01/EpIVtSyDXO/2IS2v2O9UiFwAoyB
+              YAjPnl3HxK2A577nR63MxlgP0/s+r84uBqOAlb4qnbpU7lu5GxlCPkZmpRooCQYURioC+wjS6lMC
+              AwEAATANBgkqhkiG9w0BAQsFAAOCAQEABqO7kkq/gRahAvpsQg5LLZROGFr9pIPryN9xmJGgPo7j
+              KNl7rs7gNS0lmuluYWWnJcwAPbwFeb954VMB9x9p9QEw5RnXamUY9qa0LgcS/t/WX6vJkZPNhWph
+              8bXwh0MvlsbfrvDTJr8cjH3qfxITp7pa3xb1qE7suRffVUdDXawiXXnWJ/WJr+twVVHHEqnZz1lA
+              rSDLxM8sCjG8DeJw8vnQy5mPGrGVTBba4upc8UTY1nPV9U2GBJVYuAkoVRjbTlNvrL5JqNqypKcG
+              bejjWxgrzZkeQeU2hFcjunmgwGZ+ug2fq4kKkQftwcqeJTzyzBoo2+Oo4Tmfbsh/onxPWA==
+            </ds:X509Certificate>
+          </ds:X509Data>
+        </ds:KeyInfo>
+      </md:KeyDescriptor>
+      <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://demo.egiz.gv.at/demoportal_moaid-2.0/pvp2/post"/>
+      <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://demo.egiz.gv.at/demoportal_moaid-2.0/pvp2/redirect"/>
+      <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>
+      <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+      <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
+      <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://demo.egiz.gv.at/demoportal_moaid-2.0/pvp2/post"/>
+      <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://demo.egiz.gv.at/demoportal_moaid-2.0/pvp2/redirect"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-BIRTHDATE" Name="urn:oid:1.2.40.0.10.2.1.1.261.82"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="BPK" Name="urn:oid:1.2.40.0.10.2.1.1.149" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-FAMILY-NAME" Name="urn:oid:1.2.40.0.10.2.1.1.261.80"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="BIRTHDATE" Name="urn:oid:1.2.40.0.10.2.1.1.55" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-CCS-URL" Name="urn:oid:1.2.40.0.10.2.1.1.261.64"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATE-PROF-REP-OID" Name="urn:oid:1.2.40.0.10.2.1.1.261.86"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="PRINCIPAL-NAME" Name="urn:oid:1.2.40.0.10.2.1.1.261.20"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-AUTH-BLOCK" Name="urn:oid:1.2.40.0.10.2.1.1.261.62"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-LEGAL-PERSON-FULL-NAME" Name="urn:oid:1.2.40.0.10.2.1.1.261.84"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATE-TYPE" Name="urn:oid:1.2.40.0.10.2.1.1.261.68"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-BIRTHDATE" Name="urn:oid:1.2.40.0.10.2.1.1.261.82"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-SIGNER-CERTIFICATE" Name="urn:oid:1.2.40.0.10.2.1.1.261.66"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="ENC-BPK-LIST" Name="urn:oid:1.2.40.0.10.2.1.1.261.22"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATE-PROF-REP-DESCRIPTION" Name="urn:oid:1.2.40.0.10.2.1.1.261.88"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-GIVEN-NAME" Name="urn:oid:1.2.40.0.10.2.1.1.261.78"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-LEGAL-PERSON-FULL-NAME" Name="urn:oid:1.2.40.0.10.2.1.1.261.84"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-LEGAL-PERSON-SOURCE-PIN" Name="urn:oid:1.2.40.0.10.2.1.1.261.100"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="urn:oid:1.2.40.0.10.2.1.1.261.xx.xx" Name="urn:oid:1.2.40.0.10.2.1.1.261.xx.xx"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATE-REFERENCE-VALUE" Name="urn:oid:1.2.40.0.10.2.1.1.261.90"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-CITIZEN-QAA-LEVEL" Name="urn:oid:1.2.40.0.10.2.1.1.261.94"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATE-FULL-MANDATE" Name="urn:oid:1.2.40.0.10.2.1.1.261.92"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-SOURCE-PIN" Name="urn:oid:1.2.40.0.10.2.1.1.261.70"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-ISSUING-NATION" Name="urn:oid:1.2.40.0.10.2.1.1.261.32"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-LEGAL-PERSON-SOURCE-PIN-TYPE" Name="urn:oid:1.2.40.0.10.2.1.1.261.76"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-BPK" Name="urn:oid:1.2.40.0.10.2.1.1.261.98"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="PVP-VERSION" Name="urn:oid:1.2.40.0.10.2.1.1.261.10"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-STORK-TOKEN" Name="urn:oid:1.2.40.0.10.2.1.1.261.96"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-LEGAL-PERSON-SOURCE-PIN" Name="urn:oid:1.2.40.0.10.2.1.1.261.100"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="BIRTHDATE" Name="urn:oid:1.2.40.0.10.2.1.1.55" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-SOURCE-PIN" Name="urn:oid:1.2.40.0.10.2.1.1.261.36"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="GIVEN-NAME" Name="urn:oid:2.5.4.42" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-SOURCE-PIN-TYPE" Name="urn:oid:1.2.40.0.10.2.1.1.261.102"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-SECTOR-FOR-IDENTIFIER" Name="urn:oid:1.2.40.0.10.2.1.1.261.34"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-GIVEN-NAME" Name="urn:oid:1.2.40.0.10.2.1.1.261.78"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-SOURCE-PIN-TYPE" Name="urn:oid:1.2.40.0.10.2.1.1.261.104"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATE-TYPE-OID" Name="urn:oid:1.2.40.0.10.2.1.1.261.106"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-IDENTITY-LINK" Name="urn:oid:1.2.40.0.10.2.1.1.261.38"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="EID-CITIZEN-QAA-EIDAS-LEVEL" Name="urn:oid:1.2.40.0.10.2.1.1.261.108"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <saml2:Attribute xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" FriendlyName="MANDATOR-NATURAL-PERSON-FAMILY-NAME" Name="urn:oid:1.2.40.0.10.2.1.1.261.80"
+                       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+    </md:IDPSSODescriptor>
+    <md:Organization>
+      <md:OrganizationName xml:lang="de">EGIZ</md:OrganizationName>
+      <md:OrganizationDisplayName xml:lang="de">E-Government Innovationszentrum</md:OrganizationDisplayName>
+      <md:OrganizationURL xml:lang="de">http://www.egiz.gv.at</md:OrganizationURL>
+    </md:Organization>
+    <md:ContactPerson contactType="technical">
+      <md:Company>E-Government Innovationszentrum</md:Company>
+      <md:GivenName>Lenz</md:GivenName>
+      <md:SurName>Thomas</md:SurName>
+      <md:EmailAddress>thomas.lenz@egiz.gv.at</md:EmailAddress>
+      <md:TelephoneNumber>+43 316 873 5525</md:TelephoneNumber>
+    </md:ContactPerson>
+  </md:EntityDescriptor>
+</md:EntitiesDescriptor>

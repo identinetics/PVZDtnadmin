@@ -46,14 +46,14 @@ def add_namespaces():
         try:
             o = GvOrganisation.objects.get(gvouid=gvouid_parent)
         except GvOrganisation.DoesNotExist:
-            print(f'Importing {ns_name}: {gvouid_parent} not a registered organisation')
+            print(f'Importing {ns_name}: {gvouid_parent} not a registered organisation', file=sys.stderr)
             return None
         qs = GvUserPortalOperator.objects.filter(gvouid_id=o.id)
         if len(qs) > 1:
-            print('Importing namespace %s has more than one parent (org)' % ns_name)
+            print('Importing namespace %s has more than one parent (org)' % ns_name, file=sys.stderr)
             return None
         if not qs:
-            print('Importing namespace %s: parent (org) not a UserPortalOperator' % ns_name)
+            print('Importing namespace %s: parent (org) not a UserPortalOperator' % ns_name, file=sys.stderr)
             return None
         return qs[0]
 
@@ -72,40 +72,43 @@ def add_namespaces():
 
 def add_userprivileges():
     def _get_foreign_key_parent_obj(gvouid_parent, cert) -> int:
-        qs = GvUserPortalOperator.objects.filter(gvouid__gvouid=gvouid_parent)
-        if len(qs) > 1:
-            print('Importing userprivilege %s has more than one parent (org)' % cert)
+        try:
+            o = GvOrganisation.objects.get(gvouid=gvouid_parent)
+        except GvOrganisation.DoesNotExist:
+            print(f'Importing admin (userprivilege): {gvouid_parent} not a registered organisation', file=sys.stderr)
             return None
+        qs = GvUserPortalOperator.objects.filter(gvouid_id=o.id)
         if not qs:
-            print('Importing userprivilege %s: parent (org) not found' % cert)
+            print(f"adding admin (userprivilege) for {u_username} ({u_orgid}): parent (GvUserPortalOperator) not found", file=sys.stderr)
             return None
         return qs[0]
 
     u_recs = policystore3().get_userprivileges()
     for cert in u_recs:
-        u_orgid = u_recs[cert][0]
+        u_orgid_list = u_recs[cert][0]
         u_username = u_recs[cert][1]
-        parent_o = _get_foreign_key_parent_obj(u_orgid, cert)
-        if parent_o:
-            u = Userprivilege(gvouid_parent=parent_o, cert=cert)
-            if not Userprivilege.objects.filter(cert=cert):  # assume base64 without whitespace
-                u.save()
-                print(f"added userprivilege for {u_username} ({u_orgid})")
-            else:
-                print(f"skipped duplicate userprivilege entry for {u_username} ({u_orgid}")
+        for u_orgid in u_orgid_list:
+            parent_o = _get_foreign_key_parent_obj(u_orgid, cert)
+            if parent_o:
+                u = Userprivilege(gvouid_parent=parent_o, cert=cert)
+                if not Userprivilege.objects.filter(cert=cert):  # assume base64 without whitespace
+                    u.save()
+                    print(f"added admin (userprivilege) for {u_username} ({u_orgid})")
+                else:
+                    print(f"skipped duplicate userprivilege entry for {u_username} ({u_orgid}")
 
 
 def add_issuers():
     i_recs = policystore3().get_issuers()
     for subject_cn in i_recs.keys():
-        if not Issuer.objects.filter(subject_cn=subject_cn):
-            i = Issuer(subject_cn=subject_cn)
-            i.pvprole = i_recs[subject_cn][0]
-            i.cacert = i_recs[subject_cn][1]
+        i = Issuer(subject_cn=subject_cn)
+        i.pvprole = i_recs[subject_cn][0]
+        i.cacert = i_recs[subject_cn][1]
+        try:
             i.save()
-            print('added Issuer %s' % subject_cn)
-        else:
-            print('skipped duplicate Issuer entry %s' % subject_cn)
+            print(f"added Issuer {subject_cn}")
+        except django.db.utils.IntegrityError:
+            print(f"skipped duplicate issuer {subject_cn}")
 
 
 def add_revocation():
@@ -121,7 +124,7 @@ def add_revocation():
         try:
             Revocation.objects.get(cert=cert)
             rec_found = True
-            print('skipped duplicate revocation_cert %s' % cert)
+            print('skipped duplicate revocation_cert %s...' % cert[0:80])
         except Revocation.DoesNotExist:
             pass
         if not rec_found:

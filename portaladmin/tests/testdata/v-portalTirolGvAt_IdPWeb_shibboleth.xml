@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<EntityDescriptor 
+    entityID="https://v-portal.tirol.gv.at/IdPWeb/shibboleth" 
+    xmlns="urn:oasis:names:tc:SAML:2.0:metadata" 
+    xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport" 
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+    xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" 
+    xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" 
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <Extensions>
+            <alg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <alg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256" MaxKeySize="511" MinKeySize="256"/>
+            <alg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" MaxKeySize="4096" MinKeySize="2048"/>
+            <mdui:UIInfo>
+                <mdui:DisplayName xml:lang="de">Portal Tirol IDP</mdui:DisplayName>
+                <mdui:DisplayName xml:lang="en">Portal Tirol IDP</mdui:DisplayName>
+                <mdui:Description xml:lang="de">Shibboleth Identity Provider im Portal Tirol
+                </mdui:Description>
+                <mdui:Logo height="114" width="114">https://static.tirol.gv.at/design/3.0.3/img/base/v-touch-icon-114x114-precomposed.png
+                </mdui:Logo>
+            </mdui:UIInfo>
+        </Extensions>
+        <KeyDescriptor>
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>MIIGqDCCBZCgAwIBAgICAd4wDQYJKoZIhvcNAQEFBQAwgZgxCzAJBgNVBAYTAkFU
+                    MQ0wCwYDVQQIEwRXaWVuMScwJQYDVQQKEx5CdW5kZXNtaW5pc3Rlcml1bSBmdWVy
+                    IElubmVyZXMxDjAMBgNVBAsTBUlULU1TMRkwFwYDVQQDExBQb3J0YWx2ZXJidW5k
+                    LUNBMSYwJAYJKoZIhvcNAQkBFhdibWktaXYtMi1lLWNhQGJtaS5ndi5hdDAeFw0x
+                    MzEwMTAwNjUzNTRaFw0xNTEwMzAwNjUzNTRaMH0xCzAJBgNVBAYTAkFUMQ4wDAYD
+                    VQQIEwVUaXJvbDETMBEGA1UEChMKTGFuZCBUaXJvbDEqMCgGA1UECxMhRFZULURh
+                    dGVuLVZlcmFyYmVpdHVuZy1UaXJvbCBHbWJIMR0wGwYDVQQDExR2LXBvcnRhbC50
+                    aXJvbC5ndi5hdDCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBANiIQ1Jq
+                    XisUirZaQ42/WDMjtz/AoGhzOCpTSIzb0JwL8BIzus/6Dd2tdcFY1CQaPcaKNL7z
+                    IzTK4RG0pzhnJIeo9oiD+refYZpuOgQQMHtrgYExPVaDOiDbG0gPuIOR+nHK1ZGP
+                    XQ7wToN5l17gmNuUzswQ9OFmNGNkgFBwo89cRxlkTFzeF9uAzH+GPEh4sBOprC6W
+                    dAMI3Ags8VRWeAeJiygpENrRiydeWB7Hnu0jX/qdRCTswENBKJotqRPKCCBdmigV
+                    lSsabMYwrF6+bwgvrWgdtoqO/JXe640UnSxG0BWiqiMKpDTfkWG/AGgDSn4m1xtJ
+                    1IdgEb38s1I+56+EgDp2BqqLB64ZZFWACcWcoGbClP9Q1M5RKmZfYEq5XbhGJsf5
+                    zWESGAQBb1q123wg8ypkgDnD6R0qUInx6BTeWqvyziVP0WoD8OQvuLtFhDgnlVc/
+                    PtyIebpa6jqaoXmHALlReFaJVCk3bdPT4mMmHPYiVInMQm7tP2GgwGvV7aGLnyEA
+                    1jnyU5rDjA6Ob83Tk7C4D453R//gCLBnDH8gME2BOOqIHBBf9RUEOvC3E49ZFxrI
+                    gBw7OejRhEfOZCrj/22avU5ZQ3vqqBKGXy0niALBj4mteufNio27oGgfZCGfAbv9
+                    PgT28+fT5Rxoh5Rdr/DnPc7Vjnbj9BP5XDQtAgMBAAGjggIUMIICEDAJBgNVHRME
+                    AjAAMAsGA1UdDwQEAwIF4DAsBglghkgBhvhCAQ0EHxYdT3BlblNTTCBHZW5lcmF0
+                    ZWQgQ2VydGlmaWNhdGUwHQYDVR0OBBYEFBaHjxkWyxn0FypvSxkHxumrm+VLMIHR
+                    BgNVHSMEgckwgcaAFKYe9F4aQ7SI3qLIvWhlA8Uwb2bToYGqpIGnMIGkMQswCQYD
+                    VQQGEwJBVDENMAsGA1UECBMEV2llbjENMAsGA1UEBxMEV2llbjEnMCUGA1UEChMe
+                    QnVuZGVzbWluaXN0ZXJpdW0gZnVlciBJbm5lcmVzMQ4wDAYDVQQLEwVJVC1NUzEW
+                    MBQGA1UEAxMNUG9ydGFsUm9vdC1DQTEmMCQGCSqGSIb3DQEJARYXYm1pLWl2LTIt
+                    ZS1jYUBibWkuZ3YuYXSCAQEwCQYDVR0RBAIwADAiBgNVHRIEGzAZgRdibWktaXYt
+                    Mi1lLWNhQGJtaS5ndi5hdDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8vcG9ydGFs
+                    LmJtaS5ndi5hdC9yZWYvcGtpL3BvcnRhbENBL1BvcnRhbFYuY3JsME8GCCsGAQUF
+                    BwEBBEMwQTA/BggrBgEFBQcwAoYzaHR0cDovL3BvcnRhbC5ibWkuZ3YuYXQvcmVm
+                    L3BraS9wb3J0YWxDQS9pbmRleC5odG1sMA4GByooAAoBAQEEAwEB/zANBgkqhkiG
+                    9w0BAQUFAAOCAQEAlAMfC/I9pMKqZabSyfBq/OuadZYPmV+wnqmeE5RMfznNWluS
+                    aGGY2nKGPFKtm6dr+T53h+9pcAFg/qRPc5Y4fiZDOxJ+I/XkAGbI7yYLG85SjKly
+                    GMf6eKvyCvv7C3UcTKpqH5RRqvZKwCPQ9R7qSUp6w4CemKb/vNROF1RFiYuvS1rf
+                    7tx+ajjavYtsKnbybwgu4oAOHmrToVMIQuKZ2d6jn5iBZmL6DJ2GlUk4el4JNY9u
+                    tV7QHAjRumkiCsB/iKE0PiaEARanODivPE9/JIitv+D+fC3nJvCAA6ijrY47TAtL
+                    YG/iiovDAv1ElBcNTAqaYmvJ77na/M1JXkeLEQ==
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://v-portal.tirol.gv.at/IdPWeb/profile/SAML2/POST/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://v-portal.tirol.gv.at/IdPWeb/profile/SAML2/Redirect/SSO"/>
+    </IDPSSODescriptor>
+    <Organization>
+        <OrganizationName xml:lang="de">Land Tirol
+        </OrganizationName>
+        <OrganizationDisplayName xml:lang="de">Land Tirol - Portal V-Stage
+        </OrganizationDisplayName>
+        <OrganizationURL xml:lang="de">https://www.tirol.gv.at/
+        </OrganizationURL>
+    </Organization>
+    <ContactPerson contactType="technical">
+        <GivenName>Peter
+        </GivenName>
+        <SurName>Erler
+        </SurName>
+        <EmailAddress>peter.erler@tirol.gv.at
+        </EmailAddress>
+        </ContactPerson>
+        <ContactPerson contactType="support">
+        <GivenName>Servicedesk
+        </GivenName>
+        <EmailAddress>servicedesk@tirol.gv.at
+        </EmailAddress>
+    </ContactPerson>
+</EntityDescriptor>

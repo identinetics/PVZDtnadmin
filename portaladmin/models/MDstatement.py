@@ -53,10 +53,10 @@ class MDstatement(models.Model):
     ed_uploaded_filename = models.CharField(
         verbose_name='Upload Filename',
         default=None, null=True,
-        max_length=100)
+        max_length=257)
     entityID = models.CharField(
         blank=True, null=True,
-        max_length=300)
+        max_length=301)
     entity_fqdn = models.CharField(
         blank=True, null=True,
         verbose_name='Entity FQDN',

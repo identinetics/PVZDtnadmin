@@ -3,6 +3,10 @@ from PVZDpy.xy509cert import XY509cert
 
 
 class Issuer(models.Model):
+    class Meta:
+        ordering = ('subject_cn',)
+        verbose_name = 'Issuer'
+
     cacert = models.CharField(
         unique=True,
         verbose_name='CA Certificate',
@@ -12,7 +16,7 @@ class Issuer(models.Model):
                        ('AWP', 'AWP'),
                       )
     pvprole = models.CharField(
-        verbose_name='Status',
+        verbose_name='Role',
         default='STP', null=True,
         choices=PVPROLE_CHOICES,
         max_length=3)
@@ -24,7 +28,8 @@ class Issuer(models.Model):
 
     def save(self, *args, **kwargs):
         xy509cert = XY509cert(self.cacert)
-        self.subject_cn = xy509cert.getSubjectCN
+        self.subject_cn = xy509cert.getSubjectCN()
+        super().save()
 
 # Test
 class IssuerSTPManager(models.Manager):

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<md:EntityDescriptor 
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" 
+    entityID="https://stp-auth-app.entw.portal.bka.gv.at/stdportal-idp/portalverbund.gv.at">
+    <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:Extensions xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
+            <alg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+            <alg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <alg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256" MaxKeySize="511" MinKeySize="256"/>
+            <alg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" MaxKeySize="4096" MinKeySize="2048"/>
+            <mdui:UIInfo>
+                <mdui:DisplayName xml:lang="en">BKA Auth-App (Entwicklung, extern)</mdui:DisplayName>
+                <mdui:Description xml:lang="en">BKA Entwicklungsportal Auth-App (extern)</mdui:Description>
+            <mdui:Logo xml:lang="en" height="150" width="50">https://fairchat.net/rcstatic/img/rot-weiss-rot-logo300x100px.png</mdui:Logo>
+            </mdui:UIInfo>
+        </md:Extensions>
+        <md:KeyDescriptor use="signing">
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        <!--IssuerDN: EMAILADDRESS=bmi-iv-2-e-ca@bmi.gv.at, CN=Portalverbund-CA, OU=IT-MS, O=Bundesministerium fuer Inneres, ST=Wien, C=AT
+SubjectDN: EMAILADDRESS=zertifikat@bka.gv.at, CN=stp-entw-bka-client, OU=IT, O=Bundeskanzleramt, ST=Wien, C=AT
+NotBefore: Tue Dec 20 09:32:16 CET 2016
+NotAfter: Wed Jan 09 09:32:16 CET 2019
+SerialNumber: 692 (0x2b4)
+SigAlgName: SHA256withRSA-->MIIFyTCCBLGgAwIBAgICArQwDQYJKoZIhvcNAQELBQAwgZgxCzAJBgNVBAYTAkFUMQ0wCwYDVQQIEwRXaWVuMScwJQYDVQQKEx5CdW5kZXNtaW5pc3Rlcml1bSBmdWVyIElubmVyZXMxDjAMBgNVBAsTBUlULU1TMRkwFwYDVQQDExBQb3J0YWx2ZXJidW5kLUNBMSYwJAYJKoZIhvcNAQkBFhdibWktaXYtMi1lLWNhQGJtaS5ndi5hdDAeFw0xNjEyMjAwODMyMTZaFw0xOTAxMDkwODMyMTZaMIGHMQswCQYDVQQGEwJBVDENMAsGA1UECBMEV2llbjEZMBcGA1UEChMQQnVuZGVza2FuemxlcmFtdDELMAkGA1UECxMCSVQxHDAaBgNVBAMTE3N0cC1lbnR3LWJrYS1jbGllbnQxIzAhBgkqhkiG9w0BCQEWFHplcnRpZmlrYXRAYmthLmd2LmF0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2kiq16MAcTM9F2OS9MdBtxzj2ggJjneec4Tof+oepDUdiNNGD1fH1YEOjgvbK8oskWgzmnaQ3QrWDkfiD3iuuzK+uyg7/zlHwrWefcK2pi/m2jAsjMvWdYCZOkh3h/wD7nh2JQwCxK/u+XqnuLZpGBDeLLj1+GY1P/qtKMYlsgfpY3cXYJ/woZOYnVa+Yb8MTHsMzjPpJWVL6ADEDHLSYUgxv/33H9HHaPQsMFjCz5nF+VRECA0nzVKwWpSuugZni9+7L5YTQDyT3MQKPyDqFfg1EPKmAWQtQO89u/grDESY6WK2QqWbbyFzbLxM3V27J+z8O0Wwl39rM/CT7Hr3dwIDAQABo4ICKjCCAiYwCQYDVR0TBAIwADALBgNVHQ8EBAMCBeAwLAYJYIZIAYb4QgENBB8WHU9wZW5TU0wgR2VuZXJhdGVkIENlcnRpZmljYXRlMB0GA1UdDgQWBBRgQDdBshOPiaK4TlMOsjvYmzM8SDCB0QYDVR0jBIHJMIHGgBSmHvReGkO0iN6iyL1oZQPFMG9m06GBqqSBpzCBpDELMAkGA1UEBhMCQVQxDTALBgNVBAgTBFdpZW4xDTALBgNVBAcTBFdpZW4xJzAlBgNVBAoTHkJ1bmRlc21pbmlzdGVyaXVtIGZ1ZXIgSW5uZXJlczEOMAwGA1UECxMFSVQtTVMxFjAUBgNVBAMTDVBvcnRhbFJvb3QtQ0ExJjAkBgkqhkiG9w0BCQEWF2JtaS1pdi0yLWUtY2FAYm1pLmd2LmF0ggEBMB8GA1UdEQQYMBaBFHplcnRpZmlrYXRAYmthLmd2LmF0MCIGA1UdEgQbMBmBF2JtaS1pdi0yLWUtY2FAYm1pLmd2LmF0MEUGA1UdHwQ+MDwwOqA4oDaGNGh0dHA6Ly9wb3J0YWwuYm1pLmd2LmF0L3JlZi9wa2kvcG9ydGFsQ0EvUG9ydGFsVi5jcmwwTwYIKwYBBQUHAQEEQzBBMD8GCCsGAQUFBzAChjNodHRwOi8vcG9ydGFsLmJtaS5ndi5hdC9yZWYvcGtpL3BvcnRhbENBL2luZGV4Lmh0bWwwDgYHKigACgEBAQQDAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQBmDddocZjCT2iC8lxmCptd1LKLhE/uUTLFd5BQIE2nvmF+qGpwOGIyKRXoIRvGN+f56Nnwp+aU3jv2N5hu9DhEinlf1ndCO2bHiTa6rKqrd69tScKcQi9zjGwnb9uv1NAGNT7JqUcyThwm0znzFYOB1wYBurh/dAeZbDxzJC6vKv6YOh/Yey1gCPfMF1FQgQT9AtCe1oMP4tt8uvURWRbm3krDhSl/y1H3tX5IBVvr9trJ4zJbbFMPgKKAWhDH4B4iBZ6lS6H/0jZ9TIk2DZclLHJ5/6unj88fpWr+6uA8+qwjSVR69FvGurprFs9QL06BR0D/4W5y+4QRROGYMaUB</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://stp-auth-app.entw.portal.bka.gv.at/stdportal-idp/portalverbund.gv.at/profile/SAML2/Redirect/SLO" ResponseLocation="https://stp-auth-app.entw.portal.bka.gv.at/stdportal-idp/portalverbund.gv.at/profile/SAML2/Redirect/SLO"/>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://stp-auth-app.entw.portal.bka.gv.at/stdportal-idp/portalverbund.gv.at/profile/SAML2/POST/SSO"/>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://stp-auth-app.entw.portal.bka.gv.at/stdportal-idp/portalverbund.gv.at/profile/SAML2/Redirect/SSO"/>
+    </md:IDPSSODescriptor>
+    <md:Organization>
+        <md:OrganizationName xml:lang="en">BKA</md:OrganizationName>
+        <md:OrganizationDisplayName xml:lang="en">Bundeskanzleramt</md:OrganizationDisplayName>
+        <md:OrganizationURL xml:lang="en">https://www.bka.gv.at/</md:OrganizationURL>
+    </md:Organization>
+    <md:ContactPerson contactType="support">
+        <md:Company>Bundeskanzleramt</md:Company>
+        <md:GivenName>Hotline</md:GivenName>
+        <md:EmailAddress>mailto:hotline@bka.gv.at</md:EmailAddress>
+        <md:TelephoneNumber>+43 1 531 15-202777</md:TelephoneNumber>
+    </md:ContactPerson>
+    <md:ContactPerson contactType="technical">
+        <md:Company>Bundeskanzleramt</md:Company>
+        <md:GivenName>Hotline</md:GivenName>
+        <md:EmailAddress>mailto:hotline@bka.gv.at</md:EmailAddress>
+        <md:TelephoneNumber>+43 1 531 15-202777</md:TelephoneNumber>
+    </md:ContactPerson>
+</md:EntityDescriptor>

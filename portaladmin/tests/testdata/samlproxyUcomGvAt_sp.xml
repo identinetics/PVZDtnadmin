@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ns0:EntityDescriptor 
+    xmlns:ns0="urn:oasis:names:tc:SAML:2.0:metadata" 
+    xmlns:ns1="http://www.w3.org/2000/09/xmldsig#" 
+    xmlns:ns2="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+    xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport"
+    xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init"
+    xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" 
+    xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+    entityID="https://samlproxy.ucom.gv.at/sp">
+  <ns0:Extensions>
+     <ns2:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://proxy1.test.portalverbund.gv.at/Saml2/disco" index="1"/>
+     <mdattr:EntityAttributes>
+       <saml:Attribute xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
+         Name="http://macedir.org/entity-category" 
+         NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+       <saml:AttributeValue>http://www.ref.gv.at/ns/names/agiz/pvp/egovtoken</saml:AttributeValue>
+      </saml:Attribute>
+     </mdattr:EntityAttributes>
+  </ns0:Extensions>
+  <ns0:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <ns0:Extensions>
+       <alg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+       <alg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+       <alg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
+       <alg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+       <mdui:UIInfo>
+         <mdui:DisplayName xml:lang="en">UCOM (BKA)</mdui:DisplayName>
+         <mdui:Description xml:lang="en"> 
+             UCOM / Rocketchat
+         </mdui:Description>
+         <mdui:Logo xml:lang="en" height="150" width="50">https://fairchat.net/rcstatic/img/rot-weiss-rot-logo300x100px.png</mdui:Logo>
+       </mdui:UIInfo>
+       <init:RequestInitiator Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="https://ucom.gv.at/apps/rcPrebind/"/>
+       <ns2:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://samlproxy.ucom.gv.at/Saml2/disco" index="1"/>
+    </ns0:Extensions>
+    <ns0:KeyDescriptor use="signing">
+      <ns1:KeyInfo>
+        <ns1:X509Data>
+          <ns1:X509Certificate>
+            MIIDKjCCAhICCQCYd4mEn0F+2DANBgkqhkiG9w0BAQsFADBXMQswCQYDVQQGEwJB
+            VDENMAsGA1UECAwEV2llbjENMAsGA1UEBwwEV2llbjEMMAoGA1UECgwDQktBMQsw
+            CQYDVQQLDAJJVDEPMA0GA1UEAwwGU0FUT1NBMB4XDTE3MDgyNDA3NTIxMVoXDTI3
+            MDgyMjA3NTIxMVowVzELMAkGA1UEBhMCQVQxDTALBgNVBAgMBFdpZW4xDTALBgNV
+            BAcMBFdpZW4xDDAKBgNVBAoMA0JLQTELMAkGA1UECwwCSVQxDzANBgNVBAMMBlNB
+            VE9TQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALfNYAjD5GNZKNEp
+            53W6nZTLd7B9xXXekFFOapm4nb/kbLjWtOWOe/bDxj1LrYGz/xh39/KKNycdRcJ5
+            8mzoqe7L8T8BdK/j72rCeviZQCXGXPZdtt3T8vinCudl3NI5OPCfMO0VK4awpmDc
+            6QbAnLW7XOb30Evj0KOAmCCjwTtHzSEMpnP7FycdLG1sugiu/jQ2VfKETw76jjxz
+            toOAEUcPLTCMSEoMylsqvq3ZQ/ovmr4xjb/zaEk75LQKPKA8aIDna3B6PCpzMgpf
+            kP7QuCSmqplXnF+4owpoWY4ioo7g12k8qUKZ2K4CzT2Am8ezPlD1PzJOEIY3tjgq
+            sFXnpYsCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAiXzSSSkd/HA1Ami919db0I2z
+            F+S/XMKYajor8dvfT1OuFoVjkNOhD5jSBtyNF3BUUlYOv5AQ37jVLwMAD0GV5H5A
+            ISKgMyapcy+mjVKRZ4nPJv5UZf4qxmgqooPIufBacFFyGignHO0iKihyhvSeIPbq
+            2avgAB7oskHsTFmRB9M/ZAfdF9HCVMRrOCKY9QziqI79aPKFHxUmUtjixDx3V5VH
+            FFXf/sQpuY8sYLYji6JckZoZxT0og/PA118j8fA7xUUTqtnC3+peMcuIY7DVYmDX
+            zr9dsMQT6ouDrDO6o28DSh9wrjgtndTiU+TE5rtoSVI6N6wVG2tR2repidYFOw==
+          </ns1:X509Certificate>
+        </ns1:X509Data>
+      </ns1:KeyInfo>
+    </ns0:KeyDescriptor>
+    <ns0:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</ns0:NameIDFormat>
+    <ns0:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://samlproxy.ucom.gv.at/Saml2/acs/post" index="1"/>
+    <ns0:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://samlproxy.ucom.gv.at/Saml2/acs/redirect" index="2"/>
+  </ns0:SPSSODescriptor>
+  <ns0:Organization>
+    <ns0:OrganizationName xml:lang="en">osAlliance</ns0:OrganizationName>
+    <ns0:OrganizationDisplayName xml:lang="en">osAlliance (fuer BKA)</ns0:OrganizationDisplayName>
+    <ns0:OrganizationURL xml:lang="en">https://www.osalliance.com/</ns0:OrganizationURL>
+  </ns0:Organization>
+  <ns0:ContactPerson contactType="support">
+    <ns0:GivenName>Roland</ns0:GivenName>
+    <ns0:SurName>Alton</ns0:SurName>
+    <ns0:EmailAddress>ras@osalliance.com</ns0:EmailAddress>
+  </ns0:ContactPerson>
+  <ns0:ContactPerson contactType="technical">
+    <ns0:GivenName>Robert</ns0:GivenName>
+    <ns0:SurName>Glock</ns0:SurName>
+    <ns0:EmailAddress>robert.glock@bka.gv.at</ns0:EmailAddress>
+  </ns0:ContactPerson>
+</ns0:EntityDescriptor>

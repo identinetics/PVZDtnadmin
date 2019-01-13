@@ -1,27 +1,26 @@
-from os.path import join as opj
-from PVZDpy.tests.common_fixtures import ed_path
+#import os.path
+from pathlib import Path
 
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
 import django
-import sys
-import os
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
 django.setup()
-
 from portaladmin.models import MDstatement
 from django.conf import settings
 
 
-def fixture_testdata_basedir():
-    return opj(settings.BASE_DIR, 'PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml')
+def testdata_basedir():
+    return Path(settings.BASE_DIR, 'portaladmin', 'tests', 'testdata')
 
+def entities() -> Path:
+    for file in testdata_basedir().glob('*'):
+        if file.is_file():
+            yield file
 
-for testno in range(1, 23):
-    fn = ed_path(testno, dir=fixture_testdata_basedir())
-    with open(fn, 'rb') as fd:
+for entity in entities():
+    with entity.open('rb') as fd:
         django_file = django.core.files.File(fd)
         mds = MDstatement(admin_note='load_db_with_testdata')
-        mds.ed_file_upload.save(os.path.basename(fn), django_file, save=False)
+        mds.ed_file_upload.save(entity.name, django_file, save=False)
     qs = MDstatement.objects.filter(
         entityID=mds.entityID,
         make_blank_entityid_unique=mds.make_blank_entityid_unique,
@@ -29,11 +28,11 @@ for testno in range(1, 23):
     if not qs:
         try:
             mds.save()
-            print('added MDStatement for %s' % os.path.basename(fn))
+            print('added MDStatement for %s' % entity.name)
         except Exception as e:
-            print('failed to add MDStatement for {}. {}'.format(os.path.basename(fn), e))
+            print('skipped MDStatement for {}. {}'.format(entity.name, e))
     else:
-        print('skipped MDStatement for %s' % os.path.basename(fn))
+        print('skipped MDStatement for %s' % entity.name)
 
 
 def sign04():
