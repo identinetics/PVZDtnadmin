@@ -66,5 +66,5 @@ class GvParticipant(GvFederationOrgAdmin):
 
 @admin.register(GvUserPortalOperator)
 class GvUserPortalOperator(GvFederationOrgAdmin):
-    pass
+    search_fields = []
 

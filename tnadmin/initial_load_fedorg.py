@@ -42,7 +42,11 @@ class InitialLoadFedOrg:
                     fedorg = GvFederationOrg(gvouid=gvorg)
                     fedorg.gvContractStatus = LEGAL_BASIS_PVV
                     fedorg.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
-                    fedorg.save()
+                    try:
+                        fedorg.save()
+                    except Exception as e:
+                        if not str(e).startswith('duplicate key'):
+                            raise
             pass
 
     def load_STP_DL_org(self):
@@ -56,7 +60,11 @@ class InitialLoadFedOrg:
                     fedorg = GvFederationOrg(gvouid=gvorg)
                     fedorg.gvContractStatus = LEGAL_BASIS_PROCESSOR_IDP
                     fedorg.gvSource = str(datetime.datetime.now()) + ' initial_load_fedorg'
-                    fedorg.save()
+                    try:
+                        fedorg.save()
+                    except Exception as e:
+                        if not str(e).startswith('duplicate key'):
+                            raise
 
     def load_PV_ZUGRIFF_org(self):
         for userportal in ldapgvat.models.GvUserPortal.objects.all():
@@ -99,8 +107,8 @@ class InitialLoadFedOrg:
             gvorg = GvOrganisation.objects.get(gvouid=ouid)
             return gvorg
         except tnadmin.models.gvorg.GvOrganisation.DoesNotExist:
-            #print(f"gvOrganisation '{cn}' not found via gvOuId='{ouid}'", file=sys.stderr)
-            self.exit_code = 1
+            print(f"gvOrganisation '{cn}' not found via gvOuId='{ouid}'", file=sys.stderr)
+            #self.exit_code = 1  # do not stop loading on inconsistent data
             return None
 
 

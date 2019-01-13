@@ -8,7 +8,7 @@ For Linux the script bin/setenv.sh provides an automated detection.
 The python virtual env needs to have python3>=3.4 with the packages from requirements.txt installed.  
 
 The PYTHONPATH needs the project root and library root set, i.e.
-$APP_HOME:$APP_HOME/PVZDlib/PVZDpy
+$APPHOME:$APPHOME/PVZDlib/PVZDpy
 
 The testrunner (pytest) also requires the respective test/ folder, 
 e.g. by setting the PYTHONPATH to the current directory and starting test scripts from there. 

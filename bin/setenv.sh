@@ -2,7 +2,7 @@
 # set run time environment with default values for RHEL/Centos7 and macOS
 
 scriptsdir=$(cd "$(dirname ${BASH_SOURCE[0]})" && pwd)
-export APP_HOME=$(dirname $scriptsdir)
+export APPHOME=$(dirname $scriptsdir)
 
 if [[ "$(uname)" == "Linux" ]] && [[ -f /etc/redhat-release ]]; then
     [[ "$JAVA_HOME" ]] || export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0
@@ -16,9 +16,9 @@ elif [[ ! "$JAVA_HOME" ]]; then
     exit 1
 fi
 
-export PYTHONPATH=$PYTHONPATH:$APP_HOME:$APP_HOME/PVZDlib:.
+export PYTHONPATH=$PYTHONPATH:$APPHOME:$APPHOME/PVZDlib:.
 export CLASSPATH="\
-$APP_HOME/PVZDlib/MOA-SPSS/moa-sig-lib-latest.jar:\
-$APP_HOME/PVZDlib/MOA-SPSS/lib/*:\
-$APP_HOME/PVZDlib/unittests/junit-4.11.jar:\
-$APP_HOME/PVZDlib/PVZDjava/*"
+$APPHOME/PVZDlib/MOA-SPSS/moa-sig-lib-latest.jar:\
+$APPHOME/PVZDlib/MOA-SPSS/lib/*:\
+$APPHOME/PVZDlib/unittests/junit-4.11.jar:\
+$APPHOME/PVZDlib/PVZDjava/*"

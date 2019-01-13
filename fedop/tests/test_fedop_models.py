@@ -5,6 +5,8 @@ assert os.environ["DJANGO_SETTINGS_MODULE"] in ("pvzdweb.settings_pytest_dev", "
     "require in-memory-db for loading fixtures"
 
 from django.core import management
+from pvzdweb.settings import *
+INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
 
 from fedop.models.issuer import *
 from fedop.models.revocation import *
