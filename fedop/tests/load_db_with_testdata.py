@@ -87,15 +87,19 @@ def add_userprivileges():
     for cert in u_recs:
         u_orgid_list = u_recs[cert][0]
         u_username = u_recs[cert][1]
+        u_cert_pem = cert.split('{cert}')[1]
         for u_orgid in u_orgid_list:
             parent_o = _get_foreign_key_parent_obj(u_orgid, cert)
             if parent_o:
-                u = Userprivilege(gvouid_parent=parent_o, cert=cert)
-                if not Userprivilege.objects.filter(cert=cert):  # assume base64 without whitespace
+                u = Userprivilege(gvouid_parent=parent_o, cert=u_cert_pem)
+                try:
                     u.save()
                     print(f"added admin (userprivilege) for {u_username} ({u_orgid})")
-                else:
-                    print(f"skipped duplicate userprivilege entry for {u_username} ({u_orgid}")
+                except django.db.utils.IntegrityError as e:
+                    if str(e).startswith('duplicate key'):
+                        print(f"skipped duplicate userprivilege entry for {u_username} ({u_orgid})")
+                    else:
+                        raise
 
 
 def add_issuers():
@@ -130,7 +134,7 @@ def add_revocation():
         if not rec_found:
             r = Revocation(cert=cert)
             r.save()
-            print('added revocation_cert %s' % cert)
+            print('added revocation_cert %s' % cert[0:80])
 
 
 main()

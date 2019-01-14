@@ -49,7 +49,9 @@ class LdapSyncPush:
             self.ldapSyncJob.add_upd_db_records_read += 1
             create = False
             try:
-                ldapOrg = LdapGvOrg.objects.get(dn=dbOrg.ldap_dn)
+                # ldapOrg = LdapGvOrg.objects.get(dn=dbOrg.ldap_dn) # TODO: make this working
+                ldapOrg = LdapGvOrg.objects.get(gvouid=dbOrg.gvouid) # workaround, assumes gvouid not used in another subtree
+
             except ldapgvat.models.GvOrganisation.DoesNotExist:
                 create = True
             if create:

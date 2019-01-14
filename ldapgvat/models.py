@@ -89,6 +89,16 @@ class GvOrganisation(GvOrgUnit):
     def __repr__(self):
         return self.dn
 
+    def has_add_permission(self, request):
+        return False
+
+    # Allow viewing objects but not actually changing them.
+    def has_change_permission(self, request, obj=None):
+        return (request.method in ['GET', 'HEAD'] and
+                super().has_change_permission(request, obj))
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 class GvUserPortal(ldapdb.models.Model):
     class Meta:
@@ -117,3 +127,14 @@ class GvUserPortal(ldapdb.models.Model):
 
     def __repl__(self):
         return self.dn
+
+    def has_add_permission(self, request):
+        return False
+
+    # Allow viewing objects but not actually changing them.
+    def has_change_permission(self, request, obj=None):
+        return (request.method in ['GET', 'HEAD'] and
+                super().has_change_permission(request, obj))
+
+    def has_delete_permission(self, request, obj=None):
+        return False
