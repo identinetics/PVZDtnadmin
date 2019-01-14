@@ -3,13 +3,8 @@ import os
 import sys
 
 import django
-if __name__ == '__main__':
-    django_proj_path = os.path.dirname(os.path.dirname(os.getcwd()))
-    sys.path.append(django_proj_path)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
-    django.setup()
-else:
-    assert False
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
+django.setup()
 from ldapgvat.models import GvOrganisation as LdapGvOrg
 import ldapgvat.models
 from tnadmin.models import GvOrganisation as DbGvOrg
@@ -23,6 +18,13 @@ class LdapSyncPush:
         self.ldapSyncJob.save()
         self.dbgvat_entries = set()
 
+    def main(self):
+        self.add_and_update()
+        if not self.args.nodelete:
+            self.delete_orphans()
+        self.write_summary()
+        self.ldapSyncJob_housekeeping()
+
     def get_args(self):
         parser = argparse.ArgumentParser(description='Sync TNAdmin database with LdapGvAt (upload to LDAP excluding AT:B:*)')
         parser.add_argument('-c', '--max-inputrec', dest='max_input_rec', type=int, default=0,
@@ -34,18 +36,12 @@ class LdapSyncPush:
         parser.add_argument('-v', '--verbose', dest='verbose', action="store_true")
         return parser.parse_args()
 
-    def main(self):
-        self.add_and_update()
-        if not self.args.nodelete:
-            self.delete_orphans()
-        self.write_summary()
-        self.ldapSyncJob_housekeeping()
-
     def add_and_update(self):
         max_input_rec = 0
         for dbOrg in DbGvOrg.objects.all().exclude(gvouid__startswith='AT:B:'):
             if self.is_fixed_record(dbOrg):
                 continue
+            self.dbgvat_entries.add(dbOrg.ldap_dn)  # later use: delete orphans in ldap
             self.ldapSyncJob.add_upd_db_records_read += 1
             create = False
             try:
@@ -114,7 +110,7 @@ class LdapSyncPush:
                 changed_attr += 1
                 changed_attr_list += f'{attrib}: "{source_val}"/"{dest_val}", '
         if changed_attr > 0:
-            if self.args.verbose: print(f'updating {ldapOrg.gvOuId} because of {changed_attr_list}')
+            if self.args.verbose: print(f'updating {ldapOrg.gvouid} because of {changed_attr_list}')
             self.save_ldapOrg(ldapOrg, 'update')
         else:
             if self.args.verbose: print(f'skipped {dbOrg.ldap_dn}')
@@ -129,7 +125,7 @@ class LdapSyncPush:
             self.ldapSyncJob.del_records_delete_failed += 1
         else:
             self.ldapSyncJob.del_records_deleted += 1
-            if self.args.verbose: print(f'{op_message} {ldapOrg.dn}')
+            if self.args.verbose: print(f'deleted {ldapOrg.dn}')
 
     def save_ldapOrg(self, ldapOrg: LdapGvOrg, op_message: str):
         try:
