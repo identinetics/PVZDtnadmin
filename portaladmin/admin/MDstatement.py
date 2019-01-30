@@ -1,9 +1,12 @@
 from datetime import timedelta
 
 from django import forms
+from django.urls import path, reverse
 from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin import site
+from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.utils import timezone
 from django.conf import settings
 from django.http import Http404
@@ -14,8 +17,10 @@ from ..constants import *
 from ..exceptions import CancelRequest
 from ..models import MDstatement
 from ..signals import md_statement_edit_starts
-from PVZDpy.cresignedxml import creSignedXML
-from PVZDpy.samlentitydescriptor import SAMLEntityDescriptorFromStrFactory, SAMLEntityDescriptor
+# from PVZDpy.cresignedxml import creSignedXML
+# from PVZDpy.samlentitydescriptor import SAMLEntityDescriptorFromStrFactory, SAMLEntityDescriptor
+
+from PVZDpy.cresignedxml import get_seclay_requesttemplate
 
 
 class FileInputWidget(ClearableFileInput):
@@ -43,6 +48,7 @@ class MDstatementAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.FileField: {'widget': FileInputWidget},
     }
+    change_form_template = "portaladmin/md_statement_admin_change_form.html"
     form = MDstatementForm
     save_on_top = True
     readonly_fields = (
@@ -128,6 +134,34 @@ class MDstatementAdmin(admin.ModelAdmin):
             'fields': ('ed_uploaded', 'ed_signed', ),
         }),
     )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('get_signature_request/<int:id>/request.xml',
+                 self.get_signature_request_view,
+                 name='portaladmin_get_signature_request'),
+        ]
+        return custom_urls + urls
+
+    def get_signature_request_view(self, request, id):
+        md_namespace_prefix = 'md'  # FIXME
+        template = get_seclay_requesttemplate(sigType='enveloped',
+                                              sigPosition='/' + md_namespace_prefix + ':EntityDescriptor')
+        # TODO use file if needed
+        xml = template % MDstatement.objects.get(id=id).ed_uploaded
+        # TODO 404
+
+        return HttpResponse(xml, content_type='text/xml')
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        md_statement = MDstatement.objects.get(id=object_id)
+
+        extra_context['ed_uploaded_get_template_url'] = reverse('admin:portaladmin_get_signature_request',
+                                                            args=[md_statement.id])
+
+        return super().change_view(request, object_id, form_url, extra_context)
 
     # def change_view(self, request, object_id, form_url='', extra_context=None):
     #

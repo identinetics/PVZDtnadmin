@@ -31,6 +31,13 @@ DATABASES = {
     },
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'database', 'db.sqlite3'),
+#     }
+# }
+
 INSTALLED_APPS=sorted(list(set(INSTALLED_APPS + ['fedop', 'ldapgvat', 'portaladmin', 'tnadmin'])))
 
 PVZD_SETTINGS = {

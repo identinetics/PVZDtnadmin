@@ -1,0 +1,13 @@
+{% extends 'admin/change_form.html' %}
+{% load static %}
+
+{% block submit_buttons_top %}
+    {{ block.super }}
+    <div class="submit-row">
+        <p class="deletelink-box"><a href="#sign" class="deletelink">Sign</a></p>
+    </div>
+    <div id="ed_uploaded_get_template_url" style="display: none;">
+        {{ ed_uploaded_get_template_url }}
+    </div>
+    <script type="text/javascript" src="{% static 'portaladmin/js/sign.js' %}"></script>
+{% endblock %}
