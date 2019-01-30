@@ -1,0 +1,10 @@
+source text for https://www.websequencediagrams.com
+
+
+title Sign EntityDescriptor
+
+MDStatement Form->Browser: 307 with JS form with XMLRequest
+Browser->localhost_3594: XMLHTTP-Request XMLRequest=CreateXMLSignatureRequest
+localhost_3594-> Browser: 200 with <CreateXMLSignatureResponse>
+Browser->MDStatement Form: POST sig_response=CreateXMLSignatureResponse>
+MDStatement Form->Browser: model.save(); 303 to myself
