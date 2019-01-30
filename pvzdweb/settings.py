@@ -70,7 +70,6 @@ WSGI_APPLICATION = 'pvzdweb.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -96,7 +95,6 @@ DATABASE_ROUTERS = ['ldapdb.router.Router']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
@@ -107,7 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
-
 LANGUAGE_CODE = 'de'
 # LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Europe/Vienna'
@@ -118,26 +115,22 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 STATIC_URL = '/static/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-PORTALADMIN_CHECKOUT_MINUTES = 15
-
 PVZD_SETTINGS = {
-    'logfilepep': opj(*'PVZDlib/PVZDpy/tests/testdout/pep.log'.split('/')),
-    'loglevelpep': logging.DEBUG,
-    'loglevelweb': logging.DEBUG,
-    'pepoutdir': opj(*'PVZDlib/PVZDpy/tests/testout/pepout'.split('/')),
-    'poldirhtml': opj(*'PVZDlib/PVZDpy/tests/testout/poldir/poldir.html'.split('/')),
-    'poldirjson': opj(*'PVZDlib/PVZDpy/tests/testout/poldir/poldir.json'.split('/')),
-    'policydir': opj(BASE_DIR, *'PVZDlib/PVZDpy/tests/testdata/saml/poldir1.json'.split('/')),
-    'policyjournal': opj(*'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/pol_journal_sig_rh.xml'.split('/')),
+    'logfilepep': '/var/log/pvzd/pep.log',
+    'loglevelpep': logging.INFO,
+    'loglevelweb': logging.INFO,
+    'pepoutdir': '/var/log/pvzd/pepout',
+    'poldirhtml': '/var/log/pvzd/poldir/poldir.html',
+    'poldirjson': '/var/log/pvzd/poldir/poldir.json',
+    'policydir': '/config/poldir.json',
+    'policyjournal': '/config/pol_journal_sig.xml',
     'regauthority': 'Bundeskanzleramt',
-    'shibacl': opj(*'PVZDlib/PVZDpy/tests/testdout/poldir/shibacl.xml'.split('/')),
+    'shibacl': '/var/log/pvzd/poldir/shibacl.xml',
     'superuser': True,  # allow signer in trustedcerts to skip authorization check
-    'trustedcerts': opj(*'PVZDlib/PVZDpy/tests/testdata/aodsfilehandler/trustedcerts_rh.json'.split('/')),
+    'trustedcerts': '/config/trustedcerts_rh.json',
 }
