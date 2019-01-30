@@ -33,6 +33,15 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # if it will not debug then we can use web server config to delivery of media files
 
+# add static files app level for dev
+from django.contrib.staticfiles import views
+from django.urls import re_path
+
+if settings.DEBUG:
+    urlpatterns += [
+        re_path(r'^static/(?P<path>.*)$', views.serve),
+    ]
+
 admin.site.site_header = 'PVZD Teilnehmerverwaltung'
 admin.site.index_title = 'Features area'
 admin.site.site_title = 'HTML title from adminsitration'
