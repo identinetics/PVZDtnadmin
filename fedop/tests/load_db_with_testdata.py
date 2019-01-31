@@ -17,6 +17,7 @@ else:
 from django.conf import settings
 from fedop.models.issuer import Issuer
 from fedop.models.namespace import Namespaceobj
+from fedop.models.policy_journal import PolicyJournal
 from fedop.models.revocation import Revocation
 from fedop.models.userprivilege import Userprivilege
 from PVZDpy.policystore import PolicyStore
@@ -31,6 +32,7 @@ def main():
     add_namespaces()
     add_userprivileges()
     add_issuers()
+    add_policy_journal()
     add_revocation()
 
 
@@ -114,6 +116,10 @@ def add_issuers():
         except django.db.utils.IntegrityError:
             print(f"skipped duplicate issuer {subject_cn}")
 
+
+def add_policy_journal():
+    pj = PolicyJournal()
+    pj.save()
 
 def add_revocation():
     r_recs = policystore3().get_revoked_certs()

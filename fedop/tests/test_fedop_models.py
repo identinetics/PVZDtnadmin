@@ -42,6 +42,9 @@ def test_issuer(load_fedop1):
     assert i.pvprole
     assert i.subject_cn
 
+def test_policy_journal():
+    assert 1 == len(PolicyJournal.objects.all()), 'PolicyJournal is a singleton, number or records must be equal 1'
+
 def test_revocation():
     r = Revocation.objects.all()[0]  # only one item in testdata
     assert r.subject_cn == 'gondor.magwien.gv.at/emailAddress=cctprod-l@adv.magwien.gv.at'
