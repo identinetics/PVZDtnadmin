@@ -1,8 +1,9 @@
 from django.db import models
 from PVZDpy.xy509cert import XY509cert
+from fedop.models.fedop_base import FedopBaseAbstract
 
 
-class Revocation(models.Model):
+class Revocation(FedopBaseAbstract):
     cert = models.CharField(
         unique=True,
         verbose_name='Zertifikat',

@@ -3,14 +3,14 @@ from django.db import models
 
 class PolicyJournal(models.Model):
     ''' singleton '''
-    class Meta:
-        verbose_name = 'Policy Journal'
-        verbose_name_plural = 'Policy Journal'
-
-    policy_journal = models.TextField(
+    policy_journal = models.BinaryField(
         verbose_name='Policy Journal',
         help_text='Policy Journal signed with an enveloping XML signature',
         )
+
+    class Meta:
+        verbose_name = 'Policy Journal'
+        verbose_name_plural = 'Policy Journal'
 
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Änderungsdatum', )
 
@@ -20,3 +20,4 @@ class PolicyJournal(models.Model):
 
     def delete(self, *args, **kwargs):
         pass
+

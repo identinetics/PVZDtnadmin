@@ -15,7 +15,7 @@ from portaladmin.models import MDstatement
 from portaladmin.constants import STATUS_REQUEST_QUEUE, STATUS_REJECTED, STATUS_ACCEPTED
 
 from get_pep_logger import get_pep_logger
-from get_policystore import get_policystore
+from common import get_policystore
 
 
 __author__ = 'r2h2'

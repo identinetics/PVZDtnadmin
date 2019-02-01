@@ -241,7 +241,7 @@ class MDstatement(models.Model):
 
     def _get_namespace_id(self):
         if getattr(self.ed_val, 'ed', False):
-            ns = self.ed_val.ed.get_namespace()
+            ns = self.ed_val.ed.get_namespace_changes()
             if ns:
                 qs = Namespaceobj.objects.filter(fqdn=ns)
                 if qs:

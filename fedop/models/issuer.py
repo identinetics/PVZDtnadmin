@@ -1,12 +1,8 @@
 from django.db import models
 from PVZDpy.xy509cert import XY509cert
+from fedop.models.fedop_base import FedopBaseAbstract
 
-
-class Issuer(models.Model):
-    class Meta:
-        ordering = ('subject_cn',)
-        verbose_name = 'Issuer'
-
+class Issuer(FedopBaseAbstract):
     cacert = models.CharField(
         unique=True,
         verbose_name='CA Certificate',
@@ -23,8 +19,10 @@ class Issuer(models.Model):
     subject_cn = models.CharField(
         help_text='Issuer X.509 SubjectCN (TLS CA)',
         max_length=128)
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Eingangsdatum',) #default=django.utils.timezone.now())
-    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('subject_cn',)
+        verbose_name = 'Issuer'
 
     def save(self, *args, **kwargs):
         xy509cert = XY509cert(self.cacert)
@@ -39,5 +37,6 @@ class IssuerSTPManager(models.Manager):
 
 class IssuerSTP(Issuer):
     objects = IssuerSTPManager()
+
     class Meta:
         proxy = True

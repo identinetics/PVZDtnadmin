@@ -1,15 +1,10 @@
 from django.db import models
 from PVZDpy.xy509cert import XY509cert
+from fedop.models.fedop_base import FedopBaseAbstract
 from tnadmin.models import GvUserPortalOperator
 
 
-class Userprivilege(models.Model):
-    class Meta:
-        ordering = ['subject_cn']
-        unique_together = ['cert', 'gvouid_parent']
-        verbose_name = 'Portaladmin (Userprivilege)'
-        verbose_name_plural = 'Portaladmins (Userprivilege)'
-
+class Userprivilege(FedopBaseAbstract):
     cert = models.TextField(
         verbose_name='Portaladminsitrator-Zertifikat',
         help_text='X.509 cert PEM ohne Whitespace',
@@ -33,6 +28,12 @@ class Userprivilege(models.Model):
         help_text='X.509 not valid after',
         default='',
         max_length=30)
+
+    class Meta:
+        ordering = ['subject_cn']
+        unique_together = ['cert', 'gvouid_parent']
+        verbose_name = 'Portaladmin (Userprivilege)'
+        verbose_name_plural = 'Portaladmins (Userprivilege)'
 
     #@property
     #def cert_teaser(self):

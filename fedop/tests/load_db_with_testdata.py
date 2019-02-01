@@ -1,13 +1,10 @@
 import json
-import os.path
-from pathlib import Path
 import sys
+from pathlib import Path
 import django
 
 
 if __name__ == '__main__':
-    #django_proj_path = os.path.dirname(os.path.dirname(os.getcwd()))
-    #sys.path.append(django_proj_path)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_allapps")
     print(os.environ["DJANGO_SETTINGS_MODULE"])
     django.setup()

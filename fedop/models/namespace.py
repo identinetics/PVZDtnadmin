@@ -1,13 +1,8 @@
 from django.db import models
 from tnadmin.models import GvUserPortalOperator
+from fedop.models.fedop_base import FedopBaseAbstract
 
-
-class Namespaceobj(models.Model):
-    class Meta:
-        ordering = ['fqdn']
-        verbose_name = 'FQDN Namespace'
-        verbose_name_plural = 'FQDN Namespaces'
-
+class Namespaceobj(FedopBaseAbstract):
     fqdn = models.CharField(
         unique=True,
         verbose_name='Namespace',
@@ -18,6 +13,11 @@ class Namespaceobj(models.Model):
         verbose_name='gvOuId',
         on_delete=models.PROTECT,
         help_text='OrgID des Portalbetreibers')
+
+    class Meta:
+        ordering = ['fqdn']
+        verbose_name = 'FQDN Namespace'
+        verbose_name_plural = 'FQDN Namespaces'
 
     def save(self, *args, **kwargs):
         self.fqdn = self.fqdn.lower()
