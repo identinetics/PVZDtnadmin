@@ -12,12 +12,6 @@ from tnadmin.models.gvuserportal import *
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
 
 class GvFederationOrg(GvAdminAbstract):
-    class Meta:
-        ordering = ('gvouid',)
-        unique_together = (('gvouid', 'gvouid_aufsicht', 'gvouid_dl', 'gvContractStatus'),)
-        verbose_name = 'Federation Member'
-        verbose_name_plural = 'Federation Members'
-
     gvouid = models.ForeignKey(
         GvOrganisation,
         related_name='Vertragspartei',
@@ -73,6 +67,12 @@ class GvFederationOrg(GvAdminAbstract):
         null=True, blank=True,
         help_text='Kommentare',
         max_length=10000)
+
+    class Meta:
+        ordering = ('gvouid',)
+        unique_together = (('gvouid', 'gvouid_aufsicht', 'gvouid_dl', 'gvContractStatus'),)
+        verbose_name = 'Federation Member'
+        verbose_name_plural = 'Federation Members'
 
     def __str__(self):
         return f"{self.gvouid.gvouid} {self.gvouid.cn}"

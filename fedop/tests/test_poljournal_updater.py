@@ -24,20 +24,23 @@ _blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
 
 
 @pytest.fixture(scope="module")
-def load_tnadmin1():
+def load_schema():
     management.call_command('migrate')
+
+@pytest.fixture(scope="module")
+def load_tnadmin1():
     tnadmin_data = pathlib.Path('tnadmin/fixtures/tnadmin1.json')
     assert tnadmin_data.is_file(), f'could not find file {tnadmin_data}'
     management.call_command('loaddata', tnadmin_data)
 
 @pytest.fixture(scope="module")
-def load_fedop1(load_tnadmin1):
-    management.call_command('migrate')
+def load_fedop1(load_schema, load_tnadmin1):
     fedop_data = pathlib.Path('fedop/fixtures/fedop1.json')
     assert fedop_data.is_file(), f'could not find file {fedop_data}'
     management.call_command('loaddata', fedop_data)
     # canot json-represent the poljournal, therofre load it from file
-    fedop_policyjournal = pathlib.Path('fedop/fixtures/poljournal_empty1.xml')
+    #fedop_policyjournal = pathlib.Path('fedop/fixtures/poljournal_empty1.xml')
+    fedop_policyjournal = pathlib.Path('fedop/fixtures/poljournal_testdata.xml')
     pj = PolicyJournal.objects.get(id=1)
     with fedop_policyjournal.open('rb') as fd:
         pj.policy_journal = fd.read()

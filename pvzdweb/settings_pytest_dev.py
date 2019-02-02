@@ -1,5 +1,5 @@
 import os
-from pvzdweb.settings import *
+from pvzdweb.settings_dev import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

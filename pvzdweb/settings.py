@@ -128,7 +128,7 @@ PVZD_SETTINGS = {
     'poldirhtml': '/var/log/pvzd/poldir/poldir.html',
     'poldirjson': '/var/log/pvzd/poldir/poldir.json',
     'policydir': '/config/poldir.json',
-    'policyjournal': '/config/pol_journal_sig.xml',
+    'policyjournal': '/config/pol_journal_sig_cache.xml',  # copy of master version stored in database
     'regauthority': 'Bundeskanzleramt',
     'shibacl': '/var/log/pvzd/poldir/shibacl.xml',
     'superuser': True,  # allow signer in trustedcerts to skip authorization check

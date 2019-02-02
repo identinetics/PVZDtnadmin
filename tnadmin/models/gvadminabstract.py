@@ -3,12 +3,8 @@ from django.db import models
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
 
 
-
 class GvAdminAbstract(models.Model):
     ''' Basisklasse mit administrativen Attributen '''
-    class Meta:
-        abstract = True
-
     STATUS_ACTIVE = 'active'
     STATUS_CHOICES = ((STATUS_ACTIVE, STATUS_ACTIVE), ('inactive', 'inactive'))
     gvStatus = models.CharField(
@@ -26,6 +22,9 @@ class GvAdminAbstract(models.Model):
         default='gv.at', null=True,
         db_column='gvscope',
         max_length=32)
+
+    class Meta:
+        abstract = True
 
     def defined_attr(self) -> list:
         # list replicated attributes _except_ ldap_dn
