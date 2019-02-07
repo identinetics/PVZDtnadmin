@@ -7,10 +7,6 @@ from tnadmin.models.gvorg import GvOrganisation
 
 class GvFederation(GvAdminAbstract):
     ''' singleton '''
-    class Meta:
-        verbose_name = 'Federation'
-        verbose_name_plural = 'Federation'
-
     gvfederationname = models.CharField(
         unique=True,
         verbose_name='Federation Name',
@@ -26,6 +22,14 @@ class GvFederation(GvAdminAbstract):
         verbose_name='Metadata URL',
         help_text='Bezugspunkt für Metadaten dieser Federation (URL für signiertes SAML Metadata Aggregat)',
         max_length=200)
+
+    class Meta:
+        verbose_name = 'Federation'
+        verbose_name_plural = 'Federation'
+
+    def save(self, *args, **kwargs):
+        self.id=1
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.gvfederationname

@@ -26,7 +26,8 @@ class LdapSyncPush:
         self.ldapSyncJob_housekeeping()
 
     def get_args(self):
-        parser = argparse.ArgumentParser(description='Sync TNAdmin database with LdapGvAt (upload to LDAP excluding AT:B:*)')
+        parser = argparse.ArgumentParser(
+            description='Sync TNAdmin database with LdapGvAt (upload to LDAP excluding AT:B:*)')
         parser.add_argument('-c', '--max-inputrec', dest='max_input_rec', type=int, default=0,
                             help='Do not read more than <value> records from ldap')
         parser.add_argument('-D', '--no-delete', dest='nodelete', action="store_true",
@@ -46,7 +47,8 @@ class LdapSyncPush:
             create = False
             try:
                 # ldapOrg = LdapGvOrg.objects.get(dn=dbOrg.ldap_dn) # TODO: make this working
-                ldapOrg = LdapGvOrg.objects.get(gvouid=dbOrg.gvouid) # workaround, assumes gvouid not used in another subtree
+                ldapOrg = LdapGvOrg.objects.get(
+                    gvouid=dbOrg.gvouid) # workaround, assumes gvouid not used in another subtree
 
             except ldapgvat.models.GvOrganisation.DoesNotExist:
                 create = True
@@ -139,7 +141,7 @@ class LdapSyncPush:
                 self.ldapSyncJob.add_upd_records_added += 1
             else:
                 self.ldapSyncJob.add_upd_records_updated += 1
-            if self.args.verbose: print(f'{op_message} {dbOrg.ldap_dn}')
+            if self.args.verbose: print(f'{op_message} {ldapOrg.dn}')
 
     def save_error_to_db(self, op_message, ldap_dn, e):
         ldapSyncError = LdapSyncErrorPush(
