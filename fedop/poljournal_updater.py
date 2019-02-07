@@ -13,21 +13,17 @@ django.setup()
 
 from PVZDpy.aodsfilehandler import AODSFileHandler
 from PVZDpy.aodslisthandler import AodsListHandler
-from PVZDpy.inputrecord import InputRecordIssuer, InputRecordNamespace, \
-    InputRecordOrganization, InputRecordRevocation, InputRecordUserprivilege
+from PVZDpy.PolicyChange import AodsChangeList, PolicyChangeIssuer, PolicyChangeNamespace, \
+    PolicyChangeOrganization, PolicyChangeRevocation, PolicyChangeUserprivilege
 from common.get_policystore import get_policystore
-from fedop.models.issuer import *
-from fedop.models.revocation import *
-from fedop.models.namespace import *
-from fedop.models.policy_journal import *
-from fedop.models.userprivilege import *
+from fedop.models import *
 from pvzdweb.app_settings import get_aodsfhInvocation, get_aodslhInvocation
 from tnadmin.models.gvfederationorg import GvUserPortalOperator
 
 
 class PolicyJournalUpdater():
     def __init__(self):
-        self.changelist = []
+        self.changelist = PolicyChangeList()
         self.policy_store = get_policystore()
 
     def main(self):
@@ -37,11 +33,11 @@ class PolicyJournalUpdater():
         # TODO: signal  "nothing to do"
 
     def build_changelist(self):
-        self.changelist += self.sync_gvuserportaloperator()
-        self.changelist += self.get_issuer_changes()
-        self.changelist += self.get_revocation_changes()
-        self.changelist += self.get_namespace_changes()
-        self.changelist += self.get_userprivilege_changes()
+        self.changelist.append(self.sync_gvuserportaloperator())
+        self.changelist.append(self.get_issuer_changes())
+        self.changelist.append(self.get_revocation_changes())
+        self.changelist.append(self.get_namespace_changes())
+        self.changelist.append(self.get_userprivilege_changes())
         changelist_json = json.dumps(self.changelist)
         self._create_tempfile_from_str(changelist_json )
 
@@ -66,14 +62,14 @@ class PolicyJournalUpdater():
     def get_issuer_changes(self):
         i_list = []
         for i in Issuer.objects.filter(added_to_journal=False):
-            irec_dict = InputRecordIssuer(
+            irec_dict = PolicyChangeIssuer(
                 i.subject_cn,
                 i.pvprole,
                 i.cacert,
                 False).inputrec
             i_list.append(irec_dict)
         for i in Issuer.objects.filter(marked4delete=True, deleted_from_journal=False):
-            irec_dict = InputRecordIssuer(
+            irec_dict = PolicyChangeIssuer(
                 i.subject_cn,
                 i.pvprole,
                 i.cacert,
@@ -84,13 +80,13 @@ class PolicyJournalUpdater():
     def get_namespace_changes(self):
         n_list = []
         for n in Namespaceobj.objects.filter(added_to_journal=False):
-            irec_dict = InputRecordNamespace(
+            irec_dict = PolicyChangeNamespace(
                 n.fqdn,
                 n.gvouid_parent.gvouid.gvouid,
                 False).inputrec
             n_list.append(irec_dict)
         for n in Namespaceobj.objects.filter(marked4delete=True, deleted_from_journal=False):
-            irec_dict = InputRecordNamespace(
+            irec_dict = PolicyChangeNamespace(
                 n.fqdn,
                 n.gvouid_parent.gvouid.gvouid,
                 True).inputrec
@@ -100,13 +96,13 @@ class PolicyJournalUpdater():
     def get_revocation_changes(self):
         r_list = []
         for r in Revocation.objects.filter(added_to_journal=False):
-            irec_dict = InputRecordRevocation(
+            irec_dict = PolicyChangeRevocation(
                 r.cert,
                 r.subject_cn,
                 False).inputrec
             r_list.append(irec_dict)
         for r in Revocation.objects.filter(marked4delete=True, deleted_from_journal=False):
-            irec_dict = InputRecordRevocation(
+            irec_dict = PolicyChangeRevocation(
                 r.cert,
                 r.subject_cn,
                 True).inputrec
@@ -116,14 +112,14 @@ class PolicyJournalUpdater():
     def get_userprivilege_changes(self):
         u_list = []
         for u in Userprivilege.objects.filter(added_to_journal=False):
-            inputrec_dict = InputRecordUserprivilege(
+            inputrec_dict = PolicyChangeUserprivilege(
                 u.cert,
                 u.gvouid_parent.gvouid.gvouid,
                 u.subject_cn,
                 False).inputrec
             u_list.append(inputrec_dict)
         for u in Userprivilege.objects.filter(marked4delete=True, deleted_from_journal=False):
-            inputrec_dict = InputRecordUserprivilege(
+            inputrec_dict = PolicyChangeUserprivilege(
                 u.cert,
                 u.gvouid_parent.gvouid.gvouid,
                 u.subject_cn,
@@ -136,7 +132,7 @@ class PolicyJournalUpdater():
             Get diff to keep the list in sync.
         '''
         def get_inputrec(gvouid, cn, delete=None) -> dict:
-            return InputRecordOrganization(gvouid, cn, delete).inputrec
+            return PolicyChangeOrganization(gvouid, cn, delete).inputrec
 
         def add_missing_items():
             for gvouid in gvouids_in_db.keys():

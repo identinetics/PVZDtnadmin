@@ -8,11 +8,7 @@ from django.core import management
 from pvzdweb.settings import *
 INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
 
-from fedop.models.issuer import Issuer
-from fedop.models.namespace import Namespaceobj
-from fedop.models.policy_journal import PolicyJournal
-from fedop.models.revocation import Revocation
-from fedop.models.userprivilege import Userprivilege
+from fedop.models import Issuer, Namespaceobj, PolicyStorage, Revocation, Userprivilege
 
 #pytestmark = pytest.mark.django_db  # not working for whatever reason.
                                      # workaround from https://github.com/pytest-dev/pytest-django/issues/396
