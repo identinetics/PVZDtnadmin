@@ -13,7 +13,7 @@ from PVZDpy.aodsfilehandler import AODSFileHandler
 from PVZDpy.aodslisthandler import AodsListHandler
 from PVZDpy.PolicyChange import AodsChangeList, PolicyChangeIssuer, PolicyChangeNamespace, \
     PolicyChangeOrganization, PolicyChangeRevocation, PolicyChangeUserprivilege
-from common.get_policystore import get_policystore
+from fedop.config.get_policystore import get_policystore
 from fedop.models import *
 from pvzdweb.app_settings import get_aodsfhInvocation, get_aodslhInvocation
 from tnadmin.models.gvfederationorg import GvUserPortalOperator

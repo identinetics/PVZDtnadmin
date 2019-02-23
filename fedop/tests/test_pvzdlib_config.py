@@ -31,7 +31,7 @@ def setup_db_tables():
 
 @pytest.fixture(scope='module')
 def config_file() -> None:
-    os.environ['PVZDLIB_CONFIG_MODULE'] = str(Path(__file__).parent.parent / 'pvzdlib_config.py')
+    os.environ['PVZDLIB_CONFIG_MODULE'] = str(Path(__file__).parent / 'data' / 'pvzdlib_config' / 'pvzdlib_config.py')
 
 
 @pytest.fixture
