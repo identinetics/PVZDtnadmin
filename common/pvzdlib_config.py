@@ -1,16 +1,19 @@
-""" create an invocation class specific for AODSFileHandler """
+import sys
 from pathlib import Path
-from PVZDpy.config.policystore_backend_file import PolicyStoreBackendFile
+from PVZDpy.config.appconfig_abstract import PVZDlibConfigAbstract
+from common.policystore_backend_django import PolicyStoreBackendDjango
 
 
-class PVZDlibConfig():
-    # Store policy artifacts in file system realitve to this config
-    cd = Path(__file__).parent
-    polstore_dir = cd / 'policystore/'
-    polstore_backend = PolicyStoreBackendFile(polstore_dir)
+class PVZDlibConfig(PVZDlibConfigAbstract):
+    """ Python configuration object for PVZDlib/PVZDpy """
+    def _set_config(self):
+        config = self.config['confkey']
+        # Store policy artifacts in file system relative to this config
+        config.polstore_backend = PolicyStoreBackendDjango()
 
-    # Trusted Fedop Certificates: Always stored in filesystem
-    trustedcertsdir = Path('/config/trustedcerts')
+        # Trusted Fedop Certificates: Always stored in filesystem
+        config.trustedcertsdir = Path(__file__).parent / 'tests' / 'trustedcerts'
 
-    xmlsign = True  # False only for development to skip interactive signing
-    debug = False
+        config.xmlsign = False  # False: only for development to skip interactive signing
+        config.debug = False
+        config.projhome = Path('sys.argv[0]').parent.parent

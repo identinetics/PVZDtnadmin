@@ -1,3 +1,4 @@
+import tempfile
 from pathlib import Path
 from PVZDpy.config.policystore_backend_abstract import PolicyStoreBackendAbstract
 from PVZDpy.userexceptions import PolicyJournalNotInitialized
@@ -5,66 +6,103 @@ from fedop.models import PolicyStorage
 
 
 
-class PolicyStoreBackendFile(PolicyStoreBackendAbstract):
-    def __init__(self, polstore_dir: Path):
-        self.dbo = PolicyStorage.objects.get(id=1)
+class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):
+    def __init__(self):
+        pass
 
-    # ---
+    def read_or_fail_policystorage(self):
+        if not hasattr(self, 'dbo'):
+            try:
+                self.dbo = PolicyStorage.objects.get(id=1)
+            except Exception as e:
+                raise PolicyJournalNotInitialized
 
-    def get_policy_journal(self) -> bytes:
+    def read_or_init_policystorage(self):
+        if hasattr(self, 'dbo'):
+            self.dbo = PolicyStorage.objects.get(id=1)
+        else:
+            self.dbo = PolicyStorage(id=1)
+            self.dbo.save()
+        dbo = PolicyStorage.objects.get(id=1)
+        if not dbo:
+            print('bug')
+            # ---
+
+    def get_policy_journal_xml(self) -> bytes:
+        self.read_or_fail_policystorage()
         return self.dbo.policy_journal_xml
 
     def get_policy_journal_path(self) -> Path:
-        raise NotImplementedError()
+        # copy policy journal from db to temp file
+        if hasattr(self, 'policy_journal_xml_fd'):
+            self.policy_journal_xml_fd.close()
+        self.policy_journal_xml_fd = tempfile.NamedTemporaryFile(mode='wb', prefix='pvzdpj_', suffix='.xml')
+        self.policy_journal_xml_fd.write(self.get_policy_journal())
+        self.policy_journal_xml_fd.flush()
+        return Path(self.policy_journal_xml_fd.name())
 
     def get_policy_journal_json(self) -> str:
+        self.read_or_fail_policystorage()
+        if not self.dbo.policy_journal_json:
+            raise PolicyJournalNotInitialized
         return self.dbo.policy_journal_json
 
     def get_poldict_json(self) -> str:
-        return self.dbo.poldict_json
+        self.read_or_fail_policystorage()
+        return self.dbo.policy_dict_json
 
     def get_poldict_html(self) -> str:
-        return self.dbo.poldict_html
+        self.read_or_fail_policystorage()
+        return self.dbo.policy_dict_html
 
     def get_shibacl(self) -> bytes:
+        self.read_or_fail_policystorage()
         return self.dbo.shibacl
 
     def get_trustedcerts_report(self) -> str:
-        return self.dbo._trustedcerts_report
+        self.read_or_fail_policystorage()
+        return self.dbo.trustedcerts_report
 
     # ---
 
-    def set_policy_journal_xml(self, xml_bytes: str):
+    def set_policy_journal_xml(self, xml_bytes: bytes):
+        self.read_or_init_policystorage()
         self.dbo.policy_journal_xml = xml_bytes
-        self.save()
+        self.dbo.save()
 
     def set_policy_journal_json(self, json_str: str):
+        self.read_or_init_policystorage()
         self.dbo.policy_journal_json = json_str
-        self.save()
+        self.dbo.save()
 
-    def set_policy_dict_json(self, json_str: str):
+    def set_poldict_json(self, json_str: str):
+        self.read_or_init_policystorage()
         self.dbo.policy_dict_json = json_str
-        self.save()
+        self.dbo.save()
 
     def set_poldict_html(self, html_str: str):
+        self.read_or_init_policystorage()
         self.dbo.policy_dict_html = html_str
-        self.save()
+        self.dbo.save()
 
-    def set_shibacl(self, xml_bytes: str):
+    def set_shibacl(self, xml_bytes: bytes):
+        self.read_or_init_policystorage()
         self.dbo.shibacl = xml_bytes
-        self.save()
+        self.dbo.save()
 
     def set_trustedcerts_report(self, t: str):
+        self.read_or_init_policystorage()
         self.dbo.trustedcerts_report = t
-        self.save()
+        self.dbo.save()
 
     # ---
 
     def reset_pjournal_and_derived(self):
+        self.read_or_init_policystorage()
         self.dbo.policy_journal_xml = b''
         self.dbo.policy_journal_json = ''
         self.dbo.policy_dict_json = ''
         self.dbo.policy_dict_html = ''
         self.dbo.shibacl = b''
         self.dbo.trustedcerts_report = ''
-        self.save()
+        self.dbo.save()

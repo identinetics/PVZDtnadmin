@@ -6,8 +6,6 @@ import tempfile
 from pathlib import Path
 
 import django
-projhome = Path('sys.argv[0]').parent.parent.parent
-sys.path.append(projhome)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
 django.setup()
 

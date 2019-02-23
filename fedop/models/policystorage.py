@@ -19,7 +19,7 @@ class PolicyStorage(models.Model):
         verbose_name='Policy Journal HTML',
         help_text='Policy Journal unsigned (HTML)',
         )
-    shibacl = models.TextField(
+    shibacl = models.BinaryField(
         verbose_name='ShibSP ACL',
         )
     trustedcerts_report = models.TextField(
@@ -29,8 +29,8 @@ class PolicyStorage(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Änderungsdatum', )
 
     class Meta:
-        verbose_name = 'Policy Journal'
-        verbose_name_plural = 'Policy Journal'
+        verbose_name = 'Policy Storage'
+        verbose_name_plural = 'Policy Storage'
 
     def save(self, *args, **kwargs):
         self.id=1
