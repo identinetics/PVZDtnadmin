@@ -23,7 +23,7 @@ class PolicyStorage(models.Model):
         verbose_name='ShibSP ACL',
         )
     trustedcerts_report = models.TextField(
-        verbose_name='Trusted certs",
+        verbose_name='Trusted certs',
         help_text=' list (fedop + portaladmin, non-authoritative)',
         )
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Änderungsdatum', )

@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 from pathlib import Path
 import django
@@ -14,7 +15,7 @@ else:
 from django.conf import settings
 from fedop.models.issuer import Issuer
 from fedop.models.namespace import Namespaceobj
-from fedop.models.policy_journal import PolicyJournal
+from fedop.models.policystorage import PolicyStorage
 from fedop.models.revocation import Revocation
 from fedop.models.userprivilege import Userprivilege
 from PVZDpy.policystore import PolicyStore
@@ -29,7 +30,7 @@ def main():
     add_namespaces()
     add_userprivileges()
     add_issuers()
-    add_policy_journal()
+    add_policy_storage()
     add_revocation()
 
 
@@ -114,8 +115,8 @@ def add_issuers():
             print(f"skipped duplicate issuer {subject_cn}")
 
 
-def add_policy_journal():
-    pj = PolicyJournal()
+def add_policy_storage():
+    pj = PolicyStorage()
     pj.save()
 
 def add_revocation():
