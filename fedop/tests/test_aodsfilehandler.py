@@ -11,6 +11,9 @@ from django.core import management
 from pvzdweb.settings import *
 INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
 
+from PVZDpy.aodsfilehandler import AodsFileHandler
+from PVZDpy.userexceptions import ValidationError, UnauthorizedAODSSignerError
+
 #pytestmark = pytest.mark.django_db  # not working for whatever reason.
                                      # workaround from https://github.com/pytest-dev/pytest-django/issues/396
 from pytest_django.plugin import _blocking_manager
@@ -24,17 +27,18 @@ def setup_db_tables():
     management.call_command('migrate', 'tnadmin')
     management.call_command('migrate', 'fedop')
 
-from PVZDpy.aodsfilehandler import AodsFileHandler
-from PVZDpy.userexceptions import ValidationError, UnauthorizedAODSSignerError
+
+@pytest.fixture
+def testdata_dir() -> Path:
+    return Path(__file__).parent / 'data' / 'aodsfh'
 
 
 @pytest.fixture
-def config_file() -> None:
-    os.environ['PVZDLIB_CONFIG_MODULE'] = str(Path(__file__).parent / 'data' / 'aodsfh' / 'pvzdlib_config.py')
+def config_file(testdata_dir) -> None:
+    os.environ['PVZDLIB_CONFIG_MODULE'] = str(testdata_dir / 'pvzdlib_config.py')
 
 
-@pytest.mark.requires_signature
-def test_create_read(config_file, setup_db_tables):
+def test_create_read(config_file, setup_db_tables, testdata_dir):
     aodsfh = AodsFileHandler()
     aodsfh.remove()
     aods = {"AODS": [{"content":["header","","contentfields"],"delete": False}]}
@@ -45,5 +49,5 @@ def test_create_read(config_file, setup_db_tables):
     aodsfh.save_shibacl(b'<root/>')
     aodsfh.save_trustedcerts_report('some text')
     policyjournal = aodsfh.read()
-    policyjournal_expected = aodsfh.backend.get_policy_journal_path().parent / 'policyjournal_expected.json'
+    policyjournal_expected = testdata_dir / 'policyjournal_expected.json'
     assert policyjournal == json.load(policyjournal_expected.open())

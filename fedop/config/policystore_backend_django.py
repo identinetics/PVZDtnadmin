@@ -10,23 +10,22 @@ class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):
     def __init__(self):
         pass
 
-    def read_or_fail_policystorage(self):
+    def read_or_fail_policystorage(self) -> None:
         if not hasattr(self, 'dbo'):
             try:
                 self.dbo = PolicyStorage.objects.get(id=1)
             except Exception as e:
                 raise PolicyJournalNotInitialized
 
-    def read_or_init_policystorage(self):
+    def read_or_init_policystorage(self) -> None:
         if hasattr(self, 'dbo'):
             self.dbo = PolicyStorage.objects.get(id=1)
         else:
             self.dbo = PolicyStorage(id=1)
             self.dbo.save()
-        dbo = PolicyStorage.objects.get(id=1)
-        if not dbo:
-            print('bug')
-            # ---
+        #dbo = PolicyStorage.objects.get(id=1)
+        #if not dbo:
+        #    print('bug')
 
     def get_policy_journal_xml(self) -> bytes:
         self.read_or_fail_policystorage()
@@ -66,39 +65,39 @@ class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):
 
     # ---
 
-    def set_policy_journal_xml(self, xml_bytes: bytes):
+    def set_policy_journal_xml(self, xml_bytes: bytes) -> None:
         self.read_or_init_policystorage()
         self.dbo.policy_journal_xml = xml_bytes
         self.dbo.save()
 
-    def set_policy_journal_json(self, json_str: str):
+    def set_policy_journal_json(self, json_str: str) -> None:
         self.read_or_init_policystorage()
         self.dbo.policy_journal_json = json_str
         self.dbo.save()
 
-    def set_poldict_json(self, json_str: str):
+    def set_poldict_json(self, json_str: str) -> None:
         self.read_or_init_policystorage()
         self.dbo.policy_dict_json = json_str
         self.dbo.save()
 
-    def set_poldict_html(self, html_str: str):
+    def set_poldict_html(self, html_str: str) -> None:
         self.read_or_init_policystorage()
         self.dbo.policy_dict_html = html_str
         self.dbo.save()
 
-    def set_shibacl(self, xml_bytes: bytes):
+    def set_shibacl(self, xml_bytes: bytes) -> None:
         self.read_or_init_policystorage()
         self.dbo.shibacl = xml_bytes
         self.dbo.save()
 
-    def set_trustedcerts_report(self, t: str):
+    def set_trustedcerts_report(self, t: str) -> None:
         self.read_or_init_policystorage()
         self.dbo.trustedcerts_report = t
         self.dbo.save()
 
     # ---
 
-    def reset_pjournal_and_derived(self):
+    def reset_pjournal_and_derived(self) -> None:
         self.read_or_init_policystorage()
         self.dbo.policy_journal_xml = b''
         self.dbo.policy_journal_json = ''
@@ -108,11 +107,12 @@ class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):
         self.dbo.trustedcerts_report = ''
         self.dbo.save()
 
-    def __str__(self):
-        if self.dbo:
-            s = 'dbo=y, len(jounal_xml)= %s' % self.dbo.policy_journal_xml
+    def __str__(self) -> str:
+        if hasattr(self, 'dbo'):
+            s = 'len(jounal_xml)= %s' % self.dbo.policy_journal_xml
             if hasattr(self, 'policy_journal_xml_fd'):
                 s += str(Path(policy_journal_xml_fd.name).name)
         else:
-            s = 'dbo=n'
+            s = 'storage not initialized'
+        return s
 
