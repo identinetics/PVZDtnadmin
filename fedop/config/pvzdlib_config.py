@@ -12,7 +12,7 @@ class PVZDlibConfig(PVZDlibConfigAbstract):
         config.polstore_backend = PolicyStoreBackendDjango()
 
         # Trusted Fedop Certificates: Always stored in filesystem
-        config.trustedcertsdir = Path(__file__).parent / 'tests' / 'trustedcerts'  # MUST EDIT FOR DEPLOYMENT!
+        config.trustedcertsdir = Path(__file__).parent.parent / 'tests' / 'data' / 'pvzdlib_config' / 'trustedcerts_rh'  # MUST EDIT FOR DEPLOYMENT!
 
         config.xmlsign = False  # False: only for development to skip interactive signing
         config.debug = False

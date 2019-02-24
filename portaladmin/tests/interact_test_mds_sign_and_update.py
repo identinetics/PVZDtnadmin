@@ -28,6 +28,8 @@ def result06_valmsg(testdata_basedir):
     with open(opj(testdata_basedir, 'expected_results', 'result06_valmsg.json')) as fd:
         return fd.read()
 
+
+@pytest.mark.requires_signature
 def test_insert06(ed_path06, result06_valmsg):
     mds = MDstatement(ed_file_upload=ed_path06)
     mds.save()

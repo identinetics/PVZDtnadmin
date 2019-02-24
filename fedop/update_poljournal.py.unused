@@ -9,7 +9,7 @@ django.setup()
 from PVZDpy.aodsfilehandler import AODSFileHandler
 from PVZDpy.aodslisthandler import AodsListHandler
 from PVZDpy.inputrecord import InputRecordIssuer, InputRecordNamespace, InputRecordRevocation, InputRecordUserprivilege
-from common import get_policystore
+from common import get_policy_dict
 from fedop.models.issuer import *
 from fedop.models.revocation import *
 from fedop.models.namespace import *
@@ -23,9 +23,9 @@ class PolicyJournalUpdater():
     def __init__(self):
         self.changelist = []
 
-    def main(self):
+    def load_changelist(self):
         self.build_changelist()
-        #policy_store = self.get_policystore()
+        #policy_store = self.get_policy_dict()
         #aods_fh = AODSFileHandler(get_aodslhInvocation())
         #aods_lh = AodsListHandler(aodsFileHandlder, get_aodslhInvocation())
         #self.refresh_policy_store_cache()
@@ -63,11 +63,11 @@ class PolicyJournalUpdater():
         u = Userprivilege(cert=cert)
 
     def refresh_policy_store_cache(self):
-        _ = get_policystore()   # get_policystore will copy it form the db
+        _ = get_policy_dict()   # get_policy_dict will copy it form the db
 
 
 if __name__ == '__main__':
     policy_journal_updater = PolicyJournalUpdater()
-    policy_journal_updater.main()
+    policy_journal_updater.load_changelist()
 else:
     sys.exit(1)

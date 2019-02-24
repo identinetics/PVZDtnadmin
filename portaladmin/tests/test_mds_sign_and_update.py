@@ -51,7 +51,7 @@ def test_insert22(ed_path22):
     _delete_if_exists
     _insert_as_if_unsigned()
 
-
+@pytest.mark.requires_signature
 def test_sign22(ed_path22):
     with open(ed_path22, 'rb') as fd:
         django_file = django.core.files.File(fd)

@@ -18,7 +18,7 @@ from fedop.models.namespace import Namespaceobj
 from fedop.models.policystorage import PolicyStorage
 from fedop.models.revocation import Revocation
 from fedop.models.userprivilege import Userprivilege
-from PVZDpy.policystore import PolicyStore
+from PVZDpy.policydict import PolicyDict
 from tnadmin.models.gvfederationorg import GvUserPortalOperator
 from tnadmin.models.gvorg import GvOrganisation
 
@@ -34,11 +34,11 @@ def main():
     add_revocation()
 
 
-def policystore3():
+def policy_dict3():
     p = Path(testdata_dir) / 'poldir3.json'
     with p.open() as fd:
         policydir1 = json.load(fd)
-    return PolicyStore(policydir=policydir1)
+    return PolicyDict(policydir=policydir1)
 
 
 def add_namespaces():
@@ -57,7 +57,7 @@ def add_namespaces():
             return None
         return qs[0]
 
-    ns_recs = policystore3().get_registered_namespace_objs()
+    ns_recs = policy_dict3().get_registered_namespace_objs()
     for fqdn in ns_recs:
         ns_orgid = ns_recs[fqdn][0]
         parent_o = _get_foreign_key_parent_obj(ns_orgid, fqdn)
@@ -83,7 +83,7 @@ def add_userprivileges():
             return None
         return qs[0]
 
-    u_recs = policystore3().get_userprivileges()
+    u_recs = policy_dict3().get_userprivileges()
     for cert in u_recs:
         u_orgid_list = u_recs[cert][0]
         u_username = u_recs[cert][1]
@@ -103,7 +103,7 @@ def add_userprivileges():
 
 
 def add_issuers():
-    i_recs = policystore3().get_issuers()
+    i_recs = policy_dict3().get_issuers()
     for subject_cn in i_recs.keys():
         i = Issuer(subject_cn=subject_cn)
         i.pvprole = i_recs[subject_cn][0]
@@ -120,7 +120,7 @@ def add_policy_storage():
     pj.save()
 
 def add_revocation():
-    r_recs = policystore3().get_revoked_certs()
+    r_recs = policy_dict3().get_revoked_certs()
     for cert in r_recs:
         # if not Revocation.objects.filter(cert=cert):   # TODO: compare only public key
         #     r = Revocation(cert=cert)

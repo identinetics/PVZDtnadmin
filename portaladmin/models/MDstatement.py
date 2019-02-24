@@ -6,7 +6,7 @@ from django.db import models
 
 from portaladmin.constants import *
 from django.core.exceptions import ValidationError
-from PVZDpy.policystore import PolicyStore
+from PVZDpy.policydict import PolicyDict
 from PVZDpy.samled_validator import SamlEdValidator
 from fedop.models.namespace import Namespaceobj
 
@@ -151,8 +151,8 @@ class MDstatement(models.Model):
         if not getattr(self, 'ed_val', None):
             policydir_fn = settings.PVZD_SETTINGS['policydir']
             with open(policydir_fn) as fd:
-                policystore = PolicyStore(policydir=json.loads(fd.read()))
-            self.ed_val = SamlEdValidator(policystore)
+                policy_dict = PolicyDict(policydir=json.loads(fd.read()))
+            self.ed_val = SamlEdValidator(policy_dict)
         if self.ed_signed:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)
         elif self.ed_uploaded:
@@ -263,11 +263,11 @@ class MDstatement(models.Model):
     def _get_orgid(self):
         if getattr(self.ed_val, 'ed', False):
             fqdn = self.ed_val.ed.get_entityid_hostname()
-            return self.ed_val.policystore.get_orgid(fqdn)
+            return self.ed_val.policy_dict.get_orgid(fqdn)
 
     def _get_orgcn(self):
         if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.policystore.get_orgcn(self._get_orgid())
+            return self.ed_val.policy_dict.get_orgcn(self._get_orgid())
 
     def _get_statusgroup(self):
         if self.status == STATUS_ACCEPTED:

@@ -5,7 +5,7 @@ from ..constants import *
 from ..exceptions import CancelRequest
 from ..models import MDstatement
 from PVZDpy.cresignedxml import creSignedXML
-from PVZDpy.policystore import PolicyStore
+from PVZDpy.policydict import PolicyDict
 from PVZDpy.samled_validator import SamlEdValidator
 from PVZDpy.samlentitydescriptor import SAMLEntityDescriptorFromStrFactory
 
@@ -52,8 +52,8 @@ def _request_xmldsig(ed_to_be_signed) -> str:
 def _revalidate_after_signing(mds):
     policydir_fn = settings.PVZD_SETTINGS['policydir']
     with open(policydir_fn) as fd:
-        policystore = PolicyStore(policydir=json.loads(fd.read()))
-    ed_val = SamlEdValidator(policystore)
+        policy_dict = PolicyDict(policydir=json.loads(fd.read()))
+    ed_val = SamlEdValidator(policy_dict)
     ed_val.validate_entitydescriptor(ed_str_new=mds.ed_signed, sigval=True)
     mds.signer_subject = ed_val.signer_cert_cn
     if ed_val.authz_ok:

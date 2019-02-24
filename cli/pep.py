@@ -15,7 +15,7 @@ from portaladmin.models import MDstatement
 from portaladmin.constants import STATUS_REQUEST_QUEUE, STATUS_REJECTED, STATUS_ACCEPTED
 
 from get_pep_logger import get_pep_logger
-from config import get_policystore
+from config import get_policy_dict
 
 
 __author__ = 'r2h2'
@@ -37,7 +37,7 @@ class PEP:
         self.loglevelpep = settings.PVZD_SETTINGS['loglevelpep']
         self.pepoutdir = settings.PVZD_SETTINGS['pepoutdir']
         self.regauthority = settings.PVZD_SETTINGS['regauthority']
-        self.ed_val = SamlEdValidator(get_policystore(debug_speedup=True))  # TODO: False for qa+prod
+        self.ed_val = SamlEdValidator(get_policy_dict(debug_speedup=True))  # TODO: False for qa+prod
 
     def _update_pepout(self, mds):
         ed = mds.ed_val.ed
