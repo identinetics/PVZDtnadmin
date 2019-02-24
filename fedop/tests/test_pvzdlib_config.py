@@ -11,7 +11,7 @@ from django.core import management
 from pvzdweb.settings import *
 INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
 
-from PVZDpy.config.appconfig_abstract import PVZDlibConfigAbstract
+from PVZDpy.config.pvzdlib_config_abstract import PVZDlibConfigAbstract
 from PVZDpy.trustedcerts import TrustedCerts
 from PVZDpy.userexceptions import PolicyJournalNotInitialized
 
@@ -94,3 +94,6 @@ def test_03_initialize(config_file, setup_db_tables):
     assert backend.get_poldict_html() == '<html/>'
     assert backend.get_shibacl() == b'1'
     assert backend.get_trustedcerts_report() == 'lore ipsum'
+    assert backend.get_policy_journal_path().is_file()
+
+

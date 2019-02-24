@@ -33,13 +33,14 @@ class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):
         return self.dbo.policy_journal_xml
 
     def get_policy_journal_path(self) -> Path:
-        # copy policy journal from db to temp file
+        # copy policy journal from db to temp file; do not close, refresh if exists.
         if hasattr(self, 'policy_journal_xml_fd'):
-            self.policy_journal_xml_fd.close()
-        self.policy_journal_xml_fd = tempfile.NamedTemporaryFile(mode='wb', prefix='pvzdpj_', suffix='.xml')
-        self.policy_journal_xml_fd.write(self.get_policy_journal())
+            self.policy_journal_xml_fd.seek(0)
+        else:
+            self.policy_journal_xml_fd = tempfile.NamedTemporaryFile(mode='wb', prefix='pvzdpj_', suffix='.xml')
+        self.policy_journal_xml_fd.write(self.get_policy_journal_xml())
         self.policy_journal_xml_fd.flush()
-        return Path(self.policy_journal_xml_fd.name())
+        return Path(self.policy_journal_xml_fd.name)
 
     def get_policy_journal_json(self) -> str:
         self.read_or_fail_policystorage()
@@ -106,3 +107,12 @@ class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):
         self.dbo.shibacl = b''
         self.dbo.trustedcerts_report = ''
         self.dbo.save()
+
+    def __str__(self):
+        if self.dbo:
+            s = 'dbo=y, len(jounal_xml)= %s' % self.dbo.policy_journal_xml
+            if hasattr(self, 'policy_journal_xml_fd'):
+                s += str(Path(policy_journal_xml_fd.name).name)
+        else:
+            s = 'dbo=n'
+
