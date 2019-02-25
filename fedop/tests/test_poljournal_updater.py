@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from pathlib import Path
 import pytest
@@ -34,6 +35,7 @@ def load_tnadmin1():
 
 @pytest.fixture(scope='module')
 def load_fedop1(load_schema, load_tnadmin1):
+    logging.basicConfig(level=logging.DEBUG)
     fedop_data = Path('fedop/fixtures/fedop1.json')
     assert fedop_data.is_file(), f"could not find file {fedop_data}"
     management.call_command('loaddata', fedop_data)
@@ -60,9 +62,10 @@ enforce.config({'enabled': True, 'mode': 'covariant'})
 
 
 @enforce.runtime_validation
-def test_poljournal_updater(load_fedop1, testdata_dir, pvzdconfig):
+def test_poljournal_updater01(load_fedop1, testdata_dir, pvzdconfig):
     policy_journal_updater = PolicyJournalUpdater()
-    policy_journal_updater.load_changelist()
+    count = policy_journal_updater.load_changelist()
+    assert count == 19
     ps = policy_journal_updater.policy_dict
-    with (testdata_dir / 'expected_result' / 'polstore.json').open() as fd:
+    with (testdata_dir / 'expected_result' / 'polstore01.json').open() as fd:
         assert ps.get_policydict() == json.load(fd)

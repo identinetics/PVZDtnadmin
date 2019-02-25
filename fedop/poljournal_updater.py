@@ -24,11 +24,11 @@ class PolicyJournalUpdater():
         self.changelist = PolicyChangeList()
         self.policy_dict = PolicyDict()
 
-    def load_changelist(self) -> None:
+    def load_changelist(self) -> int:
         self.build_changelist()
         if len(self.changelist):
             self.append_poljournal()
-        # TODO: signal  "nothing to do"
+        return len(self.changelist)
 
     def build_changelist(self) -> None:
         for policy_change_item in self.sync_gvuserportaloperator().changelist:
@@ -136,4 +136,5 @@ class PolicyJournalUpdater():
 
 if __name__ == '__main__':
     policy_journal_updater = PolicyJournalUpdater()
-    policy_journal_updater.load_changelist()
+    count = policy_journal_updater.load_changelist()
+    print(f"PolicyJournalUpdater::load_changelist: Appending {count} records in changelist")
