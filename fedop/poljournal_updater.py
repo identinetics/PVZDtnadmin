@@ -24,8 +24,10 @@ class PolicyJournalUpdater():
         self.changelist = PolicyChangeList()
         self.policy_dict = PolicyDict()
 
-    def load_changelist(self) -> int:
+    def load_changelist(self, preview_callback: callable = None) -> int:
         self.build_changelist()
+        if preview_callback:
+            preview_callback(self.changelist)
         if len(self.changelist):
             self.append_poljournal()
         return len(self.changelist)

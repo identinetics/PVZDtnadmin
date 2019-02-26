@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 import pytest
 import enforce
+from PVZDpy.aods_record import AodsRecord
+from PVZDpy.policychange import PolicyChangeList
 assert os.environ['DJANGO_SETTINGS_MODULE'] in ('pvzdweb.settings_pytest_dev', 'pvzdweb.settings_pytest'), \
     'require in-memory-db for loading fixtures'
 from django.core import management
@@ -62,9 +64,18 @@ enforce.config({'enabled': True, 'mode': 'covariant'})
 
 
 @enforce.runtime_validation
-def test_poljournal_updater01(load_fedop1, testdata_dir, pvzdconfig):
+def test_poljournal_updater01(capfd, load_fedop1, testdata_dir, pvzdconfig):
+    def preview_callback(changelist: PolicyChangeList):
+        with capfd.disabled():   # disable pytest output capture
+            i = 0
+            for changeitem in changelist.changelist:
+                i += 1
+                print(AodsRecord(changeitem))
+            print(f"processed {i} change items")
+
+
     policy_journal_updater = PolicyJournalUpdater()
-    count = policy_journal_updater.load_changelist()
+    count = policy_journal_updater.load_changelist(preview_callback)
     assert count == 19
     ps = policy_journal_updater.policy_dict
     with (testdata_dir / 'expected_result' / 'polstore01.json').open() as fd:
