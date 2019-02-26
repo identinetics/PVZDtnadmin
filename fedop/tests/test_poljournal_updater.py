@@ -41,7 +41,7 @@ def load_fedop1(load_schema, load_tnadmin1):
     fedop_data = Path('fedop/fixtures/fedop1.json')
     assert fedop_data.is_file(), f"could not find file {fedop_data}"
     management.call_command('loaddata', fedop_data)
-    # canot json-represent the poljournal, therefore load_changelist it from file
+    # canot json-represent the poljournal, therefore get_changelist it from file
     fedop_policyjournal = Path('fedop/fixtures/poljournal_testdata.xml')
     ps = PolicyStorage.objects.get(id=1)
     with fedop_policyjournal.open('rb') as fd:
@@ -65,7 +65,7 @@ enforce.config({'enabled': True, 'mode': 'covariant'})
 
 @enforce.runtime_validation
 def test_poljournal_updater01(capfd, load_fedop1, testdata_dir, pvzdconfig):
-    def preview_callback(changelist: PolicyChangeList):
+    def preview(changelist: PolicyChangeList):
         with capfd.disabled():   # disable pytest output capture
             i = 0
             for changeitem in changelist.changelist:
@@ -75,8 +75,10 @@ def test_poljournal_updater01(capfd, load_fedop1, testdata_dir, pvzdconfig):
 
 
     policy_journal_updater = PolicyJournalUpdater()
-    count = policy_journal_updater.load_changelist(preview_callback)
-    assert count == 19
-    ps = policy_journal_updater.policy_dict
+    policy_change_list = policy_journal_updater.get_changelist()
+    preview(policy_change_list)
+    policy_journal_updater.append_poljournal()
+    assert len(policy_change_list.changelist) == 19
+    policy_store = policy_journal_updater.policy_dict
     with (testdata_dir / 'expected_result' / 'polstore01.json').open() as fd:
-        assert ps.get_policydict() == json.load(fd)
+        assert policy_store.get_policydict() == json.load(fd)
