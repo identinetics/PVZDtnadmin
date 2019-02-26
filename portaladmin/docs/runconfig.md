@@ -22,7 +22,6 @@ openssl rand -base64 30
 
 The Portaladmin app that uses library functions that do Signature and XML-validation with Java classes. 
 The environment must provide CLASSPATH and JAVA_HOME, and for MacOS DYLD_LIBRARY_PATH, too.
-PYJNIUS_ACTIVATE has to be set (without value) as well.
 
 == Example for MacOS development environment
 
