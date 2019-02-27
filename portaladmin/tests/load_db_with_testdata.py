@@ -5,7 +5,7 @@ import django
 import sys
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
 django.setup()
 
 from portaladmin.models import MDstatement

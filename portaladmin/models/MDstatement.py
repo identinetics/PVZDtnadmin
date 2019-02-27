@@ -145,13 +145,18 @@ class MDstatement(models.Model):
         return json.dumps(self_dict, sort_keys=True, indent=2)
 
     def __str__(self):
-        return self.entityID
+        s = (self.entityID or make_blank_entityid_unique or '')
+        return s
+
+    def __repr__(self):
+        r = f"{entityID} {statusgroup} {make_blank_entityid_unique}"
+        return r
 
     def validate(self):
         if not getattr(self, 'ed_val', None):
             policydir_fn = settings.PVZD_SETTINGS['policydir']
             with open(policydir_fn) as fd:
-                policy_dict = PolicyDict(policydir=json.loads(fd.read()))
+                policy_dict = PolicyDict(test_policydict=json.loads(fd.read()))
             self.ed_val = SamlEdValidator(policy_dict)
         if self.ed_signed:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)
@@ -202,8 +207,8 @@ class MDstatement(models.Model):
                     make_blank_entityid_unique=self.make_blank_entityid_unique,
                     statusgroup=self.statusgroup)
                 if qs:
-                    raise ValidationError('Der EntityDescriptor ist mit dem Status'
-                                          ' "{}" ist bereits vorhanden'.format(qs[0].status))
+                    raise ValidationError(f"Der EntityDescriptor {self.entityID} ist mit dem Status "
+                                           "{qs[0].status} ist bereits vorhanden")
 
         if kwargs.get('operation', '') == 'mds_sign_and_update':
             super().save(*args, {})
@@ -217,6 +222,7 @@ class MDstatement(models.Model):
             super().save(*args, **kwargs)
 
     def _get_make_blank_entityid_unique(self):
+        ''' enable storing broken <EntityDescriptor> documents where an entityID cannot be parsed '''
         if self.entityID:
             return None
         else:
@@ -228,8 +234,8 @@ class MDstatement(models.Model):
         eid = self.ed_val.entityID
         if eid:
             return eid
-        elif self.ed_uploaded:
-            return '?'
+        #elif self.ed_uploaded:
+        #    return '?' # no more than 1 broken upload allowed
         else:
             return ''
 
@@ -241,13 +247,12 @@ class MDstatement(models.Model):
 
     def _get_namespace_id(self):
         if getattr(self.ed_val, 'ed', False):
-            ns = self.ed_val.ed.get_namespace_changes()
+            ns = self.ed_val.ed.get_namespace()
             if ns:
                 qs = Namespaceobj.objects.filter(fqdn=ns)
                 if qs:
                     return qs[0].id
         return None
-
 
     def _get_operation(self):
         if not getattr(self.ed_val, 'ed', False):
@@ -263,11 +268,11 @@ class MDstatement(models.Model):
     def _get_orgid(self):
         if getattr(self.ed_val, 'ed', False):
             fqdn = self.ed_val.ed.get_entityid_hostname()
-            return self.ed_val.policy_dict.get_orgid(fqdn)
+            return self.ed_val.policydict.get_orgid(fqdn)
 
     def _get_orgcn(self):
         if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.policy_dict.get_orgcn(self._get_orgid())
+            return self.ed_val.policydict.get_orgcn(self._get_orgid())
 
     def _get_statusgroup(self):
         if self.status == STATUS_ACCEPTED:
