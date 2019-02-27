@@ -11,6 +11,7 @@ pyOpenSSL
 requests
 pyjnius
 pytest
+pytest-cov
 pytest-django
 #psycopg2
 psycopg2-binary

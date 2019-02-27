@@ -17,8 +17,9 @@ _blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
 
 @pytest.fixture(scope="module")
 def setup_db_tables():
-    management.call_command('migrate', 'tnadmin')
-    management.call_command('migrate', 'fedop')
+    with open('/tmp/pvzdweb_fedop_testout_migratedb.log', 'w') as fd:
+        management.call_command('migrate', 'tnadmin', stdout=fd)
+        management.call_command('migrate', 'fedop', stdout=fd)
 
 @pytest.fixture(scope="module")
 def loaddata_fedop1():

@@ -21,8 +21,9 @@ path_expected_results = 'expected_results'
 
 @pytest.fixture(scope="module")
 def setup_db_tables():
-    management.call_command('migrate', 'fedop')
-    management.call_command('migrate', 'portaladmin')
+    with open('/tmp/pvzdweb_padmin_testout_migratedb.log', 'w') as fd:
+        management.call_command('migrate', 'fedop', stdout=fd)
+        management.call_command('migrate', 'portaladmin', stdout=fd)
 
 
 def assert_equal(expected, actual, fn=''):

@@ -53,7 +53,7 @@ def test_poljournal_updater01(capfd, load_fedop1, testdata_dir, pvzdconfig):
 
     policy_journal_updater = PolicyJournalUpdater()
     policy_change_list = policy_journal_updater.get_changelist()
-    preview(policy_change_list)
+    # preview(policy_change_list)
     policy_journal_updater.append_poljournal()
     assert len(policy_change_list.changelist) == 19
     policy_store = policy_journal_updater.policy_dict
