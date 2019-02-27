@@ -2,30 +2,13 @@ import json
 import os
 from pathlib import Path
 import pytest
-
-import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-django.setup()
 from django.conf import settings
-from django.core import management
-from pvzdweb.settings import *
-INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
-
 from PVZDpy.aodsfilehandler import AodsFileHandler
 from PVZDpy.userexceptions import ValidationError, UnauthorizedAODSSignerError
 
-#pytestmark = pytest.mark.django_db  # not working for whatever reason.
-                                     # workaround from https://github.com/pytest-dev/pytest-django/issues/396
-from pytest_django.plugin import _blocking_manager
-from django.db.backends.base.base import BaseDatabaseWrapper
-_blocking_manager.unblock()
-_blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
-
-
-@pytest.fixture(scope="module")
-def setup_db_tables():
-    management.call_command('migrate', 'tnadmin')
-    management.call_command('migrate', 'fedop')
+from pvzdweb.settings import *
+INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
+from .setup_djangodb import *
 
 
 @pytest.fixture

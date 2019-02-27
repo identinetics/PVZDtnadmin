@@ -38,7 +38,7 @@ def policy_dict3():
     p = Path(testdata_dir) / 'poldir3.json'
     with p.open() as fd:
         policydir1 = json.load(fd)
-    return PolicyDict(policydir=policydir1)
+    return PolicyDict(test_policydict=policydir1)
 
 
 def add_namespaces():

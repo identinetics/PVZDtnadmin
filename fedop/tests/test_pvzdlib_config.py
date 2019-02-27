@@ -3,30 +3,15 @@ import os
 from pathlib import Path
 import pytest
 
-import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-django.setup()
 from django.conf import settings
-from django.core import management
-from pvzdweb.settings import *
-INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
 
 from PVZDpy.config.pvzdlib_config_abstract import PVZDlibConfigAbstract
 from PVZDpy.trustedcerts import TrustedCerts
 from PVZDpy.userexceptions import PolicyJournalNotInitialized
 
-#pytestmark = pytest.mark.django_db  # not working for whatever reason.
-                                     # workaround from https://github.com/pytest-dev/pytest-django/issues/396
-from pytest_django.plugin import _blocking_manager
-from django.db.backends.base.base import BaseDatabaseWrapper
-_blocking_manager.unblock()
-_blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
-
-
-@pytest.fixture(scope="module")
-def setup_db_tables():
-    management.call_command('migrate', 'tnadmin')
-    management.call_command('migrate', 'fedop')
+from pvzdweb.settings import *
+INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
+from .setup_djangodb import *
 
 
 @pytest.fixture(scope='module')
@@ -47,10 +32,12 @@ def testout_dir() -> Path:
     dir.mkdir(parents=True, exist_ok=True)
     return dir
 
+from .common import test_info
 
 # --- 01 ---
 
-def test_01_default_not_init():
+@pytest.mark.standalone_only  # database needs to be empty for this test, thereofre do not use with test all
+def test_01_default_not_init(config_file):
     pvzdconf = PVZDlibConfigAbstract.get_config()
     backend = pvzdconf.polstore_backend
     with pytest.raises(PolicyJournalNotInitialized) as context:
@@ -60,7 +47,7 @@ def test_01_default_not_init():
 # --- 02 ---
 
 @pytest.fixture
-def expected_poldict_json02(testdata_dir):
+def expected_poldict_json02(config_file, testdata_dir):
     p = testdata_dir/ 'expected_results' / 'policy_journal02.json'
     return json.load(p.open())
 

@@ -1,0 +1,1 @@
+from fedop.views.poljournal_upd import pjupdate

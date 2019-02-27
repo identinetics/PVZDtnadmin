@@ -1,0 +1,8 @@
+<h2>Policy change items to be signed</h2>
+<ul>
+  {% for line in changelist %}
+    <li>{{ line }}</li>
+  {% endfor %}
+</ul>
+
+<a href="/fedop/pjupdate/confirm">Confirm<a/>

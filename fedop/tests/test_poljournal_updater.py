@@ -6,41 +6,18 @@ import pytest
 import enforce
 from PVZDpy.aods_record import AodsRecord
 from PVZDpy.policychange import PolicyChangeList
-assert os.environ['DJANGO_SETTINGS_MODULE'] in ('pvzdweb.settings_pytest_dev', 'pvzdweb.settings_pytest'), \
-    'require in-memory-db for loading fixtures'
 from django.core import management
-from pvzdweb.settings import *
-INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
-
 from fedop.models import Issuer, Namespaceobj, PolicyStorage, Revocation, Userprivilege
 from fedop.poljournal_updater import PolicyJournalUpdater
 
-# pytestmark = pytest.mark.django_db  # not working for whatever reason.
-                                      # workaround from https://github.com/pytest-dev/pytest-django/issues/396
-from pytest_django.plugin import _blocking_manager
-from django.db.backends.base.base import BaseDatabaseWrapper
-_blocking_manager.unblock()
-_blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
+from pvzdweb.settings import *
+INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
+from .setup_djangodb import *
 
 
 @pytest.fixture(scope='module')
-def load_schema():
-    management.call_command('migrate')
-
-
-@pytest.fixture(scope='module')
-def load_tnadmin1():
-    tnadmin_data = Path('tnadmin/fixtures/tnadmin1.json')
-    assert tnadmin_data.is_file(), f"could not find file {tnadmin_data}"
-    management.call_command('loaddata', tnadmin_data)
-
-
-@pytest.fixture(scope='module')
-def load_fedop1(load_schema, load_tnadmin1):
+def load_fedop1(setup_db_tables, loaddata_fedop1):
     logging.basicConfig(level=logging.DEBUG)
-    fedop_data = Path('fedop/fixtures/fedop1.json')
-    assert fedop_data.is_file(), f"could not find file {fedop_data}"
-    management.call_command('loaddata', fedop_data)
     # canot json-represent the poljournal, therefore get_changelist it from file
     fedop_policyjournal = Path('fedop/fixtures/poljournal_testdata.xml')
     ps = PolicyStorage.objects.get(id=1)
