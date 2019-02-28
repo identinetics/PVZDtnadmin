@@ -102,14 +102,14 @@ class PolicyJournalUpdater():
         u_list = []
         for u in Userprivilege.objects.filter(added_to_journal=False):
             inputrec_dict = PolicyChangeUserprivilege(
-                u.cert,
+                '{cert}' + u.cert,
                 u.gvouid_parent.gvouid.gvouid,
                 u.subject_cn,
                 False)
             u_list.append(inputrec_dict)
         for u in Userprivilege.objects.filter(marked4delete=True, deleted_from_journal=False):
             inputrec_dict = PolicyChangeUserprivilege(
-                u.cert,
+                '{cert}' + u.cert,
                 u.gvouid_parent.gvouid.gvouid,
                 u.subject_cn,
                 True)

@@ -27,8 +27,9 @@ admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
 
 
 urlpatterns = [
-    path('fedop/', include('fedop.urls')),
     path('admin/', admin.site.urls),
+    path('fedop/', include('fedop.urls')),
+    path('pjupdate/start/', include('django.contrib.flatpages.urls')),
 ]
 
 if settings.DEBUG:

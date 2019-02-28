@@ -9,6 +9,7 @@ from PVZDpy.policydict import PolicyDict
 from PVZDpy.samled_validator import SamlEdValidator
 from PVZDpy.samlentitydescriptor import SAMLEntityDescriptorFromStrFactory
 
+
 def mds_sign_and_update(_modeladmin, request, queryset,
                         used_uploaded_as_signed=False, unittest=True):
     mds = _get_selected_record_from_queryset(request, queryset, unittest)
@@ -19,6 +20,7 @@ def mds_sign_and_update(_modeladmin, request, queryset,
     mds.status = STATUS_SIGNATURE_APPLIED  # to be overwritten by revalidate
     _revalidate_after_signing(mds)
     mds.save(operation='mds_sign_and_update')
+
 
 def _get_selected_record_from_queryset(request, queryset, unittest) -> MDstatement:
     if len(queryset.all()) > 1:
@@ -63,6 +65,7 @@ def _revalidate_after_signing(mds):
         mds.status = STATUS_REJECTED
         mds.signer_authorized = False
         mds.validation_message = json.dumps(ed_val.val_mesg_dict, indent=2)
+
 
 def _set_message_error(request, msg, unittest=False):
     if unittest:

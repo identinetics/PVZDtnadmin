@@ -16,7 +16,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 #MENU_WEIGHT = {
@@ -36,6 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+# configure flatpages
+INSTALLED_APPS += [
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+]
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
