@@ -2,6 +2,7 @@ import logging
 import os
 from os.path import join as opj
 import ldap
+import rest_framework
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -34,14 +35,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 ]
 
 # configure flatpages
-INSTALLED_APPS += [
-    'django.contrib.sites',
-    'django.contrib.flatpages',
-]
-SITE_ID = 1
+#INSTALLED_APPS += [
+#    'django.contrib.sites',
+#    'django.contrib.flatpages',
+#]
+#SITE_ID = 1
 
 
 MIDDLEWARE = [
@@ -126,6 +128,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
+}
+
 
 PVZD_SETTINGS = {
     'logfilepep': '/var/log/pvzd/pep.log',

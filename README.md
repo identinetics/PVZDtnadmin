@@ -1,4 +1,4 @@
-# Portalverbund zentrale Dienste - Teilnehmerverwaltung
+# Portalverbund zentrale Dienste - Metadaten- und Teilnehmerverwaltung
 
 
 

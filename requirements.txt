@@ -1,6 +1,7 @@
 cffi
 Cython
 django
+djangorestframework
 #django-admin-menu>=1.1
 django-ldapdb
 #GitPython

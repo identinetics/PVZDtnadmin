@@ -17,7 +17,10 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
-from fedop import views
+#from fedop import views
+from rest_framework import routers
+from portaladmin.views import MDstatementViewSet
+
 
 # disable access control
 class AccessUser:
@@ -25,11 +28,13 @@ class AccessUser:
 
 admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
 
+router = routers.DefaultRouter()
+router.register(r'mdstatement', MDstatementViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('fedop/', include('fedop.urls')),
-    path('pjupdate/start/', include('django.contrib.flatpages.urls')),
+    path('api/', include(router.urls)),
 ]
 
 if settings.DEBUG:
