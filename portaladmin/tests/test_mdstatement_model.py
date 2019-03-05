@@ -26,6 +26,20 @@ def setup_db_tables():
         management.call_command('migrate', 'portaladmin', stdout=fd)
 
 
+@pytest.fixture(scope="module")
+def setup_and_load_tnadmin1(setup_db_tables):
+    tnadmin_data = Path('tnadmin/fixtures/tnadmin1.json')
+    assert tnadmin_data.is_file(), f'could not find file {tnadmin_data}'
+    management.call_command('loaddata', tnadmin_data)
+
+
+@pytest.fixture(scope="module")
+def setup_and_load_fedop1(setup_and_load_tnadmin1):
+    fedop_data = Path('fedop/fixtures/fedop1.json')
+    assert fedop_data.is_file(), f'could not find file {fedop_data}'
+    management.call_command('loaddata', fedop_data)
+
+
 def assert_equal(expected, actual, fn=''):
     # workaround because pycharm does not display the full string (despite pytest -vv etc)
     msg = fn+"\n'"+actual+"' != '"+expected+"' "
@@ -68,7 +82,7 @@ def fixture_result(filename):
                           ('insert22.json', 22),
                           ('insert23.json', 23),
                           ])
-def test_insert_and_update(setup_db_tables, expected_result_fn, ed_path_no):
+def test_insert_and_update(setup_and_load_fedop1, expected_result_fn, ed_path_no):
     fn = Path(ed_path(ed_path_no, dir=fixture_testdata_basedir()))
     with fn.open('rb') as fd:
         django_file = django.core.files.File(fd)

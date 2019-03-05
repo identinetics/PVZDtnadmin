@@ -16,13 +16,12 @@ _blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
 
 
 @pytest.fixture(scope="module")
-def setup_db_tables():
+def setup_db_tables_fedop():
     with open('/tmp/pvzdweb_fedop_testout_migratedb.log', 'w') as fd:
-        management.call_command('migrate', 'tnadmin', stdout=fd)
         management.call_command('migrate', 'fedop', stdout=fd)
 
 @pytest.fixture(scope="module")
-def loaddata_fedop1():
+def loaddata_fedop1(setup_db_tables_fedop):
     fedop_data = Path('fedop/fixtures/fedop1.json')
     assert fedop_data.is_file(), f"could not find file {fedop_data}"
     management.call_command('loaddata', fedop_data)
