@@ -5,8 +5,9 @@ import tempfile
 from django.conf import settings
 from django.db import models
 
-from portaladmin.constants import *
+from portaladmin.constants import STATUS_CREATED, STATUS_CHOICES, STATUSGROUP_FRONTEND, STATUSGROUP_CHOICES
 from django.core.exceptions import ValidationError
+from PVZDpy.config.pvzdlib_config_abstract import PVZDlibConfigAbstract
 from PVZDpy.policydict import PolicyDict
 from PVZDpy.samled_validator import SamlEdValidator
 from fedop.models.namespace import Namespaceobj
@@ -27,6 +28,8 @@ class MDstatement(models.Model):
     def __init__(self, *args, **kw):
         super(MDstatement, self).__init__(*args, **kw)
         self._ed_uploaded_old = self.ed_uploaded
+        pvzdconf = PVZDlibConfigAbstract.get_config()
+        self.policy_dict = json.loads(pvzdconf.polstore_backend.get_poldict_json())
 
     admin_note = models.TextField(
         blank=True, null=True,
@@ -102,7 +105,7 @@ class MDstatement(models.Model):
     namespace = models.CharField(
         blank=True, null=True,
         max_length=30)
-#    namespace = models.ForeignKey(
+#    namespace = models.ForeignKey(  # TODO: clarifiy if foreign key is possible to enforce referential integrity
 #        Namespaceobj,
 #        blank=True, null=True,
 #        on_delete=models.PROTECT,
@@ -157,9 +160,7 @@ class MDstatement(models.Model):
     def validate(self):
         if not getattr(self, 'ed_val', None):
             policydir_fn = settings.PVZD_SETTINGS['policydir']
-            with open(policydir_fn) as fd:
-                policy_dict = PolicyDict(test_policydict=json.loads(fd.read()))
-            self.ed_val = SamlEdValidator(policy_dict)
+            self.ed_val = SamlEdValidator(self.policy_dict)
         if self.ed_signed:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)
         elif self.ed_uploaded:
