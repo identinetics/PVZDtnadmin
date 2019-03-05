@@ -68,7 +68,7 @@ def fixture_result(filename):
                           ('insert22.json', 22),
                           ('insert23.json', 23),
                           ])
-def test_insert(setup_db_tables, expected_result_fn, ed_path_no):
+def test_insert_and_update(setup_db_tables, expected_result_fn, ed_path_no):
     fn = Path(ed_path(ed_path_no, dir=fixture_testdata_basedir()))
     with fn.open('rb') as fd:
         django_file = django.core.files.File(fd)
@@ -77,5 +77,12 @@ def test_insert(setup_db_tables, expected_result_fn, ed_path_no):
     #assert 1 == len(MDstatement.objects.all())
     expected_result = fixture_result(expected_result_fn)
     assert_equal(expected_result, MDstatement.objects.all()[0].serialize_json())
+    if ed_path_no < 4:
+        mds = MDstatement.objects.get(id=ed_path_no)
+        mds.admin_note = f"some text fromt test {ed_path_no}"
+        mds.save()
+        mds = MDstatement.objects.get(id=ed_path_no)
+        assert mds.admin_note == f"some text fromt test {ed_path_no}"
 
 #def test_unique_constraint() # TODO
+
