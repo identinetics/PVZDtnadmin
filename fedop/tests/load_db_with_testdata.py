@@ -6,8 +6,7 @@ import django
 
 
 if __name__ == '__main__':
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_allapps")
-    print(os.environ["DJANGO_SETTINGS_MODULE"])
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
     django.setup()
 else:
     assert False

@@ -5,6 +5,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
 django.setup()
 from django.core import management
+from fedop.models.policystorage import PolicyStorage
 
 
 #pytestmark = pytest.mark.django_db  # not working for whatever reason.
@@ -22,6 +23,23 @@ def setup_db_tables_fedop():
 
 @pytest.fixture(scope="module")
 def loaddata_fedop1(setup_db_tables_fedop):
+    def add_policy_storage():
+        polstore1_path = Path('fedop') / 'fixtures' / 'policystore1'
+        ps = PolicyStorage()
+        # ps.policy_journal_xml = polstore1_path / 'policydict.xml'.read_bytes()  # -> xmlsign=False
+        ps.policy_dict_html = (polstore1_path / 'policydict.html').read_text()
+        ps.policy_dict_json = (polstore1_path / 'policydict.json').read_text()
+        ps.policy_journal_json = (polstore1_path / 'policyjournal.json').read_text()
+        ps.shibacl = (polstore1_path / 'shibacl.xml').read_bytes()
+        ps.trustedcerts_report = (polstore1_path / 'trustedcerts.txt').read_text()
+        ps.save()
+        pass
+
     fedop_data = Path('fedop/fixtures/fedop1.json')
     assert fedop_data.is_file(), f"could not find file {fedop_data}"
     management.call_command('loaddata', fedop_data)
+    try:
+        add_policy_storage()
+    except Exception as e:
+        raise e
+

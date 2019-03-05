@@ -2,22 +2,18 @@ import os
 from pathlib import Path
 import pytest
 import django
-from django.conf import settings
-from django.core import management
-import django.core.files
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
-django.setup()
 import coreapi
 from portaladmin.constants import STATUSGROUP_FRONTEND
 from portaladmin.models import MDstatement
 from PVZDpy.tests.common_fixtures import ed_path
+from django.conf import settings
+assert 'portaladmin' in settings.INSTALLED_APPS
 
-#pytestmark = pytest.mark.django_db  # not working for whatever reason.
-                                     # workaround from https://github.com/pytest-dev/pytest-django/issues/396
-from pytest_django.plugin import _blocking_manager
-from django.db.backends.base.base import BaseDatabaseWrapper
-_blocking_manager.unblock()
-_blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
+pytestmark = pytest.mark.django_db
+
+import django.core.files
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
+django.setup()
 
 path_expected_results = 'expected_results'
 
@@ -28,7 +24,6 @@ def assert_equal(expected, actual, fn=''):
 
 
 def fixture_testdata_basedir():
-    #return Path(settings.BASE_DIR / 'portaladmin' / 'tests' / 'saml'
     return Path(settings.BASE_DIR) / 'PVZDlib' / 'PVZDpy' / 'tests' / 'testdata' / 'saml'
 
 

@@ -135,20 +135,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
-REST_API_ROOTPATH = '/api/'
+PVZDWEB_API_ROOTPATH = '/api/'
+SIGPROXY_BASEURL = 'http://localhost:8080/SigProxy'
 
 
-# obsolete: PVZD_SETTINGS = {
-#    'logfilepep': '/var/log/pvzd/pep.log',
-#    'loglevelpep': logging.INFO,
-#    'loglevelweb': logging.INFO,
-#    'pepoutdir': '/var/log/pvzd/pepout',
-#    'poldirhtml': '/var/log/pvzd/poldir/poldir.html',
-#    'poldirjson': '/var/log/pvzd/poldir/poldir.json',
-#    'policydir': '/config/poldir.json',
-#    'policyjournal': '/config/pol_journal_sig_cache.xml',  # copy of master version stored in database
-#    'regauthority': 'Bundeskanzleramt',
-#    'shibacl': '/var/log/pvzd/poldir/shibacl.xml',
-#    'superuser': True,  # allow signer in trustedcerts to skip authorization check
-#    'trustedcerts': '/config/trustedcerts_rh.json',
-# }

@@ -6,17 +6,25 @@ import pytest
 import enforce
 from PVZDpy.aods_record import AodsRecord
 from PVZDpy.policychange import PolicyChangeList
-from django.core import management
 from fedop.models import Issuer, Namespaceobj, PolicyStorage, Revocation, Userprivilege
 from fedop.poljournal_updater import PolicyJournalUpdater
+from tnadmin.models import GvOrganisation
+from django.conf import settings
+assert 'fedop' in settings.INSTALLED_APPS
 
-from pvzdweb.settings import *
-INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
-from .setup_djangodb import *
+
+# prepare database fixture (a temporary in-memory database is created for this test)
+import django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
+django.setup()
+from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
+def test_assert_tnadmin_loaded(load_tnadmin1):
+    assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
+from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
 
 
 @pytest.fixture(scope='module')
-def load_fedop1(setup_db_tables, loaddata_fedop1):
+def load_fedop1(setup_db_tables_fedop, loaddata_fedop1):
     logging.basicConfig(level=logging.DEBUG)
     # canot json-represent the poljournal, therefore get_changelist it from file
     fedop_policyjournal = Path('fedop/fixtures/poljournal_testdata.xml')
@@ -41,6 +49,7 @@ enforce.config({'enabled': True, 'mode': 'covariant'})
 
 
 @enforce.runtime_validation
+@pytest.mark.standalone_only
 def test_poljournal_updater01(capfd, load_fedop1, testdata_dir, pvzdconfig):
     def preview(changelist: PolicyChangeList):
         with capfd.disabled():   # disable pytest output capture
@@ -55,7 +64,7 @@ def test_poljournal_updater01(capfd, load_fedop1, testdata_dir, pvzdconfig):
     policy_change_list = policy_journal_updater.get_changelist()
     # preview(policy_change_list)
     policy_journal_updater.append_poljournal()
-    assert len(policy_change_list.changelist) == 19
+    assert len(policy_change_list.changelist) == 22
     policy_store = policy_journal_updater.policy_dict
     with (testdata_dir / 'expected_result' / 'polstore01.json').open() as fd:
         assert policy_store.get_policydict() == json.load(fd)

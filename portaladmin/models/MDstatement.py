@@ -5,7 +5,8 @@ import tempfile
 from django.conf import settings
 from django.db import models
 
-from portaladmin.constants import STATUS_CREATED, STATUS_CHOICES, STATUSGROUP_FRONTEND, STATUSGROUP_CHOICES
+from portaladmin.constants import STATUS_ACCEPTED, STATUS_CREATED, STATUS_REJECTED, STATUS_CHOICES, STATUS_UPLOADED, \
+    STATUSGROUP_FRONTEND, STATUSGROUP_CHOICES
 from django.core.exceptions import ValidationError
 from PVZDpy.config.pvzdlib_config_abstract import PVZDlibConfigAbstract
 from PVZDpy.policydict import PolicyDict
@@ -28,8 +29,7 @@ class MDstatement(models.Model):
     def __init__(self, *args, **kw):
         super(MDstatement, self).__init__(*args, **kw)
         self._ed_uploaded_old = self.ed_uploaded
-        pvzdconf = PVZDlibConfigAbstract.get_config()
-        self.policy_dict = json.loads(pvzdconf.polstore_backend.get_poldict_json())
+        self.policy_dict = PolicyDict()
 
     admin_note = models.TextField(
         blank=True, null=True,
@@ -159,7 +159,6 @@ class MDstatement(models.Model):
 
     def validate(self):
         if not getattr(self, 'ed_val', None):
-            policydir_fn = settings.PVZD_SETTINGS['policydir']
             self.ed_val = SamlEdValidator(self.policy_dict)
         if self.ed_signed:
             self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)

@@ -2,16 +2,22 @@ import json
 import os
 from pathlib import Path
 import pytest
-
-from django.conf import settings
-
 from PVZDpy.config.pvzdlib_config_abstract import PVZDlibConfigAbstract
 from PVZDpy.trustedcerts import TrustedCerts
 from PVZDpy.userexceptions import PolicyJournalNotInitialized
+from tnadmin.models import GvOrganisation
+from django.conf import settings
+assert 'fedop' in settings.INSTALLED_APPS
 
-from pvzdweb.settings import *
-INSTALLED_APPS=list(set(INSTALLED_APPS + ['fedop']))
-from .setup_djangodb import *
+# prepare database fixture (a temporary in-memory database is created for this test)
+pytest.mark.standalone_only
+import django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
+django.setup()
+from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
+def test_assert_tnadmin_loaded(load_tnadmin1):
+    assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
+from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
 
 
 @pytest.fixture(scope='module')
@@ -36,7 +42,7 @@ from .common import test_info
 
 # --- 01 ---
 
-@pytest.mark.standalone_only  # database needs to be empty for this test, thereofre do not use with test all
+@pytest.mark.standalone_only
 def test_01_default_not_init(config_file):
     pvzdconf = PVZDlibConfigAbstract.get_config()
     backend = pvzdconf.polstore_backend
@@ -52,6 +58,7 @@ def expected_poldict_json02(config_file, testdata_dir):
     return json.load(p.open())
 
 
+#@pytest.mark.standalone_only
 #def test_02_read_existing(pvzdconfig02, expected_poldict_json02):
 #    pvzdconf = PVZDlibConfigAbstract.get_config()
 #    backend = pvzdconf.polstore_backend
@@ -61,7 +68,8 @@ def expected_poldict_json02(config_file, testdata_dir):
 
 # --- 03 ---
 
-def test_03_initialize(config_file, setup_db_tables):
+@pytest.mark.standalone_only
+def test_03_initialize(config_file, setup_db_tables_fedop):
     pvzdconf = PVZDlibConfigAbstract.get_config()
     backend = pvzdconf.polstore_backend
     try:
