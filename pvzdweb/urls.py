@@ -14,11 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
+import portaladmin.views
 from portaladmin.views import MDstatementViewSet
 
 
@@ -35,7 +36,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('fedop/', include('fedop.urls')),
     path('api/', include(router.urls)),
-    path('docs/', include_docs_urls(title='PVZD API'))
+    path('docs/', include_docs_urls(title='PVZD API')),
+    re_path('api/unsignedxml/(?P<id>\d+)/', portaladmin.views.unsignedxml),
 ]
 
 if settings.DEBUG:

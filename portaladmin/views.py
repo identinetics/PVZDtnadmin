@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework import viewsets
 from portaladmin.models import MDstatement
 from portaladmin.serializers import MDstatementSerializer
@@ -10,4 +11,10 @@ class MDstatementViewSet(viewsets.ModelViewSet):
     """
     queryset = MDstatement.objects.all()
     serializer_class = MDstatementSerializer
+
+
+def unsignedxml(request, id: int):
+    mds = MDstatement.objects.get(id=id)
+    ed_unsignedxml = mds.ed_uploaded
+    return HttpResponse(ed_unsignedxml, content_type="application/xml")
 
