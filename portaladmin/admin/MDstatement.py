@@ -49,6 +49,7 @@ class MDstatementAdmin(admin.ModelAdmin):
     form = MDstatementForm
     save_on_top = True
     readonly_fields = (
+        'id',
         'content_valid',
         'created_at',
         'ed_signed',
@@ -124,6 +125,7 @@ class MDstatementAdmin(admin.ModelAdmin):
                 ('created_at', 'updated_at', ),
                 'signer_subject',
                 'admin_note',
+                'id',
             )
         }),
         ('EntityDescriptor XML', {

@@ -26,4 +26,3 @@ def loaddata_fedop1():
     fedop_data = Path('fedop/fixtures/fedop1.json')
     assert fedop_data.is_file(), f"could not find file {fedop_data}"
     management.call_command('loaddata', fedop_data)
-

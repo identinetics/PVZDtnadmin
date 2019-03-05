@@ -1,4 +1,6 @@
 cffi
+coreapi
+coreapi-cli
 Cython
 django
 djangorestframework
@@ -8,6 +10,7 @@ django-ldapdb
 gunicorn
 json2html
 lxml
+Markdown
 pyOpenSSL
 requests
 pyjnius

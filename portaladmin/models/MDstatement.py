@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import json
 import tempfile
@@ -45,8 +46,8 @@ class MDstatement(models.Model):
         verbose_name='EntityDescriptor signiert',
         help_text='SAML EntityDescriptor (signiert)',
         max_length=100000)
-    ed_uploaded = models.TextField(
-        blank=False, null=False,
+    ed_uploaded = models.TextField(  # do not write this field directly, always upload into ed_file_upload
+        blank=False, null=False, default='',
         verbose_name='EntityDescriptor hochgeladen',
         help_text='SAML EntityDescriptor (geladen, nicht signiert)',
         max_length=100000)
@@ -55,16 +56,16 @@ class MDstatement(models.Model):
         default=None, null=True,
         max_length=257)
     entityID = models.CharField(
-        blank=True, null=True,
+        blank=True, null=True, default='',
         max_length=301)
     entity_fqdn = models.CharField(
         blank=True, null=True,
         verbose_name='Entity FQDN',
         max_length=300)
-    make_blank_entityid_unique =models.CharField(
+    make_blank_entityid_unique = models.CharField(
         verbose_name = 'if the entityID is blank due to a validation error, this hash value '
                        'assures that the unique constraint is not violated',
-        blank=True, null=True,
+        blank=True, null=True, default='',
         max_length=16)
     operation = models.CharField(
         blank=True, null=True,
@@ -91,6 +92,7 @@ class MDstatement(models.Model):
         max_length=14)
     statusgroup = models.CharField(
         verbose_name='Status Group', null=False,
+        default=STATUSGROUP_FRONTEND,
         choices=STATUSGROUP_CHOICES,
         max_length=8)
     validation_message  = models.TextField(
@@ -221,14 +223,15 @@ class MDstatement(models.Model):
             _enforce_unique_constraint()
             super().save(*args, **kwargs)
 
-    def _get_make_blank_entityid_unique(self):
+    def _get_make_blank_entityid_unique(self) -> str:
         ''' enable storing broken <EntityDescriptor> documents where an entityID cannot be parsed '''
         if self.entityID:
             return None
         else:
             hashobj = hashlib.md5()
             hashobj.update(self.ed_uploaded.encode('utf-8'))
-            return hashobj.digest()
+            hash_str = base64.a85encode(hashobj.digest()).decode('ascii')[0:16]
+            return hash_str
 
     def _get_entityID(self):
         eid = self.ed_val.entityID

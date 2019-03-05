@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
-#from fedop import views
 from rest_framework import routers
+from rest_framework.documentation import include_docs_urls
 from portaladmin.views import MDstatementViewSet
 
 
@@ -35,6 +35,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('fedop/', include('fedop.urls')),
     path('api/', include(router.urls)),
+    path('docs/', include_docs_urls(title='PVZD API'))
 ]
 
 if settings.DEBUG:

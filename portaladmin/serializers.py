@@ -6,6 +6,7 @@ class MDstatementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MDstatement
         fields = (
+            'id',
             'admin_note',
             'content_valid',
             'created_at',

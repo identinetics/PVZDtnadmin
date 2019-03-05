@@ -1,0 +1,24 @@
+---
+source text for https://www.websequencediagrams.com
+---
+
+title Fedop Policy Journal Update
+
+
+Browser->PJ_upd_view: GET update_pol_journal/start
+PJ_upd_view->PL_updater.buildlist:
+PJ_upd_view->Browser: display preview
+Browser->PJ_upd_view: GET update_pol_journal/confirm
+PJ_upd_view-> PL_updater.append:
+PL_updater.append->aods_listhandler:
+aods_listhandler->cresig_seclay:
+cresig_seclay->Browser: 302
+Browser->SigService: POST CreateXMLSignatureRequest
+SigService->Browser: CreateXMLSignatureResponse
+Browser->cresig_seclay: POST CreateXMLSignatureResponse
+cresig_seclay->aods_listhandler:
+aods_listhandler->PL_updater.append:
+PL_updater.append->PJ_upd_view:
+PJ_upd_view->PL_updater.updatedb:
+PL_updater.updatedb->PJ_upd_view:
+PJ_upd_view->Browser: result page
