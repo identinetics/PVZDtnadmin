@@ -28,3 +28,10 @@ Files:
 * urls.py    routes /api/ to views registered for the API router
 * views.py   defines the selection and order for the API results
 * settings.py INSTALLED_APPS, REST_FRAMEWORK
+
+
+## Notes
+
+There are 2 API endpoints for callback of the signature proxy. 
+These are _not_ implemented with DRF, therefore not in that doc.
+See pvzdweb/url.py and search SIGPROXYAPI 

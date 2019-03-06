@@ -10,7 +10,6 @@ from django.conf import settings
 assert 'portaladmin' in settings.INSTALLED_APPS
 
 pytestmark = pytest.mark.django_db
-
 import django.core.files
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
 django.setup()
@@ -32,7 +31,7 @@ def fixture_result(filename):
     with p.open() as fd:
         return fd.read()
 
-
+@pytest.mark.requires_webapp
 def test_api_update_ed_signed():
     ''' update ed_signed via API
         requires PVZDweb runnning on dev database (no fixture yet for this)

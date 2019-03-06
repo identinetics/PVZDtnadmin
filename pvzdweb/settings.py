@@ -135,7 +135,14 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
-PVZDWEB_API_ROOTPATH = '/api/'
-SIGPROXY_BASEURL = 'http://localhost:8080/SigProxy'
+# === configure here for deployment
+SIGPROXY_ORIGIN = 'http://localhost:8080'
+SIGPROXY_BASEURL = SIGPROXY_ORIGIN  + '/SigProxy/loadsigproxyclient'
+PVZD_ORIGIN = 'http://localhost:8000'
+# ===
+PVZD_BASEPATH = 'sigproxyapi'  # do NOT to have a leading /
+SIGPROXYAPI_GETUNSIGNEDXML = PVZD_BASEPATH + '/getunsignedxml/'
+SIGPROXYAPI_POSTSIGNEDXML = PVZD_BASEPATH + '/postsignedxml/'
+SIGPROXYAPI_STARTSIGNING =  PVZD_BASEPATH + '/startsigning/'
 
 

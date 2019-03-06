@@ -37,7 +37,9 @@ urlpatterns = [
     path('fedop/', include('fedop.urls')),
     path('api/', include(router.urls)),
     path('docs/', include_docs_urls(title='PVZD API')),
-    re_path('api/unsignedxml/(?P<id>\d+)/', portaladmin.views.unsignedxml),
+    re_path(settings.SIGPROXYAPI_GETUNSIGNEDXML + '(?P<id>\d+)/', portaladmin.views.getunsignedxml),
+    re_path(settings.SIGPROXYAPI_POSTSIGNEDXML + '(?P<id>\d+)/', portaladmin.views.postsignedxml),
+    re_path(settings.SIGPROXYAPI_STARTSIGNING + '(?P<id>\d+)/', portaladmin.views.startsigning),
 ]
 
 if settings.DEBUG:

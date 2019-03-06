@@ -1,8 +1,10 @@
-from django.http import HttpResponse
+from django.conf import settings
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
 from rest_framework import viewsets
 from portaladmin.models import MDstatement
 from portaladmin.serializers import MDstatementSerializer
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_exempt
 
 # @never_cache  TODO: make this working with CBV
 class MDstatementViewSet(viewsets.ModelViewSet):
@@ -13,8 +15,50 @@ class MDstatementViewSet(viewsets.ModelViewSet):
     serializer_class = MDstatementSerializer
 
 
-def unsignedxml(request, id: int):
-    mds = MDstatement.objects.get(id=id)
-    ed_unsignedxml = mds.ed_uploaded
-    return HttpResponse(ed_unsignedxml, content_type="application/xml")
+@never_cache
+def getunsignedxml(request: HttpRequest, id: int) -> HttpResponse:
+    if request.method == "GET":
+        mds = MDstatement.objects.get(id=id)
+        ed_unsignedxml = mds.ed_uploaded
+        response = HttpResponse(ed_unsignedxml, content_type="application/xml")
+        response["Access-Control-Allow-Origin"] = '*' # settings.SIGPROXY_ORIGIN
+        return response
+    else:
+        raise Http404("Only GET supported at this path")
+
+
+# Manual test to set ed_signed to blank (use @csrf_exempt):
+# `curl -X POST -d "signedxml=" localhost:8000/api/mdstatement/signedxml/<id>/`
+@csrf_exempt
+def postsignedxml(request: HttpRequest, id: int) -> HttpResponse:
+    if request.method == "POST":
+        mds = MDstatement.objects.get(id=id)
+        try:
+            mds.ed_signed = request.POST['signedxml']
+            mds.save()
+        except Exception as e:
+            raise Http404("Error when updating MDStatement.ed_signed.\n" + str(e))
+        else:
+            response = HttpResponse('OK', content_type='text/plain')
+            response["Access-Control-Allow-Origin"] = '*'  # can't do harm here, or: # settings.SIGPROXY_ORIGIN
+            return response
+    else:
+        raise Http404("Only POST supported at this path")
+
+
+def _get_sigproxy_url(doc_baseuri: str, id: int) -> str:
+    return (
+            settings.SIGPROXY_BASEURL +
+            '?unsignedxml_url=' + settings.PVZD_ORIGIN + '/' + settings.SIGPROXYAPI_GETUNSIGNEDXML + str(id) + '/' +
+            '&result_to=' + settings.PVZD_ORIGIN + '/' + settings.SIGPROXYAPI_POSTSIGNEDXML + str(id) + '/' +
+            '&return=' + doc_baseuri + str(id) + '/' +
+            '&sigtype=samled'
+    )
+
+def startsigning(request: HttpRequest, id: int) -> HttpResponse:
+
+    if request.method == "GET":
+        return HttpResponseRedirect(_get_sigproxy_url(settings.PVZD_ORIGIN + '/admin/portaladmin/mdstatement/', id))
+    else:
+        raise Http404("Only GET supported at this path")
 

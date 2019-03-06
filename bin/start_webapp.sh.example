@@ -5,6 +5,8 @@
 scriptsdir=$(cd "$(dirname ${BASH_SOURCE[0]})" && pwd)
 source $scriptsdir/setenv.sh
 
+export DJANGO_SETTINGS_MODULE=pvzdweb.settings_dev
+
 # As a rule-of-thumb set the --workers according to the following formula: 2 * CPUs + 1
 gunicorn pvzdweb.wsgi:application \
     --workers=3 \
