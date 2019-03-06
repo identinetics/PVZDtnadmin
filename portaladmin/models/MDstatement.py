@@ -2,11 +2,12 @@ import base64
 import hashlib
 import json
 import tempfile
+from typing import Optional
 from django.conf import settings
 from django.db import models
 
 from portaladmin.constants import STATUS_ACCEPTED, STATUS_CREATED, STATUS_REJECTED, STATUS_CHOICES, STATUS_UPLOADED, \
-    STATUSGROUP_FRONTEND, STATUSGROUP_CHOICES
+    STATUSGROUP_BACKEND, STATUSGROUP_FRONTEND, STATUSGROUP_CHOICES
 from django.core.exceptions import ValidationError
 from PVZDpy.config.pvzdlib_config_abstract import PVZDlibConfigAbstract
 from PVZDpy.policydict import PolicyDict
@@ -150,11 +151,11 @@ class MDstatement(models.Model):
         return json.dumps(self_dict, sort_keys=True, indent=2)
 
     def __str__(self):
-        s = (self.entityID or make_blank_entityid_unique or '')
+        s = (self.entityID or self._get_make_blank_entityid_unique() or '')
         return s
 
     def __repr__(self):
-        r = f"{entityID} {statusgroup} {make_blank_entityid_unique}"
+        r = f"{self.entityID} {self.statusgroup} {self._get_make_blank_entityid_unique()}"
         return r
 
     def validate(self):
@@ -223,7 +224,7 @@ class MDstatement(models.Model):
             _enforce_unique_constraint()
             super().save(*args, **kwargs)
 
-    def _get_make_blank_entityid_unique(self) -> str:
+    def _get_make_blank_entityid_unique(self) -> Optional[str]:
         ''' enable storing broken <EntityDescriptor> documents where an entityID cannot be parsed '''
         if self.entityID:
             return None

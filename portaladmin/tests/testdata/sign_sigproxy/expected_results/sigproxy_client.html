@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+window.onload = do_signature_flow;
+"use strict";
+
+function do_signature_flow () {
+    const ASYNC_FALSE = false;
+    const ERR_CLIENT_CALLBACK1 = {name: "clientcallback1", message: "Error when reading unsigned document from client application"}
+    const ERR_CLIENT_CALLBACK2 = {name: "clientcallback2", message: "Error when returning signed document to client application"}
+    const ERR_PROXY_CALLBACK2 = {name: "proxycallback2", message: "Error when requesting signed XML document from signature proxy"}
+    const ERR_SECLAY = {name: "seclay", message: "Error when sending CreateXMLSignatureRequest to Security Layer"}
+
+    function get_unsigned_xml(url) {
+        write_status("reading unsigned XML document");
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, ASYNC_FALSE);
+        xhr.send(null);
+        if (xhr.status != 200) throw ERR_CLIENT_CALLBACK1;
+        write_status('Response OK, returned ' +  xhr.responseText.length + ' characters');
+        return xhr.responseText;
+    }
+
+    function get_cresignedxml_requ(url, unsignedxml, sigtype) {
+        write_status("creatingCreateXMLSignatureRequest");
+        var params = "sigtype=" + sigtype + "&unsignedxml=" + encodeURI(unsignedxml);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, ASYNC_FALSE);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(params);
+        if (xhr.status != 200)
+            throw {name: "proxycallback1",
+                   message: "Error when requesting CreateXMLSignatureRequest from signature proxy, http code=" + xhr.status};
+        write_status('Response OK, returned ' +  xhr.responseText.length + ' characters');
+        return xhr.responseText;
+    }
+
+    function security_layer_request(url, cresignedxml_requ) {
+        write_status("requesting Signature from Security Layer");
+        var params = "XMLRequest=" + encodeURI(cresignedxml_requ);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, ASYNC_FALSE);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(params);
+        if (xhr.status != 200) throw ERR_SECLAY;  // errors reported in content handled later
+        write_status('Response OK, returned ' +  xhr.responseText.length + ' characters');
+        return xhr.responseText;
+    }
+
+    function getsignedxmldoc(url, cresignedxml_resp) {
+        write_status("extracting signed XML doc from Security Layer response");
+        var params = "sigresponse=" + encodeURI(cresignedxml_resp);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, ASYNC_FALSE);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(params);
+        if (xhr.status == 204) {
+            sl_error = JSON.parse(xhr.responseText)
+            throw sl_error
+        }
+        if (xhr.status != 200) throw ERR_PROXY_CALLBACK2;
+        write_status('Response OK, returned ' +  xhr.responseText.length + ' characters');
+        return xhr.responseText
+    }
+
+    function post_result_to(url, signedxml) {
+        write_status("posting signed XML doc to requesting application");
+        var params = "signedxml=" + (signedxml);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, ASYNC_FALSE);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(params);
+         write_status('Response OK, returned ' +  xhr.responseText.length + ' characters');
+       if (xhr.status != 200) throw ERR_CLIENT_CALLBACK2;
+    }
+
+    function load_termination_page(url) {
+        write_status("Signature Proxy/Browser Client says good bye")
+        document.location = url
+    }
+
+    function write_status(msg){
+        console.log(msg)
+        messagelist = messagelist + "<li>"+ msg + "</li>";
+        messagebox.innerHTML = "<ul>" + messagelist + "</ul>";
+    }
+
+    var messagelist = "";
+    var messagebox = document.getElementById("messages");
+    try {
+        var unsignedxml = get_unsigned_xml("http://localhost:8000/sigproxyapi/getunsignedxml/1/");
+        var cresignedxml_requ = get_cresignedxml_requ("http://localhost:8080/SigProxy/makecresigrequ", unsignedxml, "samled");
+        var cresignedxml_resp = security_layer_request("http://127.0.0.1:3495/http-security-layer-request", cresignedxml_requ);
+        var signedxml_resp = getsignedxmldoc("http://localhost:8080/SigProxy/getsignedxmldoc", cresignedxml_resp);
+        post_result_to("http://localhost:8000/sigproxyapi/postsignedxml/1/", signedxml_resp);
+        err_params = ''
+    } catch(err) {
+        if (err.name == 'NetworkError')
+            msg = '(' + err.name + ') ' + err.message + err.sourceURL;
+        else
+            msg = '(' + err.name + ') ' + err.message
+        alert('The signature request could not be completed. \nReason: ' + msg)
+        err_params = '?code=' + encodeURI(err.name) + "&msg=" + encodeURI(err.message)
+    }
+    load_termination_page("http://localhost:8000/admin/portaladmin/mdstatement/1/" + err_params)
+}
+
+    </script>
+  </head>
+  <body>
+    <h1>Signature Proxy</h1>
+    <!--textarea rows="30" cols="100" readonly ></textarea-->
+  <div id="messages"></div>
+  </body>
+</html>
