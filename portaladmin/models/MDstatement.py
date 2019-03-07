@@ -36,6 +36,10 @@ class MDstatement(models.Model):
         blank=True, null=True,
         verbose_name='Admin Notiz',
         max_length=1000)
+    allow_selfsigned = models.BooleanField(
+        default=False, null=False,
+        verbose_name='Selbst-signiertes Zertifikat OK',
+        help_text='Selbst-signiertes oder nicht registriertes Zertifikat erlauben (nicht für PVP-R-Profil)')
     content_valid = models.BooleanField(
         default=False, null=False,
         verbose_name='Content validation', )
@@ -131,8 +135,7 @@ class MDstatement(models.Model):
 
     def get_boilerplate_help(self):
         return "Ein Metadaten Statement wird erstellt und geändert, indem eine Datei mit einem " \
-               "SAML Entity Descriptor hochgeladen wird. Für die Signatur ist in der " \
-               "Listansicht der Eintrag zu markieren und die Aktion zum signieren auszuführen."
+               "SAML Entity Descriptor hochgeladen wird. Mit der Signatur wird das Dokument zur Veröffentlichung eingebracht."
     get_boilerplate_help.short_description = ''
 
 
@@ -162,9 +165,11 @@ class MDstatement(models.Model):
         if not getattr(self, 'ed_val', None):
             self.ed_val = SamlEdValidator(self.policy_dict)
         if self.ed_signed:
-            self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_signed, sigval=True)
+            self.ed_val.validate_entitydescriptor(
+                ed_str_new=self.ed_signed, portaladmin_sigval=True, keydesc_certval=(not self.allow_selfsigned))
         elif self.ed_uploaded:
-            self.ed_val.validate_entitydescriptor(ed_str_new=self.ed_uploaded, sigval=False)
+            self.ed_val.validate_entitydescriptor(
+                ed_str_new=self.ed_uploaded, portaladmin_sigval=False, keydesc_certval=(not self.allow_selfsigned))
 
     def clean(self):
         def _fail_if_updating_not_allowed():
@@ -245,9 +250,8 @@ class MDstatement(models.Model):
 
     def _get_fqdn(self):
         if getattr(self.ed_val, 'ed', False):
-            return self.ed_val.ed.get_entityid_hostname()
-        else:
-            return ''
+            fqdn = self.ed_val.ed.get_entityid_hostname()
+        return (fqdn or self.ed_val.ed.get_entityid() or self._get_make_blank_entityid_unique() )
 
     def _get_namespace_id(self):
         if getattr(self.ed_val, 'ed', False):
