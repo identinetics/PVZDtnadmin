@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
+#import fedop.views
 import portaladmin.views
 from portaladmin.views import MDstatementViewSet
 
@@ -37,9 +38,14 @@ urlpatterns = [
     path('fedop/', include('fedop.urls')),
     path('api/', include(router.urls)),
     path('docs/', include_docs_urls(title='PVZD API')),
-    re_path(settings.SIGPROXYAPI_GETUNSIGNEDXML + '(?P<id>\d+)/', portaladmin.views.getunsignedxml),
-    re_path(settings.SIGPROXYAPI_POSTSIGNEDXML + '(?P<id>\d+)/', portaladmin.views.postsignedxml),
-    re_path(settings.SIGPROXYAPI_STARTSIGNING + '(?P<id>\d+)/', portaladmin.views.startsigning),
+    #re_path(settings.SIGPROXYAPI_FEDOP_GETSTARTURL + '(?P<id>\d+)/', fedop.views.getstarturl),
+    #re_path(settings.SIGPROXYAPI_FEDOP_GETUNSIGNEDXML + '(?P<id>\d+)/', fedop.views.getunsignedxml),
+    #re_path(settings.SIGPROXYAPI_FEDOP_POSTSIGNEDXML + '(?P<id>\d+)/', fedop.views.postsignedxml),
+    #re_path(settings.SIGPROXYAPI_FEDOP_STARTSIGNING + '(?P<id>\d+)/', fedop.views.startsigning),
+    re_path(settings.SIGPROXYAPI_PADMIN_GETSTARTURL + '(?P<id>\d+)/', portaladmin.views.getstarturl),
+    re_path(settings.SIGPROXYAPI_PADMIN_GETUNSIGNEDXML + '(?P<id>\d+)/', portaladmin.views.getunsignedxml),
+    re_path(settings.SIGPROXYAPI_PADMIN_POSTSIGNEDXML + '(?P<id>\d+)/', portaladmin.views.postsignedxml),
+    re_path(settings.SIGPROXYAPI_PADMIN_STARTSIGNING + '(?P<id>\d+)/', portaladmin.views.startsigning),
 ]
 
 if settings.DEBUG:

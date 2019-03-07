@@ -4,7 +4,7 @@ import pytest
 import requests
 from portaladmin.constants import STATUSGROUP_FRONTEND
 from portaladmin.models import MDstatement
-from portaladmin.views import _get_sigproxy_url
+from portaladmin.views import getstarturl
 from django.conf import settings
 assert 'portaladmin' in settings.INSTALLED_APPS
 
@@ -52,6 +52,6 @@ def ed_prepared_in_db(testdata_dir) -> int:
 def test_get_sigproxyurl(config_file, testdata_dir, ed_prepared_in_db):
     expected_result_fp = testdata_dir / 'expected_results' / 'sigproxy_client.html'
     expected_result_html = expected_result_fp.read_text()
-    url = _get_sigproxy_url(settings.PVZD_ORIGIN + '/admin/portaladmin/mdstatement/', 1)
+    url = getstarturl(1)
     response = requests.get(url)
     assert_equal(expected_result_html, response.text, expected_result_fp)

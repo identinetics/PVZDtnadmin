@@ -4,10 +4,12 @@
 {% block submit_buttons_top %}
     {{ block.super }}
     <div class="submit-row">
-        <p class="deletelink-box"><a href="#sign" class="deletelink">Sign</a></p>
+        <p class="deletelink-box" id="sign-button">
+            <input type="submit" value="Signieren" name="Sign">
+        </p>
     </div>
     <div id="ed_uploaded_get_template_url" style="display: none;">
         {{ ed_uploaded_get_template_url }}
     </div>
-    <script type="text/javascript" src="{% static 'portaladmin/js/sign.js' %}"></script>
+    <!--script type="text/javascript" src="{% static 'portaladmin/js/sign.js' %}"></script-->
 {% endblock %}

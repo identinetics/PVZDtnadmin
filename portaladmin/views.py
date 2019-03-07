@@ -29,7 +29,7 @@ def getunsignedxml(request: HttpRequest, id: int) -> HttpResponse:
 
 # Manual test to set ed_signed to blank (use @csrf_exempt):
 # `curl -X POST -d "signedxml=" localhost:8000/api/mdstatement/signedxml/<id>/`
-@csrf_exempt
+# @csrf_exempt
 def postsignedxml(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         mds = MDstatement.objects.get(id=id)
@@ -46,19 +46,19 @@ def postsignedxml(request: HttpRequest, id: int) -> HttpResponse:
         raise Http404("Only POST supported at this path")
 
 
-def _get_sigproxy_url(doc_baseuri: str, id: int) -> str:
+def getstarturl(id: int) -> str:
     return (
             settings.SIGPROXY_BASEURL +
-            '?unsignedxml_url=' + settings.PVZD_ORIGIN + '/' + settings.SIGPROXYAPI_GETUNSIGNEDXML + str(id) + '/' +
-            '&result_to=' + settings.PVZD_ORIGIN + '/' + settings.SIGPROXYAPI_POSTSIGNEDXML + str(id) + '/' +
-            '&return=' + doc_baseuri + str(id) + '/' +
+            '?unsignedxml_url=' + settings.PVZD_ORIGIN + '/' + settings.SIGPROXYAPI_PADMIN_GETUNSIGNEDXML + str(id) + '/' +
+            '&result_to=' + settings.PVZD_ORIGIN + '/' + settings.SIGPROXYAPI_PADMIN_POSTSIGNEDXML + str(id) + '/' +
+            '&return=' + settings.PVZD_ORIGIN + '/admin/portaladmin/mdstatement/' + str(id) + '/' +
             '&sigtype=samled'
     )
 
 def startsigning(request: HttpRequest, id: int) -> HttpResponse:
 
     if request.method == "GET":
-        return HttpResponseRedirect(_get_sigproxy_url(settings.PVZD_ORIGIN + '/admin/portaladmin/mdstatement/', id))
+        return HttpResponseRedirect(getstarturl(id))
     else:
         raise Http404("Only GET supported at this path")
 
