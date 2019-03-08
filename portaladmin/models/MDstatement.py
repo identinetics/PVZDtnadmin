@@ -249,9 +249,10 @@ class MDstatement(models.Model):
             return ''
 
     def _get_fqdn(self):
+        fqdn = None
         if getattr(self.ed_val, 'ed', False):
-            fqdn = self.ed_val.ed.get_entityid_hostname()
-        return (fqdn or self.ed_val.ed.get_entityid() or self._get_make_blank_entityid_unique() )
+            fqdn = (self.ed_val.ed.get_entityid_hostname() or self.ed_val.ed.get_entityid())
+        return (fqdn or self._get_make_blank_entityid_unique())
 
     def _get_namespace_id(self):
         if getattr(self.ed_val, 'ed', False):

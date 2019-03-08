@@ -1,9 +1,5 @@
-import json
 import logging
 import os
-import sys
-import tempfile
-from pathlib import Path
 
 import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
@@ -128,5 +124,6 @@ class PolicyJournalUpdater():
 
 if __name__ == '__main__':
     policy_journal_updater = PolicyJournalUpdater()
-    count = policy_journal_updater.get_changelist()
+    count = len(policy_journal_updater.get_changelist())
     print(f"PolicyJournalUpdater::get_changelist: Appending {count} records in changelist")
+    policy_journal_updater.append_poljournal()

@@ -136,19 +136,22 @@ REST_FRAMEWORK = {
 }
 
 # === configure here for deployment
+# Signature Proxy (recommended to be on same host & port -> nginx reverse proxy dispatches on rootpath)
 SIGPROXY_ORIGIN = 'http://localhost:8080'
-SIGPROXY_BASEURL = SIGPROXY_ORIGIN  + '/SigProxy/loadsigproxyclient'
-PVZD_ORIGIN = 'http://localhost:8000'
-# ===
-PVZD_BASEPATH = 'sigproxyapi'  # do NOT to have a leading /
-SIGPROXYAPI_FEDOP_GETSTARTURL = PVZD_BASEPATH + '/fedop/getstarturl/'
-SIGPROXYAPI_FEDOP_GETUNSIGNEDXML = PVZD_BASEPATH + '/fedop/getunsignedxml/'
-SIGPROXYAPI_FEDOP_POSTSIGNEDXML = PVZD_BASEPATH + '/fedop/postsignedxml/'
-SIGPROXYAPI_FEDOP_STARTSIGNING =  PVZD_BASEPATH + '/startsigning/'
+SIGPROXY_BASEURL = SIGPROXY_ORIGIN + '/' 'SigProxy/loadsigproxyclient'
+# Myself:
+PVZD_ORIGIN = 'http://localhost:8080'
+SIGPROXYAPI_ROOTPATH = 'sigproxyapi'  # do NOT to have a leading /
+SIGPROXYAPI_ROOTURL = PVZD_ORIGIN  + '/' + SIGPROXYAPI_ROOTPATH
+# === configure SigProxy API paths
+SIGPROXYAPI_FEDOP_GETSTARTURL = SIGPROXYAPI_ROOTPATH + '/fedop/getstarturl/'
+SIGPROXYAPI_FEDOP_GETUNSIGNEDXML = SIGPROXYAPI_ROOTPATH + '/fedop/getunsignedxml/'
+SIGPROXYAPI_FEDOP_POSTSIGNEDXML = SIGPROXYAPI_ROOTPATH + '/fedop/postsignedxml/'
+SIGPROXYAPI_FEDOP_STARTSIGNING =  SIGPROXYAPI_ROOTPATH + '/startsigning/'
 
-SIGPROXYAPI_PADMIN_GETSTARTURL = PVZD_BASEPATH + '/padmin/getstarturl/'
-SIGPROXYAPI_PADMIN_GETUNSIGNEDXML = PVZD_BASEPATH + '/padmin/getunsignedxml/'
-SIGPROXYAPI_PADMIN_POSTSIGNEDXML = PVZD_BASEPATH + '/padmin/postsignedxml/'
-SIGPROXYAPI_PADMIN_STARTSIGNING =  PVZD_BASEPATH + '/startsigning/'
+SIGPROXYAPI_PADMIN_GETSTARTURL = SIGPROXYAPI_ROOTPATH + '/padmin/getstarturl/'
+SIGPROXYAPI_PADMIN_GETUNSIGNEDXML = SIGPROXYAPI_ROOTPATH + '/padmin/getunsignedxml/'
+SIGPROXYAPI_PADMIN_POSTSIGNEDXML = SIGPROXYAPI_ROOTPATH + '/padmin/postsignedxml/'
+SIGPROXYAPI_PADMIN_STARTSIGNING =  SIGPROXYAPI_ROOTPATH + '/startsigning/'
 
 

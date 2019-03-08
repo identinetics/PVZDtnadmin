@@ -144,7 +144,7 @@ class MDstatementAdmin(admin.ModelAdmin):
         }),
         ('EntityDescriptor XML', {
             'classes': ('collapse',),
-            'fields': ('ed_uploaded', 'ed_signed', ),
+            'fields': ('ed_signed', 'ed_uploaded', ),
         }),
     )
 

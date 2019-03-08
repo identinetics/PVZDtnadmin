@@ -1,26 +1,13 @@
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
-from rest_framework import viewsets
-from portaladmin.models import MDstatement
-from portaladmin.serializers import MDstatementSerializer
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
-# @never_cache  TODO: make this working with CBV
-class MDstatementViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = MDstatement.objects.all()
-    serializer_class = MDstatementSerializer
-
-
 @never_cache
 def getunsignedxml(request: HttpRequest, id: int) -> HttpResponse:
+    pvzdconf = PVZDlibConfigAbstract.get_config()
     if request.method == "GET":
-        mds = MDstatement.objects.get(id=id)
-        ed_unsignedxml = mds.ed_uploaded
-        response = HttpResponse(ed_unsignedxml, content_type="application/xml")
+        response = HttpResponse(, content_type="application/xml")
         response["Access-Control-Allow-Origin"] = '*' # settings.SIGPROXY_ORIGIN
         return response
     else:
@@ -29,7 +16,7 @@ def getunsignedxml(request: HttpRequest, id: int) -> HttpResponse:
 
 # Manual test to set ed_signed to blank (use @csrf_exempt):
 # `curl -X POST -d "signedxml=" localhost:8000/api/mdstatement/signedxml/<id>/`
-@csrf_exempt
+# @csrf_exempt
 def postsignedxml(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         mds = MDstatement.objects.get(id=id)
