@@ -3,13 +3,9 @@
 
 {% block submit_buttons_top %}
     {{ block.super }}
-    <div class="submit-row">
-        <p class="deletelink-box" id="sign-button">
+    {% if change %}
+        <div class="submit-row">
             <input type="submit" value="Signieren" name="Sign">
-        </p>
-    </div>
-    <div id="ed_uploaded_get_template_url" style="display: none;">
-        {{ ed_uploaded_get_template_url }}
-    </div>
-    <!--script type="text/javascript" src="{% static 'portaladmin/js/sign.js' %}"></script-->
+        </div>
+    {% endif %}
 {% endblock %}
