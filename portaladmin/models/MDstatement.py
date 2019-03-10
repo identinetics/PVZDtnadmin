@@ -56,8 +56,8 @@ class MDstatement(models.Model):
         max_length=100000)
     ed_uploaded = models.TextField(  # do not write this field directly, always upload into ed_file_upload
         blank=False, null=False, default='',
-        verbose_name='EntityDescriptor hochgeladen',
-        help_text='SAML EntityDescriptor (geladen, nicht signiert)',
+        verbose_name='EntityDescriptor normalisiert',
+        help_text='SAML EntityDescriptor (geladen, normalisiert, nicht signiert)',
         max_length=100000)
     ed_uploaded_filename = models.CharField(
         verbose_name='Upload Filename',
@@ -133,12 +133,6 @@ class MDstatement(models.Model):
     get_validation_message_trunc.short_description = 'error'
 
 
-    def get_boilerplate_help(self):
-        return "Ein Metadaten Statement wird erstellt und geändert, indem eine Datei mit einem " \
-               "SAML Entity Descriptor hochgeladen wird. Mit der Signatur wird das Dokument zur Veröffentlichung eingebracht."
-    get_boilerplate_help.short_description = ''
-
-
 #-------
     def serialize_json(self):
         """ serialize stable values for unit tests """
@@ -187,7 +181,8 @@ class MDstatement(models.Model):
     def save(self, *args, **kwargs):
         def _read_uploaded_file():
             if self.ed_file_upload.name:
-                self.ed_uploaded = self.ed_file_upload.file.read().decode('utf-8')
+                ed_utf8: bytes = self.ed_file_upload.file.read()
+                self.ed_uploaded = SamlEdValidator.normalize_ed(ed_utf8).decode('utf-8')
         def _set_status_on_upload():
             if self.ed_uploaded != self._ed_uploaded_old:
                 if self.status in (STATUS_CREATED, STATUS_REJECTED):

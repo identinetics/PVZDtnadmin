@@ -1,11 +1,25 @@
 {% extends 'admin/change_form.html' %}
-{% load static %}
-
 {% block submit_buttons_top %}
     {{ block.super }}
+    {% if add %}
+        <p class="help">
+            Ein Metadaten Statement wird erstellt und geändert, indem eine Datei mit einem SAML Entity Descriptor hochgeladen wird.
+            Zusätzlich kann eine administrative Notiz erfasst werden.
+        </p>
+        <p class="help">
+            Das hochgeladene XML-Dokument wird normalisiert, z.b. werden enthaltene Signaturen werden entfernt und die Codierung auf UTF-8 geändert falls notwendig.
+            Anschließend ist in der Detailanzeige zu prüfen ob die <em>Content Validation</em> OK ist.
+        </p>
+        <p class="help">
+            Nachdem eventuell vorhandene Fehler korrigiert wurden, kann der EntityDescriptor signiert und eingebracht werden.
+        </p>
+    {% endif %}
     {% if change %}
         <div class="submit-row">
             <input type="submit" value="Signieren" name="Sign">
+            <p class="deletelink-box">
+                Mit der Bürgerkarten-Signatur wird das Dokument zur Veröffentlichung eingebracht.
+            </p>
         </div>
     {% endif %}
 {% endblock %}

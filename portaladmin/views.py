@@ -35,6 +35,9 @@ def postsignedxml(request: HttpRequest, id: int) -> HttpResponse:
         mds = MDstatement.objects.get(id=id)
         try:
             mds.ed_signed = request.POST['signedxml']
+            if hasattr(settings, 'siglog_path'):
+                with (settings.siglog_path / 'signedxml.xml').open('wb') as fd:
+                    fd.write(mds.ed_signed)
             mds.save()
         except Exception as e:
             raise Http404("Error when updating MDStatement.ed_signed.\n" + str(e))

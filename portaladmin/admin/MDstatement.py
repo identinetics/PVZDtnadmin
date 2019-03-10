@@ -1,21 +1,18 @@
-from datetime import timedelta
-
+#from datetime import timedelta
 from django import forms
-from django.urls import path, reverse
+#from django.urls import path, reverse
 from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin import site
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse, HttpResponseRedirect
-#from django.shortcuts import redirect
-from django.utils import timezone
-from django.conf import settings
-from django.http import Http404
+#from django.utils import timezone
+#from django.conf import settings
 from django.db import models
 from django.forms.widgets import ClearableFileInput
-from ..constants import *
-from ..exceptions import CancelRequest
-from ..models import MDstatement
+from portaladmin.constants import *
+from portaladmin.forms import MDstatementForm
+from portaladmin.models import MDstatement
 from portaladmin.views import getstarturl
 #from PVZDpy.samlentitydescriptor import SAMLEntityDescriptor
 #from PVZDpy.get_seclay_request import get_seclay_request
@@ -23,34 +20,6 @@ from portaladmin.views import getstarturl
 
 class FileInputWidget(ClearableFileInput):
     template_name = 'portaladmin/widgets/clearable_file_input.html'
-
-
-class MDstatementForm(forms.ModelForm):
-
-    class Meta:
-        model = MDstatement
-        exclude = ['checkout_status']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        if not self.instance.ed_uploaded:
-            if not cleaned_data.get("ed_file_upload"):
-                self.add_error('ed_file_upload', 'Es wurde noch kein EntityDescriptor hochgeladen')
-        if 'Sign' in self.data:
-            try:
-                mds = MDstatement.objects.get(id=self.instance.id)
-            except Exception as e:
-                raise ValidationError('Signatur kann nicht erstellt werden bevor die Eingabe gesichert wird.')
-
-            if mds.status in (STATUS_REQUEST_QUEUE, STATUS_SIGNATURE_APPLIED, STATUS_ACCEPTED):
-                raise ValidationError("EntityDescriptor wurde bereits signiert")
-            if mds.status != STATUS_UPLOADED:
-                raise ValidationError("Vor dem Signieren muss ein neuer Entityescriptor hochgeladen werden")
-            if not mds.content_valid:
-                raise ValidationError("Nur ein gültiger EntityDescriptor kann signiert werden")
-
-
-site.disable_action('delete_selected')
 
 
 @admin.register(MDstatement)
@@ -69,7 +38,6 @@ class MDstatementAdmin(admin.ModelAdmin):
         'ed_uploaded',
         'ed_uploaded_filename',
         'entityID',
-        'get_boilerplate_help',
         'signer_subject',
         'namespace',
         'operation',
@@ -110,19 +78,10 @@ class MDstatementAdmin(admin.ModelAdmin):
         'admin_note',
     )
     fieldsets = (
-        (None, {
-            'fields': ('get_boilerplate_help', )
-        }),
         ('Entity', {
             'fields': (
                 'entityID',
                 'operation',
-            )
-        }),
-        ('Datei hochladen', {
-            'fields': (
-                'ed_file_upload',
-                'ed_uploaded_filename',
             )
         }),
         ('Prozess Status', {
@@ -133,18 +92,27 @@ class MDstatementAdmin(admin.ModelAdmin):
                 'validation_message',
             )
         }),
-        ('Adminsitrative Attribute', {
+        ('Neue Datei hochladen', {
             'fields': (
+                'ed_file_upload',
+                'ed_uploaded_filename',
+            )
+        }),
+        ('Administrative Attribute', {
+            'fields': (
+                'admin_note',
                 ('created_at', 'updated_at', ),
                 'signer_subject',
                 'allow_selfsigned',
-                'admin_note',
                 'id',
             )
         }),
         ('EntityDescriptor XML', {
             'classes': ('collapse',),
-            'fields': ('ed_signed', 'ed_uploaded', ),
+            'fields': (
+                'ed_signed',
+                'ed_uploaded',
+            ),
         }),
     )
 
@@ -157,15 +125,14 @@ class MDstatementAdmin(admin.ModelAdmin):
 #        ]
 #        return custom_urls + urls
 
-#    def get_signature_request_view(self, request, id):
-#        ed_str = MDstatement.objects.get(id=id).ed_uploaded
-#        md_namespace_prefix = SAMLEntityDescriptor.get_namespace_prefix(ed_str)
-#        sig_pos = '/' + md_namespace_prefix + ':EntityDescriptor'
-#        xml = get_seclay_request('enveloped', ed_str, sigPosition=sig_pos)
-#        return HttpResponse(xml, content_type='text/xml')
-
-#    def change_view(self, request, object_id, form_url='', extra_context=None):
-#        return super().change_view(request, object_id, form_url, extra_context)
+    def get_fieldsets(self, request, obj=None):
+        ''' return only 1st and 3rd fieldsets on add views '''
+        from copy import deepcopy
+        fieldsets = deepcopy(super(MDstatementAdmin, self).get_fieldsets(request, obj))
+        if obj:  # change request
+            return fieldsets
+        else:
+            return (fieldsets[2], fieldsets[3])
 
     def response_add(self, request, obj, post_url_continue=None):
         if 'Sign' in request.POST:
