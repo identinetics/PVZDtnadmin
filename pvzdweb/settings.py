@@ -29,6 +29,7 @@ ALLOWED_HOSTS = ['*']
 # Add apps according to the instance
 INSTALLED_APPS = [
     # 'admin_menu',
+    # 'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

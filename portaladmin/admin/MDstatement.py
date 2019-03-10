@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 #from django.conf import settings
 from django.db import models
 from django.forms.widgets import ClearableFileInput
-from portaladmin.constants import *
+
 from portaladmin.forms import MDstatementForm
 from portaladmin.models import MDstatement
 from portaladmin.views import getstarturl

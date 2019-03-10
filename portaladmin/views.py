@@ -1,3 +1,4 @@
+import urllib
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
 from rest_framework import viewsets
@@ -19,9 +20,9 @@ class MDstatementViewSet(viewsets.ModelViewSet):
 def getunsignedxml(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "GET":
         mds = MDstatement.objects.get(id=id)
-        ed_unsignedxml = mds.ed_uploaded
-        response = HttpResponse(ed_unsignedxml, content_type="application/xml")
-        response["Access-Control-Allow-Origin"] = '*' # settings.SIGPROXY_ORIGIN
+        ed_unsignedxml_urlencoded = urllib.parse.quote_plus(mds.ed_uploaded)
+        response = HttpResponse(ed_unsignedxml_urlencoded, content_type="text/plain")
+        response["Access-Control-Allow-Origin"] = settings.SIGPROXY_ORIGIN
         return response
     else:
         raise Http404("Only GET supported at this path")
@@ -43,7 +44,7 @@ def postsignedxml(request: HttpRequest, id: int) -> HttpResponse:
             raise Http404("Error when updating MDStatement.ed_signed.\n" + str(e))
         else:
             response = HttpResponse('OK', content_type='text/plain')
-            response["Access-Control-Allow-Origin"] = '*'  # can't do harm here, or: # settings.SIGPROXY_ORIGIN
+            response["Access-Control-Allow-Origin"] = settings.SIGPROXY_ORIGIN
             return response
     else:
         raise Http404("Only POST supported at this path")

@@ -213,9 +213,7 @@ class MDstatement(models.Model):
                     raise ValidationError(f"Der EntityDescriptor {self.entityID} ist mit dem Status "
                                            "{qs[0].status} ist bereits vorhanden")
 
-        if kwargs.get('operation', '') == 'mds_sign_and_update':
-            super().save(*args, {})
-        elif kwargs.get('operation', '') == 'PEP':   # see security considerations in docs/
+        if kwargs.get('operation', '') == 'PEP':   # see security considerations in docs/
             super().save(*args, {})
         else:
             _read_uploaded_file()
