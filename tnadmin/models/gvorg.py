@@ -62,7 +62,7 @@ class GvOrgAbstract(GvAdminAbstract):
     gvouvkz_upper = models.CharField(max_length=250, default='', unique=True, null=True, blank=True,)
 
     c = models.CharField(max_length=250,default='AT', null=True, blank=True,)
-    cn = models.CharField(max_length=120,
+    cn = models.CharField(max_length=1024,
         verbose_name='Bezeichnung (cn)',
         help_text='Bezeichnung der Organisationseinheit (ausgeschrieben). (Abt. ITMS/Ref. NIK -  Referat nationale und internationale Koordination)',
     )
