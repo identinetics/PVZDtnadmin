@@ -7,7 +7,7 @@ djangorestframework
 #django-admin-menu>=1.1
 #django-bootstrap4
 django-ldapdb
-#GitPython
+enforce
 gunicorn
 json2html
 lxml
