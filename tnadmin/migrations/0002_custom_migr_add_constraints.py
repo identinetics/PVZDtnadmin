@@ -22,9 +22,6 @@ class Migration(migrations.Migration):
                 "ALTER TABLE tnadmin_gvorganisation ADD CONSTRAINT l_maxlen_64 CHECK (length(l) <= 64);"
             ),
             migrations.RunSQL(
-                "ALTER TABLE tnadmin_gvorganisation ADD CONSTRAINT cn_maxlen_64 CHECK (length(cn) <= 64);"
-            ),
-            migrations.RunSQL(
                 "ALTER TABLE tnadmin_gvorganisation ADD CONSTRAINT o_maxlen_64 CHECK (length(o) <= 64);"
             ),
         ]
