@@ -1,6 +1,7 @@
 import os
-from pathlib import Path
+import re
 import subprocess
+from pathlib import Path
 
 import django
 import pytest
@@ -12,6 +13,7 @@ from portaladmin.views import getstarturl
 
 # prepare database fixture (a temporary in-memory database is created for this test)
 # drop/create db before django opens a connection
+subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
 from django.conf import settings
 assert 'portaladmin' in settings.INSTALLED_APPS
@@ -19,10 +21,10 @@ django.setup()
 from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
 
 
-def assert_equal(expected, actual, fn=''):
-    # workaround because pycharm does not display the full string (despite pytest -vv etc)
-    msg = str(fn) + "\n'" + actual + "' != '" + expected + "' "
-    assert actual == expected, msg
+#def assert_equal(expected, actual, fn=''):
+#    # workaround because pycharm does not display the full string (despite pytest -vv etc)
+#    msg = str(fn) + "\n'" + actual + "' != '" + expected + "' "
+#    assert actual == expected, msg
 
 
 @pytest.fixture()
@@ -59,4 +61,6 @@ def test_get_sigproxyurl(config_file, setup_db_tables_portaladmin, testdata_dir,
     expected_result_html = expected_result_fp.read_text()
     url = getstarturl(1)
     response = requests.get(url)
-    assert_equal(expected_result_html, response.text, expected_result_fp)
+    e_without_uniq_str = re.sub(r'    const csrftoken4proxy = ".*\n', '', expected_result_html)
+    a_without_uniq_str = re.sub(r'    const csrftoken4proxy = ".*\n', '', response.text)
+    assert a_without_uniq_str == e_without_uniq_str
