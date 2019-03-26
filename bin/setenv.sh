@@ -9,6 +9,9 @@ if [[ "$(uname)" == "Linux" ]] && [[ -f /etc/redhat-release ]]; then
 elif [[ "$(uname)" == "Darwin" ]]; then  # MacOS (Development)
     [[ "$JAVA_HOME" ]] || export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
     # Java 9 not yet supported (class loader problem?)
+    # pyjnius versions have different behaviors wrt locating libjvm.dynlib.
+    # V1.2.0 looks for this: $JAVA_HOME/lib/server/libjvm.dylib  (make link to JRE:)
+    #    ln -s  /Library/Java/JavaVirtualMachines/jdk1.8.0/Contents/Home/jre/lib/server/libjvm.dylib /Library/Java/JavaVirtualMachines/jdk1.8.0/Contents/Home/lib/server/libjvm.dylib
     #export DYLD_LIBRARY_PATH=$JAVA_HOME/jre/lib/server
     #export DYLD_LIBRARY_PATH=$JAVA_HOME/lib/server
 elif [[ ! "$JAVA_HOME" ]]; then
