@@ -18,7 +18,7 @@ exec_loader() {
     printf "\n\n\n"
 }
 
-[[ "$PVZDLIB_CONFIG_MODULE" ]] || export PVZDLIB_CONFIG_MODULE='default'
+[[ "$PVZDLIB_CONFIG_MODULE" ]] || export PVZDLIB_CONFIG_MODULE='DEFAULT'
 
 if [[ $DJANGO_SETTINGS_MODULE == 'pvzdweb.settings' ]]; then
     export DJANGO_SETTINGS_MODULE='pvzdweb.settings_allapps'
