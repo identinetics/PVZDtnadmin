@@ -1,9 +1,4 @@
-import os
-from pathlib import Path
 import pytest
-import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-django.setup()
 from django.core import management
 
 

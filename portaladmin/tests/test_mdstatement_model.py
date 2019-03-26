@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
+
+import django
 import pytest
+
 from PVZDpy.tests.common_fixtures import ed_path
 from fedop.models import PolicyStorage
 from portaladmin.models import MDstatement
@@ -9,7 +12,9 @@ from django.conf import settings
 assert 'portaladmin' in settings.INSTALLED_APPS
 
 # prepare database fixture (a temporary in-memory database is created for this test)
-import django
+# drop/create db before django opens a connection
+import subprocess
+subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
 django.setup()
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
@@ -24,9 +29,12 @@ from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
 path_expected_results = 'expected_results'
 
 
-def assert_equal(expected, actual, fn=''):
+def assert_equal(expected, actual, fn='', ed_path_no: int=None):
     # workaround because pycharm does not display the full string (despite pytest -vv etc)
     msg = fn+"\n'"+actual+"' != '"+expected+"' "
+    p_testout = Path(f"portaladmin/tests/testout/insert{ed_path_no}.json").resolve()
+    with p_testout.open('w') as fd:
+        fd.write(actual)
     assert expected == actual, msg
 
 
@@ -60,11 +68,11 @@ def config_file() -> None:
                           ('insert13.json', 13),
                           ('insert14.json', 14),
                           ('insert15.json', 15),
-                          # ('insert16.json', 16),   # causes unique contraint violation
-                          # ('insert17.json', 17),   # causes unique contraint violation
+                          # ('insert16.json', 16),   # causes unique constraint violation
+                          # ('insert17.json', 17),   # causes unique constraint violation
                           ('insert18.json', 18),
-                          ('insert19.json', 19),
-                          # ('insert20.json', 20),   # causes unique contraint violation
+                          #('insert19.json', 19),    # causes unique constraint violation
+                          # ('insert20.json', 20),   # causes unique constraint violation
                           ('insert21.json', 21),
                           ('insert22.json', 22),
                           ('insert23.json', 23),
@@ -77,7 +85,7 @@ def test_insert_and_update(config_file, setup_db_tables_portaladmin, expected_re
         mds = MDstatement()
         mds.ed_file_upload.save(fn.name, django_file, save=True)
     expected_result = fixture_result(expected_result_fn)
-    assert_equal(expected_result, MDstatement.objects.all()[0].serialize_json())
+    assert_equal(expected_result, MDstatement.objects.all()[0].serialize_json(), ed_path_no=ed_path_no)
     if ed_path_no < 4:
         mds = MDstatement.objects.get(id=ed_path_no)
         mds.admin_note = f"some text fromt test {ed_path_no}"

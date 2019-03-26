@@ -2,20 +2,25 @@ import json
 import logging
 import os
 from pathlib import Path
-import pytest
+import subprocess
+
+import django
 import enforce
+import pytest
+
 from PVZDpy.aods_record import AodsRecord
 from PVZDpy.policychange import PolicyChangeList
 from fedop.models import Issuer, Namespaceobj, PolicyStorage, Revocation, Userprivilege
 from fedop.poljournal_updater import PolicyJournalUpdater
 from tnadmin.models import GvOrganisation
-from django.conf import settings
-assert 'fedop' in settings.INSTALLED_APPS
 
 
 # prepare database fixture (a temporary in-memory database is created for this test)
-import django
+# drop/create db before django opens a connection
+subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
+from django.conf import settings
+assert 'fedop' in settings.INSTALLED_APPS
 django.setup()
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 def test_assert_tnadmin_loaded(load_tnadmin1):

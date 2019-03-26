@@ -1,10 +1,8 @@
-import os
 from pathlib import Path
+
 import pytest
-import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-django.setup()
 from django.core import management
+
 from fedop.models.policystorage import PolicyStorage
 
 
@@ -20,6 +18,7 @@ _blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
 def setup_db_tables_fedop():
     with open('/tmp/pvzdweb_fedop_testout_migratedb.log', 'w') as fd:
         management.call_command('migrate', 'fedop', stdout=fd)
+
 
 @pytest.fixture(scope="module")
 def loaddata_fedop1(setup_db_tables_fedop):

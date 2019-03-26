@@ -1,7 +1,10 @@
 import json
 import os
 from pathlib import Path
+
+import django
 import pytest
+
 from PVZDpy.config.pvzdlib_config_abstract import PVZDlibConfigAbstract
 from PVZDpy.trustedcerts import TrustedCerts
 from PVZDpy.userexceptions import PolicyJournalNotInitialized
@@ -11,7 +14,6 @@ assert 'fedop' in settings.INSTALLED_APPS
 
 # prepare database fixture (a temporary in-memory database is created for this test)
 pytest.mark.standalone_only
-import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
 django.setup()
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
@@ -42,12 +44,13 @@ from .common import test_info
 
 # --- 01 ---
 
-@pytest.mark.standalone_only
-def test_01_default_not_init(config_file):
-    pvzdconf = PVZDlibConfigAbstract.get_config()
-    backend = pvzdconf.polstore_backend
-    with pytest.raises(PolicyJournalNotInitialized) as context:
-        _ = backend.get_policy_journal_json()
+# removed, because db setup now addes a dummy entry
+# @pytest.mark.standalone_only
+# def test_01_default_not_init(config_file):
+#    pvzdconf = PVZDlibConfigAbstract.get_config()
+#    backend = pvzdconf.polstore_backend
+#    with pytest.raises(PolicyJournalNotInitialized) as context:
+#        _ = backend.get_policy_journal_json()
 
 
 # --- 02 ---
@@ -58,8 +61,8 @@ def expected_poldict_json02(config_file, testdata_dir):
     return json.load(p.open())
 
 
-#@pytest.mark.standalone_only
-#def test_02_read_existing(pvzdconfig02, expected_poldict_json02):
+# @pytest.mark.standalone_only
+# def test_02_read_existing(pvzdconfig02, expected_poldict_json02):
 #    pvzdconf = PVZDlibConfigAbstract.get_config()
 #    backend = pvzdconf.polstore_backend
 #    policy_journal_json = backend.get_policy_journal_json()

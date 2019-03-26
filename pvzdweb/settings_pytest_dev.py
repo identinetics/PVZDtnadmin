@@ -11,9 +11,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ldapsearch -h devl11 -p 8389 -D cn=admin,dc=at -x -w changeit -L 'uid=*'
 
 DATABASES = {
+    # sqllite stopped to work properly (created a foreign key that referenced a parent table with suffix _old)
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': ':memory:',
+    #},
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pvzddb_nofsync',
+        'USER': 'postgres',
+        'PASSWORD': 'changeit',  # superuser password for PostgreSQL
+        'HOST': 'devl11',
+        'PORT': '15432',
     },
     'ldap': {
         'ENGINE': 'ldapdb.backends.ldap',
@@ -27,4 +36,4 @@ DATABASES = {
     },
 }
 
-os.environ['SQLLITE'] = 'True'   # signal tnadmin migration not to add postgres-specific constraints
+# os.environ.setdefault('SQLLITE', 'True')   # signal tnadmin migration not to add postgres-specific constraints

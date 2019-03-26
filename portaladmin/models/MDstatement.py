@@ -5,6 +5,7 @@ import tempfile
 from typing import Optional
 from django.conf import settings
 from django.db import models
+import lxml
 
 from portaladmin.constants import STATUS_ACCEPTED, STATUS_CREATED, STATUS_REJECTED, STATUS_CHOICES, STATUS_UPLOADED, \
     STATUSGROUP_BACKEND, STATUSGROUP_FRONTEND, STATUSGROUP_CHOICES
@@ -182,7 +183,10 @@ class MDstatement(models.Model):
         def _read_uploaded_file():
             if self.ed_file_upload.name:
                 ed_utf8: bytes = self.ed_file_upload.file.read()
-                self.ed_uploaded = SamlEdValidator.normalize_ed(ed_utf8).decode('utf-8')
+                try:
+                    self.ed_uploaded = SamlEdValidator.normalize_ed(ed_utf8).decode('utf-8')
+                except lxml.etree.XMLSyntaxError as e:
+                    self.ed_uploaded = ed_utf8.decode('utf-8')
         def _set_status_on_upload():
             if self.ed_uploaded != self._ed_uploaded_old:
                 if self.status in (STATUS_CREATED, STATUS_REJECTED):

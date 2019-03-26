@@ -1,12 +1,18 @@
 import os
+import subprocess
+
+import django
 import pytest
+
 from tnadmin.models import *
 from fedop.models import Issuer, Namespaceobj, PolicyStorage, Revocation, Userprivilege
 from django.conf import settings
 assert 'fedop' in settings.INSTALLED_APPS
 
-# prepare database fixture (a temporary in-memory database is created for this test)
-import django
+
+# prepare database fixture (a temporary database used only for this test)
+# drop/create db before django opens a connection
+subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
 django.setup()
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin

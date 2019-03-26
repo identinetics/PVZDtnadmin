@@ -1,15 +1,20 @@
 import json
 import os
+import subprocess
 from pathlib import Path
+
+import django
 import pytest
+
 from PVZDpy.aodsfilehandler import AodsFileHandler
 from tnadmin.models import GvOrganisation
-from django.conf import settings
-assert 'fedop' in settings.INSTALLED_APPS
 
 # prepare database fixture (a temporary in-memory database is created for this test)
-import django
+# drop/create db before django opens a connection
+subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
+from django.conf import settings
+assert 'fedop' in settings.INSTALLED_APPS
 django.setup()
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 def test_assert_tnadmin_loaded(load_tnadmin1):

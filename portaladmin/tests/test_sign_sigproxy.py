@@ -1,17 +1,22 @@
 import os
 from pathlib import Path
+import subprocess
+
+import django
 import pytest
 import requests
+
 from portaladmin.constants import STATUSGROUP_FRONTEND
 from portaladmin.models import MDstatement
 from portaladmin.views import getstarturl
+
+# prepare database fixture (a temporary in-memory database is created for this test)
+# drop/create db before django opens a connection
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
 from django.conf import settings
 assert 'portaladmin' in settings.INSTALLED_APPS
-
-pytestmark = pytest.mark.django_db
-import django.core.files
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
 django.setup()
+from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
 
 
 def assert_equal(expected, actual, fn=''):
@@ -49,7 +54,7 @@ def ed_prepared_in_db(testdata_dir) -> int:
 
 
 @pytest.mark.requires_webapp
-def test_get_sigproxyurl(config_file, testdata_dir, ed_prepared_in_db):
+def test_get_sigproxyurl(config_file, setup_db_tables_portaladmin, testdata_dir, ed_prepared_in_db):
     expected_result_fp = testdata_dir / 'expected_results' / 'sigproxy_client.html'
     expected_result_html = expected_result_fp.read_text()
     url = getstarturl(1)
