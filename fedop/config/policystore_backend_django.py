@@ -29,7 +29,7 @@ class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):
 
     def get_policy_journal_xml(self) -> bytes:
         self.read_or_fail_policystorage()
-        return self.dbo.policy_journal_xml
+        return bytes(self.dbo.policy_journal_xml)
 
     def get_policy_journal_path(self) -> Path:
         # copy policy journal from db to temp file; do not close, refresh if exists.
@@ -57,7 +57,7 @@ class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):
 
     def get_shibacl(self) -> bytes:
         self.read_or_fail_policystorage()
-        return self.dbo.shibacl
+        return bytes(self.dbo.shibacl)
 
     def get_trustedcerts_report(self) -> str:
         self.read_or_fail_policystorage()
