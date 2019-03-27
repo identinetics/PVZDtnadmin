@@ -21,12 +21,6 @@ django.setup()
 from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
 
 
-#def assert_equal(expected, actual, fn=''):
-#    # workaround because pycharm does not display the full string (despite pytest -vv etc)
-#    msg = str(fn) + "\n'" + actual + "' != '" + expected + "' "
-#    assert actual == expected, msg
-
-
 @pytest.fixture()
 def testdata_dir() -> Path:
     return Path(settings.BASE_DIR) / 'portaladmin' / 'tests' / 'testdata' / 'sign_sigproxy'
@@ -42,7 +36,6 @@ def ed_prepared_in_db(testdata_dir) -> int:
     ed_unsigned_fp = testdata_dir / '01_idp1_valid_cert.xml'
     with ed_unsigned_fp.open('rb') as fd:
         django_file = django.core.files.File(fd)
-        mds = MDstatement()
         count = MDstatement.objects.filter(entityID='https://idp1.identinetics.com/idp.xml', statusgroup=STATUSGROUP_FRONTEND)
         if count:
             mds = MDstatement.objects.get(entityID='https://idp1.identinetics.com/idp.xml', statusgroup=STATUSGROUP_FRONTEND)
