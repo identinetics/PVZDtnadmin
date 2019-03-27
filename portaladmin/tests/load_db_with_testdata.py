@@ -16,7 +16,7 @@ def fixture_testdata_basedir():
     return opj(settings.BASE_DIR, 'PVZDlib', 'PVZDpy', 'tests', 'testdata', 'saml')
 
 
-for testno in range(1, 23):
+for testno in (*list(range(1,16)), 18, 20, 21):
     fn = ed_path(testno, dir=fixture_testdata_basedir())
     with open(fn, 'rb') as fd:
         django_file = django.core.files.File(fd)

@@ -1,22 +1,23 @@
 import os
 from pathlib import Path
+import subprocess
 
 import django
 import pytest
+from django.conf import settings
 
 from PVZDpy.tests.common_fixtures import ed_path
+from common.show_env import show_env
 from fedop.models import PolicyStorage
 from portaladmin.models import MDstatement
 from tnadmin.models import GvOrganisation
-from django.conf import settings
 assert 'portaladmin' in settings.INSTALLED_APPS
+django.setup()
 
 # prepare database fixture (a temporary in-memory database is created for this test)
+pytestmark = pytest.mark.unittest_db
 # drop/create db before django opens a connection
-import subprocess
 subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-django.setup()
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 def test_assert_tnadmin_loaded(load_tnadmin1):
     assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
@@ -52,8 +53,14 @@ def config_file() -> None:
     os.environ['PVZDLIB_CONFIG_MODULE'] = str(Path(settings.BASE_DIR)  / 'fedop/config/pvzdlib_config.py')
 
 
-@pytest.mark.parametrize('expected_result_fn, ed_path_no',
-                         [('insert01.json', 1),
+@pytest.mark.show_testenv
+def test_show_env(capfd):
+    with capfd.disabled():
+        show_env(__name__)
+
+
+@pytest.mark.parametrize('expected_result_fn, ed_path_no', [
+                          ('insert01.json', 1),
                           ('insert02.json', 2),
                           ('insert03.json', 3),
                           ('insert04.json', 4),
@@ -77,7 +84,6 @@ def config_file() -> None:
                           ('insert22.json', 22),
                           ('insert23.json', 23),
                           ])
-@pytest.mark.standalone_db
 def test_insert_and_update(config_file, setup_db_tables_portaladmin, expected_result_fn, ed_path_no):
     fn = Path(ed_path(ed_path_no, dir=fixture_testdata_basedir()))
     with fn.open('rb') as fd:

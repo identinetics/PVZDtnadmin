@@ -6,9 +6,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
 django.setup()
 from ldapgvat.models import GvOrganisation
 
-pytestmark = pytest.mark.django_db
 
-
+@pytest.mark.requires_ldap
 def test_gvOrganisation_get_by_gvouid():
     o = GvOrganisation.objects.get(gvouid='AT:B:1')
     assert 'active' == o.gvStatus

@@ -1,4 +1,6 @@
 import ldap
+import logging.config
+import os
 from pvzdweb.settings_base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -29,6 +31,52 @@ DATABASES = {
     },
 }
 DATABASE_ROUTERS = ['ldapdb.router.Router']
+
+logdir = os.environ.get('PVZDLOGDIR', 'work')
+os.makedirs(logdir, exist_ok=True)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'default': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(logdir, '/pvzdweb.log'),
+            'maxBytes': 1024*1024*500, # 500 MB
+            'backupCount': 5,
+            'formatter':'standard',
+        },
+        'request_handler': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(logdir, '/pvzdweb_request.log'),
+            'maxBytes': 1024*1024*500, # 500 MB
+            'backupCount': 5,
+            'formatter':'standard',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'django.request': {
+            'handlers': ['request_handler'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+    }
+}
+LOGGING_CONFIG = None
+logging.config.dictConfig(LOGGING)
+
+
 
 # === configure here for deployment
 # PVZDweb (Fedop, Portaladmin) as seen by the browser:

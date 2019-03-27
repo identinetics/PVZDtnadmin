@@ -16,6 +16,7 @@ from tnadmin.models import GvOrganisation
 
 
 # prepare database fixture (a temporary in-memory database is created for this test)
+pytestmark = pytest.mark.unittest_db
 # drop/create db before django opens a connection
 subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")

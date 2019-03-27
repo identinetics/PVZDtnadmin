@@ -13,7 +13,7 @@ class LoggingConfig:
                  console_level=logging.INFO,
                  file_level=logging.DEBUG,
                  mode='a'):
-        logdir = os.environ.get('LOGDIR', os.path.abspath(os.path.join('log')))
+        logdir = os.environ.get('LOGDIR', os.path.abspath('log'))
         if not os.path.exists(logdir):
             os.makedirs(logdir)
         self.LOGFILENAME = os.path.abspath(os.path.join(logdir, module + '.debug'))

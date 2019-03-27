@@ -10,6 +10,7 @@ from PVZDpy.aodsfilehandler import AodsFileHandler
 from tnadmin.models import GvOrganisation
 
 # prepare database fixture (a temporary in-memory database is created for this test)
+pytestmark = pytest.mark.unittest_db
 # drop/create db before django opens a connection
 subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
@@ -32,7 +33,6 @@ def config_file(testdata_dir) -> None:
     os.environ['PVZDLIB_CONFIG_MODULE'] = str(testdata_dir / 'pvzdlib_config.py')
 
 
-@pytest.mark.standalone_only
 def test_create_read(config_file, setup_db_tables_fedop, testdata_dir):
     aodsfh = AodsFileHandler()
     aodsfh.remove()

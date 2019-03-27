@@ -1,18 +1,21 @@
 import os
 from pathlib import Path
-import pytest
-import django
+
 import coreapi
+import django
+import django.core.files
+import pytest
+from django.conf import settings
+
+from PVZDpy.tests.common_fixtures import ed_path
+from common.show_env import show_env
 from portaladmin.constants import STATUSGROUP_FRONTEND
 from portaladmin.models import MDstatement
-from PVZDpy.tests.common_fixtures import ed_path
-from django.conf import settings
 assert 'portaladmin' in settings.INSTALLED_APPS
 
 pytestmark = pytest.mark.django_db
-import django.core.files
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
 django.setup()
+
 
 path_expected_results = 'expected_results'
 
@@ -30,6 +33,13 @@ def fixture_result(filename):
     p = Path(settings.BASE_DIR) / 'portaladmin' / 'tests' / path_expected_results / filename
     with p.open() as fd:
         return fd.read()
+
+
+@pytest.mark.show_testenv
+def test_show_env(capfd):
+    with capfd.disabled():
+        show_env(__name__)
+
 
 @pytest.mark.requires_webapp
 def test_api_update_ed_signed():

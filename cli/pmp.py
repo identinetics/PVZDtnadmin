@@ -13,10 +13,7 @@ def run_me():
         raise "must use python 3.6 or greater"
 
     logbasename = re.sub(r'\.py$', '', os.path.basename(__file__))
-    if 'LOGLEVEL' in os.environ and os.path.isfile(os.environ['LOGLEVEL']):
-        loglevel = os.environ['LOGLEVEL']
-    else:
-        loglevel = 'INFO'
+    loglevel = os.environ.get('LOGLEVEL', 'INFO')
     logging_config = loggingconfig.LoggingConfig(logbasename,
                                                  console=True,
                                                  file_level=loglevel)

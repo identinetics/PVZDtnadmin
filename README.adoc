@@ -1,11 +1,38 @@
-# Portalverbund zentrale Dienste - Metadaten- und Teilnehmerverwaltung
+= Portalverbund zentrale Dienste - Metadaten- und Teilnehmerverwaltung
 
+Dieses Projekt besteht aus 4 Teilanwendungen und einem Subsystem.
 
-## Notes
+|===
+| Rechteverwaltung für Portaladministratoren | WebApp (fedop)
+| Metadatenregistrierung | WebApp (portaladmin)
+| TNadmin | WebApp (tnadmin)
+| Backend/PEP | Backend (pep)
+| Signatur-Proxy | Subsystem seclay_sig_proxy
+|===
+
+== Notes
 Migrations: Delete ldapgvat/migrations/*.py after makemigrations - backend does not support migrations.
 
-### Web Proxy
+=== HTTP Proxy Konfiguration
 
-SigProxy: Map into WebApp namespace with nginx proxy (avoids spurious SOP violations)
-Dev: See docs/proxyconf.md
+Die WebApps fedop und portaladmin benötigen den Sigproxy.
+Webapps und Sigproxy werden über einen Reverse Proxy auf einen Host gemappt.
+Siehe docs/proxyconf.md
 
+
+== Environment Settings
+
+.Enviroment Variablen
+|===
+| DJANGO_SETTINGS_MODULE  | siehe unten
+| PVZDLIB_SETTINGS_MODULE | siehe unten
+| PYTHONPATH | siehe bin/setenv.sh
+| JAVA_HOME | siehe bin/setenv.sh
+| CLASSPATH | siehe bin/setenv.sh
+|===
+
+Pycharm run configuration: Default Env wird gesetzt in Project|Languages & Framewoks|Django
+Pytest: pytest.ini
+
+
+=== DJANGO_SETTINGS_MODULE

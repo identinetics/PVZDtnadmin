@@ -1,0 +1,40 @@
+= Test Organisation
+
+Hier werden Unittests and Funktionstests beschrieben.
+
+== Test Dankebanken und Fixtures
+
+Für die meisten Tests sind bestehende Datenbankinstanzen, z.T. LDAP-Instanzen erforderlich.
+Sie werdn über unterschiedliche Dajngo-Settings eingestellt:
+
+    DJANGO_SETTINGS_MODULE=pvzdweb.settings_dev: Default-DB Entwicklungsumgebung
+    DJANGO_SETTINGS_MODULE=pvzdweb.settings_pytest_dev: Unittest-DB Entwicklungsumgebung
+
+Für CI/Jenkins und Deployments müssen entsprechende Konfigurationen erstellt werden.
+
+Mit dem pytest-mark "unittest_db" gekonnzeichnete Tests verwerfen und erzeugen die Datenbank vor jedem Aufruf (DROP/CREATE DATABASE).
+
+Leere Datanbanken werden mit Fixtures (JSON) initialisiert.
+
+
+== Unit Testing mit pytest
+
+Environment Variable werden in pytest.ini vorgegeben.
+
+Tests können mit pytest marks ausgewählt werden, z.B.:
+
+     pytest -m "unittest_db" -v  --tb=short portaladmin/tests/
+
+
+Die unittest_db Testfälle verwenden pro Testmodul eine Datenbank, die nach dem Test erhalten bleibt und erst beim nächsten Aufruf gelöscht wird.
+Das Plugin pytest-django wird für das DB-Setup vorläufig nicht verwendet.
+
+Der Aufruf der nicht-interaktiven Tests erfolgt mit bin/pytest_all_noninteractive.sh
+
+
+
+== Functional Test Database Setup
+
+Funktionale Tests verwenden die Default-Datenbank in Django (persistent, exisiterend).
+Mit dem Script reset_db_dev" wird die Default-Datenbank der Entwicklugnsumgebung zurückgesetzt und mit Testdaten (lokal und ldap) nue geladen.
+

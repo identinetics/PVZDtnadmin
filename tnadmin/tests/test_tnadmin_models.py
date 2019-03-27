@@ -15,18 +15,18 @@ django.setup()
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 
 
-@pytest.mark.standalone_db
+@pytest.mark.unittest_db
 def test_gvorg_count(load_tnadmin1):
     assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
 
 
-@pytest.mark.standalone_db
+@pytest.mark.unittest_db
 def test_gvorg_get(load_tnadmin1):
     o = GvOrganisation.objects.get(gvouid='AT:B:1')
     assert o.gvouvkz == 'BMJ'
 
 
-@pytest.mark.standalone_db
+@pytest.mark.unittest_db
 def test_gvFedOrg_insert(load_tnadmin1):
     o = GvOrganisation.objects.get(gvouid='AT:B:1')
     fedorg = GvFederationOrg(gvouid=o)

@@ -6,20 +6,13 @@ from pathlib import Path
 import django
 import pytest
 import requests
+from django.conf import settings
 
 from portaladmin.constants import STATUSGROUP_FRONTEND
 from portaladmin.models import MDstatement
 from portaladmin.views import getstarturl
-
-# prepare database fixture (a temporary in-memory database is created for this test)
-# drop/create db before django opens a connection
-subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
-from django.conf import settings
 assert 'portaladmin' in settings.INSTALLED_APPS
 django.setup()
-from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
-
 
 @pytest.fixture()
 def testdata_dir() -> Path:
@@ -48,8 +41,20 @@ def ed_prepared_in_db(testdata_dir) -> int:
         return mds.id
 
 
+@pytest.mark.show_testenv
+def test_info(capfd, config_file):
+    with capfd.disabled():
+        django_settings = Path(os.environ['DJANGO_SETTINGS_MODULE']).name
+        projroot = str(Path(__file__).parent.parent.parent)
+        p = Path(os.environ.get('PVZDLIB_CONFIG_MODULE', 'DEFAULT'))
+        pvzdlib_settings = str(p)[len(projroot)+1:]   # reduce to path relative to project root
+        print(f"\ntestenv/{__name__}: DJANGO_SETTINGS_MODULE={django_settings}; "
+              f"PVZDLIB_CONFIG_MODULE={pvzdlib_settings}")
+
+
 @pytest.mark.requires_webapp
-def test_get_sigproxyurl(config_file, setup_db_tables_portaladmin, testdata_dir, ed_prepared_in_db):
+@pytest.mark.django_db
+def test_get_sigproxyurl(config_file, testdata_dir, ed_prepared_in_db):
     expected_result_fp = testdata_dir / 'expected_results' / 'sigproxy_client.html'
     expected_result_html = expected_result_fp.read_text()
     url = getstarturl(1)
