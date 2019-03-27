@@ -19,6 +19,14 @@ DATABASES = {
         'HOST': 'postgres_ci',
         'PORT': '5432',
     },
+    'admin_db': {  # used to drop/create the default db
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'changeit',  # superuser password for PostgreSQL
+        'HOST': 'postgres_ci',
+        'PORT': '5432',
+    },
     'ldap': {
         'ENGINE': 'ldapdb.backends.ldap',
         'NAME': 'ldap://openldap_pv:12389',
@@ -31,8 +39,15 @@ DATABASES = {
     },
 }
 DATABASE_ROUTERS = ['ldapdb.router.Router']
+DBADMIN_SHELL = (
+    'psql',
+    '-U', DATABASES['admin_db']['USER'],
+    '-h', DATABASES['admin_db']['HOST'],
+    '-p', DATABASES['admin_db']['PORT'],
+    '-d', DATABASES['admin_db']['NAME'],
+)
 
-logdir = os.environ.get('PVZDLOGDIR', 'work')
+logdir = os.environ.get('PVZDLOGDIR', os.getcwd()+'/work')
 os.makedirs(logdir, exist_ok=True)
 LOGGING = {
     'version': 1,
@@ -46,7 +61,7 @@ LOGGING = {
         'default': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(logdir, '/pvzdweb.log'),
+            'filename': os.path.join(logdir, 'pvzdweb.log'),
             'maxBytes': 1024*1024*500, # 500 MB
             'backupCount': 5,
             'formatter':'standard',
@@ -54,7 +69,7 @@ LOGGING = {
         'request_handler': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(logdir, '/pvzdweb_request.log'),
+            'filename': os.path.join(logdir, 'pvzdweb_request.log'),
             'maxBytes': 1024*1024*500, # 500 MB
             'backupCount': 5,
             'formatter':'standard',

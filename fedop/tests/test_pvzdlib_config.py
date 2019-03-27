@@ -1,6 +1,5 @@
 import json
 import os
-import subprocess
 from pathlib import Path
 
 import django
@@ -9,19 +8,22 @@ from django.conf import settings
 
 from PVZDpy.config.pvzdlib_config_abstract import PVZDlibConfigAbstract
 from PVZDpy.userexceptions import PolicyJournalNotInitialized
+from common.recreate_db import recreate_db
 from common.show_env import show_env
-from tnadmin.models import GvOrganisation
-assert 'fedop' in settings.INSTALLED_APPS
-django.setup()
-
-# prepare database fixture (a temporary in-memory database is created for this test)
-pytestmark = pytest.mark.unittest_db
-# drop/create db before django opens a connection
-subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
-from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
-def test_assert_tnadmin_loaded(load_tnadmin1):
-    assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
+from tnadmin.models import GvOrganisation
+from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
+
+# prepare database fixture
+pytestmark = pytest.mark.unittest_db
+django.setup()
+assert 'fedop' in settings.INSTALLED_APPS
+recreate_db() # drop/create db before django opens a connection
+setup_db_tables_tnadmin()
+setup_db_tables_fedop()
+load_tnadmin1()
+loaddata_fedop1()
+assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
 
 
 @pytest.fixture(scope='module')
@@ -78,7 +80,7 @@ def expected_poldict_json02(config_file, testdata_dir):
 # --- 03 ---
 
 @pytest.mark.standalone_only
-def test_03_initialize(config_file, setup_db_tables_fedop):
+def test_03_initialize(config_file):
     pvzdconf = PVZDlibConfigAbstract.get_config()
     backend = pvzdconf.polstore_backend
     try:

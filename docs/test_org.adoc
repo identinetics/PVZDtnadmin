@@ -5,14 +5,15 @@ Hier werden Unittests and Funktionstests beschrieben.
 == Test Dankebanken und Fixtures
 
 Für die meisten Tests sind bestehende Datenbankinstanzen, z.T. LDAP-Instanzen erforderlich.
-Sie werdn über unterschiedliche Dajngo-Settings eingestellt:
+Sie werden über unterschiedliche Django-Settings eingestellt:
 
-    DJANGO_SETTINGS_MODULE=pvzdweb.settings_dev: Default-DB Entwicklungsumgebung
-    DJANGO_SETTINGS_MODULE=pvzdweb.settings_pytest_dev: Unittest-DB Entwicklungsumgebung
+    DJANGO_SETTINGS_MODULE=pvzdweb.settings: Default-DB Jenkins/CI (DB: postgres_ci:5432, LDAP: openldap_pv:12389)
+    DJANGO_SETTINGS_MODULE=pvzdweb.settings_dev: Default-DB Entwicklungsumgebung (DB: devl11:5432, LDAP:8389)
+    DJANGO_SETTINGS_MODULE=pvzdweb.settings_pytest_dev: Unittest-DB Entwicklungsumgebung (DB: devl11:15432, LDAP:8389)
 
-Für CI/Jenkins und Deployments müssen entsprechende Konfigurationen erstellt werden.
+Für das Deployment muss eine eigene Konfigurationen erstellt werden.
 
-Mit dem pytest-mark "unittest_db" gekonnzeichnete Tests verwerfen und erzeugen die Datenbank vor jedem Aufruf (DROP/CREATE DATABASE).
+Mit dem pytest-mark "unittest_db" gekennzeichnete Tests verwerfen und erzeugen die Datenbank vor jedem Aufruf (DROP/CREATE DATABASE).
 
 Leere Datanbanken werden mit Fixtures (JSON) initialisiert.
 
@@ -25,16 +26,19 @@ Tests können mit pytest marks ausgewählt werden, z.B.:
 
      pytest -m "unittest_db" -v  --tb=short portaladmin/tests/
 
+Die Liste der registrierten Marker wird angezeigt mit
 
-Die unittest_db Testfälle verwenden pro Testmodul eine Datenbank, die nach dem Test erhalten bleibt und erst beim nächsten Aufruf gelöscht wird.
-Das Plugin pytest-django wird für das DB-Setup vorläufig nicht verwendet.
+    pytest --markers
+
+
+Die unittest_db Testfälle initialisieren pro Testmodul (test_xxxx.py) eine Datenbank, die nach dem Test erhalten bleibt und erst beim nächsten Aufruf gelöscht wird.
+(Das Plugin pytest-django wird für das DB-Setup vorläufig nicht verwendet.)
 
 Der Aufruf der nicht-interaktiven Tests erfolgt mit bin/pytest_all_noninteractive.sh
 
 
+== FunKtionstest Database Setup
 
-== Functional Test Database Setup
-
-Funktionale Tests verwenden die Default-Datenbank in Django (persistent, exisiterend).
+Funktionstests verwenden die Default-Datenbank in Django (persistent, beim Aufruf existierend).
 Mit dem Script reset_db_dev" wird die Default-Datenbank der Entwicklugnsumgebung zurückgesetzt und mit Testdaten (lokal und ldap) nue geladen.
 

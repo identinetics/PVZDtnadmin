@@ -1,34 +1,36 @@
-''' Create Postgres ~/.pgpass file from django settings '''
+''' Create Postgres ~/.pgpass file from django settings if it does not exist '''
 
-import os
 from pathlib import Path
-import sys
-import django
-if __name__ == '__main__':
-    django_proj_home = Path(sys.argv[0]).parent.parent.resolve()
-    sys.path.append(django_proj_home)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
-    django.setup()
-else:
-    assert False
 
+import django
 from django.conf import settings
 
-pgdb = settings.DATABASES['default']
 
-assert pgdb['ENGINE'] == 'django.db.backends.postgresql'
+def main():
+    django.setup()
+    default_db = create_pgpass_entry(settings.DATABASES['default'])
+    admin_db = create_pgpass_entry(settings.DATABASES['admin_db'])
+    write_pgpass([default_db, admin_db])
 
-format_data = {
-    'hostname':  pgdb['HOST'],
-    'port': pgdb['PORT'],
-    'database': pgdb['NAME'],
-    'username': pgdb['USER'],
-    'password': pgdb['PASSWORD'],
-}
-dotpgpass_template = '{hostname}:{port}:{database}:{username}:{password}'.format(**format_data)
 
-pgpass = Path.home() / '.pgpass'
-if not pgpass.exists():
-    with pgpass.open('w') as fd:
-        fd.write(dotpgpass_template)
-    pgpass.chmod(0o600)
+def create_pgpass_entry(pgdb: str) -> str:
+    assert pgdb['ENGINE'] == 'django.db.backends.postgresql'
+    format_data = {
+        'hostname':  pgdb['HOST'],
+        'port': pgdb['PORT'],
+        'database': pgdb['NAME'],
+        'username': pgdb['USER'],
+        'password': pgdb['PASSWORD'],
+    }
+    return '{hostname}:{port}:{database}:{username}:{password}'.format(**format_data)
+
+
+def write_pgpass(entries: list) -> None:
+    pgpass = Path.home() / '.pgpass'
+    if not pgpass.exists():
+        with pgpass.open('w') as fd:
+            fd.write('\n'.join(entries))
+        pgpass.chmod(0o600)
+
+
+main()

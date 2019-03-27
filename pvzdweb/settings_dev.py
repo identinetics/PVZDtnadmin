@@ -17,6 +17,14 @@ DATABASES = {
         'HOST': 'devl11',
         'PORT': '5432',
     },
+    'admin_db': {  # used to drop/create the default db
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'changeit',  # superuser password for PostgreSQL
+        'HOST': 'devl11',
+        'PORT': '5432',
+    },
     'ldap': {
         'ENGINE': 'ldapdb.backends.ldap',
         'NAME': 'ldap://devl11:8389',
@@ -28,6 +36,14 @@ DATABASES = {
         }
     },
 }
+DBADMIN_SHELL = (
+    'psql',
+    '-U', DATABASES['admin_db']['USER'],
+    '-h', DATABASES['admin_db']['HOST'],
+    '-p', DATABASES['admin_db']['PORT'],
+    '-d', DATABASES['admin_db']['NAME'],
+)
+
 
 # DATABASES = {
 #     'default': {

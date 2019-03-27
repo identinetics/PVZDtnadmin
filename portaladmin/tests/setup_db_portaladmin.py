@@ -10,7 +10,6 @@ _blocking_manager.unblock()
 _blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
 
 
-@pytest.fixture(scope="module")
 def setup_db_tables_portaladmin():
     with open('/tmp/pvzdweb_portaladmin_testout_migratedb.log', 'w') as fd:
         management.call_command('migrate', 'portaladmin', stdout=fd)

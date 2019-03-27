@@ -2,7 +2,6 @@ import json
 import logging
 import os
 from pathlib import Path
-import subprocess
 
 import django
 import enforce
@@ -10,29 +9,29 @@ import pytest
 
 from PVZDpy.aods_record import AodsRecord
 from PVZDpy.policychange import PolicyChangeList
+from common.recreate_db import recreate_db
 from fedop.models import Issuer, Namespaceobj, PolicyStorage, Revocation, Userprivilege
 from fedop.poljournal_updater import PolicyJournalUpdater
+from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
 from tnadmin.models import GvOrganisation
+from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 
 
 # prepare database fixture (a temporary in-memory database is created for this test)
 pytestmark = pytest.mark.unittest_db
-# drop/create db before django opens a connection
-subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-from django.conf import settings
-assert 'fedop' in settings.INSTALLED_APPS
 django.setup()
-from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
-def test_assert_tnadmin_loaded(load_tnadmin1):
-    assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
-from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
+recreate_db() # drop/create db before django opens a connection
+setup_db_tables_tnadmin()
+setup_db_tables_fedop()
+load_tnadmin1()
+loaddata_fedop1()
+assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
 
 
 @pytest.fixture(scope='module')
-def load_fedop1(setup_db_tables_fedop, loaddata_fedop1):
+def load_fedop1():
     logging.basicConfig(level=logging.DEBUG)
-    # canot json-represent the poljournal, therefore get_changelist it from file
+    # canot json-represent the poljournal, therefore get_changelist from file
     fedop_policyjournal = Path('fedop/fixtures/poljournal_testdata.xml')
     ps = PolicyStorage.objects.get(id=1)
     with fedop_policyjournal.open('rb') as fd:

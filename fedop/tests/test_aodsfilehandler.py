@@ -1,26 +1,27 @@
 import json
 import os
-import subprocess
 from pathlib import Path
 
 import django
 import pytest
+from django.conf import settings
 
 from PVZDpy.aodsfilehandler import AodsFileHandler
-from tnadmin.models import GvOrganisation
-
-# prepare database fixture (a temporary in-memory database is created for this test)
-pytestmark = pytest.mark.unittest_db
-# drop/create db before django opens a connection
-subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-from django.conf import settings
-assert 'fedop' in settings.INSTALLED_APPS
-django.setup()
-from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
-def test_assert_tnadmin_loaded(load_tnadmin1):
-    assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
+from common.recreate_db import recreate_db
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
+from tnadmin.models import GvOrganisation
+from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
+
+# prepare database fixture
+pytestmark = pytest.mark.unittest_db
+django.setup()
+assert 'fedop' in settings.INSTALLED_APPS
+recreate_db() # drop/create db before django opens a connection
+setup_db_tables_tnadmin()
+setup_db_tables_fedop()
+load_tnadmin1()
+loaddata_fedop1()
+assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
 
 
 @pytest.fixture
@@ -33,7 +34,7 @@ def config_file(testdata_dir) -> None:
     os.environ['PVZDLIB_CONFIG_MODULE'] = str(testdata_dir / 'pvzdlib_config.py')
 
 
-def test_create_read(config_file, setup_db_tables_fedop, testdata_dir):
+def test_create_read(config_file, testdata_dir):
     aodsfh = AodsFileHandler()
     aodsfh.remove()
     aods = {"AODS": [{"content":["header","","contentfields"],"delete": False}]}

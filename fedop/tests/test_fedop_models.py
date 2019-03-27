@@ -1,38 +1,36 @@
-import os
-import subprocess
-
 import django
 import pytest
-
-from tnadmin.models import *
-from fedop.models import Issuer, Namespaceobj, PolicyStorage, Revocation, Userprivilege
 from django.conf import settings
-assert 'fedop' in settings.INSTALLED_APPS
 
-
-# prepare database fixture (a temporary database used only for this test)
-pytestmark = pytest.mark.unittest_db
-# drop/create db before django opens a connection
-subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-django.setup()
-from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
-def test_assert_tnadmin_loaded(load_tnadmin1):
-    assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
+from common.recreate_db import recreate_db
+from fedop.models import Issuer, PolicyStorage, Revocation
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
+from tnadmin.models import *
+from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
+
+# prepare database fixture
+pytestmark = pytest.mark.unittest_db
+django.setup()
+assert 'fedop' in settings.INSTALLED_APPS
+recreate_db() # drop/create db before django opens a connection
+setup_db_tables_tnadmin()
+setup_db_tables_fedop()
+load_tnadmin1()
+loaddata_fedop1()
+assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
 
 
-def test_issuer(loaddata_fedop1):
+def test_issuer():
     i = Issuer.objects.get(subject_cn='PortalRoot-CA')
     assert i.cacert == "{cert}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"
     assert i.pvprole
     assert i.subject_cn
 
 
-def test_policy_journal(loaddata_fedop1):
+def test_policy_journal():
     assert 1 == len(PolicyStorage.objects.all()), 'PolicyStorage is a singleton, number or records must be equal 1'
 
 
-def test_revocation(loaddata_fedop1):
+def test_revocation():
     r = Revocation.objects.all()[0]  # only one item in testdata
     assert r.subject_cn == '/C=AT/ST=Wien/O=Magistrat der Stadt Wien/OU=MA 14/CN=gondor.magwien.gv.at/emailAddress=cctprod-l@adv.magwien.gv.at'

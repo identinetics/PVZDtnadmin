@@ -1,39 +1,44 @@
 import os
 from pathlib import Path
-import subprocess
 
 import django
 import pytest
 from django.conf import settings
 
 from PVZDpy.tests.common_fixtures import ed_path
+from common.recreate_db import recreate_db
 from common.show_env import show_env
 from fedop.models import PolicyStorage
+from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
 from portaladmin.models import MDstatement
+from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
 from tnadmin.models import GvOrganisation
-assert 'portaladmin' in settings.INSTALLED_APPS
-django.setup()
+from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 
 # prepare database fixture (a temporary in-memory database is created for this test)
 pytestmark = pytest.mark.unittest_db
-# drop/create db before django opens a connection
-subprocess.call(['ssh', 'devl11', '/home/r2h2/devl/docker/c_pvzdweb_pgnofsync/drop_createdb.sh'])
-from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
-def test_assert_tnadmin_loaded(load_tnadmin1):
-    assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
-from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
-def test_policy_journal(loaddata_fedop1):
-    assert 1 == len(PolicyStorage.objects.all()), 'PolicyStorage is a singleton, number or records must be equal 1'
-from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
-
+assert 'portaladmin' in settings.INSTALLED_APPS
+django.setup()
+recreate_db() # drop/create db before django opens a connection
+setup_db_tables_tnadmin()
+setup_db_tables_fedop()
+setup_db_tables_portaladmin()
+load_tnadmin1()
+loaddata_fedop1()
+assert len(GvOrganisation.objects.all()) > 0, 'No gvOrganisation data found'
 
 path_expected_results = 'expected_results'
+path_testout = Path('portaladmin/tests/testout')
+path_testout.mkdir(parents=True)
 
+
+def test_policy_journal():
+    assert 1 == len(PolicyStorage.objects.all()), 'PolicyStorage is a singleton, number or records must be equal 1'
 
 def assert_equal(expected, actual, fn='', ed_path_no: int=None):
     # workaround because pycharm does not display the full string (despite pytest -vv etc)
     msg = fn+"\n'"+actual+"' != '"+expected+"' "
-    p_testout = Path(f"portaladmin/tests/testout/insert{ed_path_no}.json").resolve()
+    p_testout = Path(path_testout / f"insert{ed_path_no}.json").resolve()
     with p_testout.open('w') as fd:
         fd.write(actual)
     assert expected == actual, msg
@@ -84,7 +89,7 @@ def test_show_env(capfd):
                           ('insert22.json', 22),
                           ('insert23.json', 23),
                           ])
-def test_insert_and_update(config_file, setup_db_tables_portaladmin, expected_result_fn, ed_path_no):
+def test_insert_and_update(config_file, expected_result_fn, ed_path_no):
     fn = Path(ed_path(ed_path_no, dir=fixture_testdata_basedir()))
     with fn.open('rb') as fd:
         django_file = django.core.files.File(fd)

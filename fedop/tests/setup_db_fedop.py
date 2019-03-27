@@ -14,14 +14,12 @@ _blocking_manager.unblock()
 _blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
 
 
-@pytest.fixture(scope="module")
 def setup_db_tables_fedop():
     with open('/tmp/pvzdweb_fedop_testout_migratedb.log', 'w') as fd:
         management.call_command('migrate', 'fedop', stdout=fd)
 
 
-@pytest.fixture(scope="module")
-def loaddata_fedop1(setup_db_tables_fedop):
+def loaddata_fedop1():
     def add_policy_storage():
         polstore1_path = Path('fedop') / 'fixtures' / 'policystore1'
         ps = PolicyStorage()

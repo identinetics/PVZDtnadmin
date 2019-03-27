@@ -18,7 +18,15 @@ DATABASES = {
     #},
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pvzddb_nofsync',
+        'NAME': 'pvzddb_unittest',
+        'USER': 'postgres',
+        'PASSWORD': 'changeit',  # superuser password for PostgreSQL
+        'HOST': 'devl11',
+        'PORT': '15432',
+    },
+    'admin_db': {  # used to drop/create the default db
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'changeit',  # superuser password for PostgreSQL
         'HOST': 'devl11',
@@ -35,5 +43,13 @@ DATABASES = {
         }
     },
 }
+DBADMIN_SHELL = (
+    'psql',
+    '-U', DATABASES['admin_db']['USER'],
+    '-h', DATABASES['admin_db']['HOST'],
+    '-p', DATABASES['admin_db']['PORT'],
+    '-d', DATABASES['admin_db']['NAME'],
+)
+
 
 # os.environ.setdefault('SQLLITE', 'True')   # signal tnadmin migration not to add postgres-specific constraints
