@@ -52,8 +52,7 @@ DBADMIN_SHELL = (
 #     }
 # }
 
-INSTALLED_APPS=sorted(list(set(INSTALLED_APPS + ['fedop', 'ldapgvat', 'portaladmin', 'tnadmin'])))
-pass
+INSTALLED_APPS=sorted(list(set(INSTALLED_APPS + ['ldapgvat'])))
 
 if DEBUG:
     siglog_path = Path(__file__).parent.parent / 'work/siglog'

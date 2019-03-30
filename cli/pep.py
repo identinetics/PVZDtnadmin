@@ -11,8 +11,7 @@ from django.conf import settings
 from PVZDpy.constants import *
 from PVZDpy.samled_validator import SamlEdValidator
 from PVZDpy.userexceptions import *
-from portaladmin.models import MDstatement
-from portaladmin.constants import STATUS_REQUEST_QUEUE, STATUS_REJECTED, STATUS_ACCEPTED
+.MDfrom portaladmin.constants import STATUS_REQUEST_QUEUE, STATUS_REJECTED, STATUS_ACCEPTED
 
 from get_pep_logger import get_pep_logger
 from config import get_policy_dict

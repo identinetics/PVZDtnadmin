@@ -20,12 +20,6 @@ exec_loader() {
 
 [[ "$PVZDLIB_CONFIG_MODULE" ]] || export PVZDLIB_CONFIG_MODULE='DEFAULT'
 
-if [[ $DJANGO_SETTINGS_MODULE == 'pvzdweb.settings' ]]; then
-    export DJANGO_SETTINGS_MODULE='pvzdweb.settings_allapps'
-else
-    :   # dev environment has already all apps registered
-fi
-
 echo 'tnadmin test data: loading gvOrganisation'
 exec_loader "python $APPHOME/tnadmin/sync_gvOrg_from_ldapgvat.py --select-all"
 

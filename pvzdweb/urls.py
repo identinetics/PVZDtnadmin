@@ -25,10 +25,10 @@ from portaladmin.views import MDstatementViewSet
 
 
 # disable access control
-class AccessUser:
-    has_module_perms = has_perm = __getattr__ = lambda s,*a,**kw: True
+#class AccessUser:
+#    has_module_perms = has_perm = __getattr__ = lambda s,*a,**kw: True
 
-admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
+#admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
 
 router = routers.DefaultRouter()
 router.register(r'mdstatement', MDstatementViewSet)

@@ -20,7 +20,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'a)$#m^s5*4zv5i&o9p7gn$6iyp7qd&
 
 # Add apps according to the instance
 INSTALLED_APPS = [
-    # 'admin_menu',
+    #'admin_menu',
     # 'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -28,7 +28,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'fedop',
+    'portaladmin',
     'rest_framework',
+    'tnadmin',
 ]
 
 MIDDLEWARE = [
