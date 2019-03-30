@@ -8,7 +8,7 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_dev")
 django.setup()
 
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 from django.conf import settings
 
 

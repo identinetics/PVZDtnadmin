@@ -4,7 +4,7 @@ from pathlib import Path
 #os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings")
 import django
 django.setup()
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 from django.conf import settings
 
 

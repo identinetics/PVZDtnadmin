@@ -2,8 +2,7 @@ import tempfile
 from pathlib import Path
 from PVZDpy.config.policystore_backend_abstract import PolicyStoreBackendAbstract
 from PVZDpy.userexceptions import PolicyJournalNotInitialized
-from fedop.models import PolicyStorage
-
+from fedop.models.policystorage import PolicyStorage
 
 
 class PolicyStoreBackendDjango(PolicyStoreBackendAbstract):

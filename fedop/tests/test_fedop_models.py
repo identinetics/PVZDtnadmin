@@ -3,7 +3,9 @@ import pytest
 from django.conf import settings
 
 from common.recreate_db import recreate_db
-from fedop.models import Issuer, PolicyStorage, Revocation
+from fedop.models.issuer import Issuer
+from fedop.models.revocation import Revocation
+from fedop.models.policystorage import PolicyStorage
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
 from tnadmin.models import *
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin

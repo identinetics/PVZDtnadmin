@@ -8,7 +8,7 @@ import requests
 from django.conf import settings
 
 from portaladmin.constants import STATUSGROUP_FRONTEND
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 from portaladmin.views import getstarturl
 assert 'portaladmin' in settings.INSTALLED_APPS
 django.setup()

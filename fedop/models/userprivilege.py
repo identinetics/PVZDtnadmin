@@ -1,7 +1,7 @@
 from django.db import models
 from PVZDpy.xy509cert import XY509cert
 from fedop.models.fedop_base import FedopBaseAbstract
-from tnadmin.models import GvUserPortalOperator
+from tnadmin.models.gvfederationorg import GvUserPortalOperator
 
 
 class Userprivilege(FedopBaseAbstract):

@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 from tnadmin.models.gvadminabstract import GvAdminAbstract
-from tnadmin.models.gvfederation import GvFederation
+from tnadmin.models.gvfederationorg import GvParticipant
 from tnadmin.models.gvorg import GvOrganisation
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1
@@ -27,7 +27,7 @@ class GvUserPortal(GvAdminAbstract):
         null=True, blank=True,
         help_text='gvOuId des Stammportalbetreibers (Organisation des Portalverantwortlichen')
     gvouid_participant = models.ManyToManyField(
-        GvOrganisation,
+        GvOrganisation,   # TODO change to GvParticipant
         verbose_name='Participant',
         help_text='Liste der Participants, die am Stammportal berechtigt sind')
     gvSamlIdpEntityId = models.URLField(

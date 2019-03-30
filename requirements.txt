@@ -6,6 +6,7 @@ django
 djangorestframework
 #django-admin-menu>=1.1
 #django-bootstrap4
+django-admin-relation-links
 django-ldapdb
 enforce
 gunicorn

@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django_admin_relation_links import AdminChangeLinksMixin
 from tnadmin.models.gvorg import *
 
 class GvOrganisationForm(forms.ModelForm):
@@ -13,7 +14,7 @@ class GvOrganisationForm(forms.ModelForm):
         }
 
 @admin.register(GvOrganisation)
-class GvOrganisationAdmin(admin.ModelAdmin):
+class GvOrganisationAdmin(AdminChangeLinksMixin, admin.ModelAdmin):
     #actions = None
     exclude = ('gvouidparent', )
     fields = (
@@ -46,3 +47,4 @@ class GvOrganisationAdmin(admin.ModelAdmin):
         'gvNotValidAfter',
         'gvStatus',
     )
+    changelist_links = ['STPbetreiber']

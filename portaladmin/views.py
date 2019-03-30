@@ -2,7 +2,7 @@ import urllib
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
 from rest_framework import viewsets
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 from portaladmin.serializers import MDstatementSerializer
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt

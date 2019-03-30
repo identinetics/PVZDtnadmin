@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib import auth
 
-admin.site.unregister(auth.models.User)
-admin.site.unregister(auth.models.Group)
-
+#admin.site.unregister(auth.models.User)
+#admin.site.unregister(auth.models.Group)
+pass

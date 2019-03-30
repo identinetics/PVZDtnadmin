@@ -4,7 +4,7 @@ from django.conf import settings
 from django.http import HttpRequest
 
 from portaladmin.constants import STATUS_REQUEST_QUEUE, STATUS_REJECTED
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 from PVZDpy.tests.common_fixtures import ed_path
 from portaladmin.admin.mds_sign_and_update import mds_sign_and_update
 

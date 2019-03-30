@@ -8,9 +8,9 @@ from django.conf import settings
 from PVZDpy.tests.common_fixtures import ed_path
 from common.recreate_db import recreate_db
 from common.show_env import show_env
-from fedop.models import PolicyStorage
+from fedop.models.policystorage import PolicyStorage
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
 from tnadmin.models import GvOrganisation
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin

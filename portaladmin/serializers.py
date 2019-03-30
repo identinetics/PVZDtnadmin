@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 
 
 class MDstatementSerializer(serializers.HyperlinkedModelSerializer):

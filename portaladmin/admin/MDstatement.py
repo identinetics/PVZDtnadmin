@@ -10,7 +10,7 @@ from django.db import models
 from django.forms.widgets import ClearableFileInput
 
 from portaladmin.forms import MDstatementForm
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 from portaladmin.views import getstarturl
 #from PVZDpy.samlentitydescriptor import SAMLEntityDescriptor
 #from PVZDpy.get_seclay_request import get_seclay_request

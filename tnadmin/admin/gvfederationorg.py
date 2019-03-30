@@ -1,13 +1,12 @@
-from django import forms
 from django.contrib import admin
-from tnadmin.models.gvorg import *
-from tnadmin.models.gvfederationorg import *
+from django_admin_relation_links import AdminChangeLinksMixin
+from tnadmin.models.gvfederationorg import GvFederationOrg, GvParticipant, GvUserPortalOperator
 
 
 
 
 @admin.register(GvFederationOrg)
-class GvFederationOrgAdmin(admin.ModelAdmin):
+class GvFederationOrgAdmin(AdminChangeLinksMixin, admin.ModelAdmin):
     #actions = None
     autocomplete_fields = ('gvouid', 'gvCaseOrg', 'gvouid_aufsicht', 'gvouid_dl')
     fields = (
@@ -38,6 +37,7 @@ class GvFederationOrgAdmin(admin.ModelAdmin):
         'gvStatus',
         'gvSource',
     )
+    changelist_links = ['Participant']
 
     def get_org_o(self, inst):
         return inst.gvouid.o
@@ -57,8 +57,8 @@ class GvFederationOrgAdmin(admin.ModelAdmin):
             return ''
     get_org_o3.short_description = 'Dienstleister'
 
-    def get_query_set(self):
-        return super(Requirement, self).get_query_set().select_related('GvOrganisation', )  # improve performance by joining related tables
+    #def get_query_set(self):
+    #    return super(Requirement, self).get_query_set().select_related('GvOrganisation', )  # improve performance by joining related tables
 
 @admin.register(GvParticipant)
 class GvParticipant(GvFederationOrgAdmin):

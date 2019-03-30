@@ -1,12 +1,9 @@
 import datetime
 from django.db import models
-from django.core.validators import MaxValueValidator
 from tnadmin.models.constants import *
 from tnadmin.models.get_defaults import *
 from tnadmin.models.gvadminabstract import GvAdminAbstract
-from tnadmin.models.gvfederation import GvFederation
 from tnadmin.models.gvorg import GvOrganisation
-from tnadmin.models.gvuserportal import *
 
 
 #  Attributdefinitionen laut LDAP-gvat_2-5-1

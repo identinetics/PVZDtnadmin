@@ -10,7 +10,11 @@ from PVZDpy.policychange import PolicyChangeIssuer, PolicyChangeNamespace, \
     PolicyChangeOrganization, PolicyChangeRevocation, PolicyChangeUserprivilege, \
     PolicyChangeList
 from PVZDpy.policydict import OrgDict, PolicyDict
-from fedop.models import *
+from fedop.models.issuer import Issuer
+from fedop.models.revocation import Revocation
+from fedop.models.namespace import Namespaceobj
+from fedop.models.userprivilege import Userprivilege
+
 from tnadmin.models.gvfederationorg import GvUserPortalOperator
 
 

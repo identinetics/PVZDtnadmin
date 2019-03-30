@@ -10,7 +10,7 @@ from django.conf import settings
 from PVZDpy.tests.common_fixtures import ed_path
 from common.show_env import show_env
 from portaladmin.constants import STATUSGROUP_FRONTEND
-from portaladmin.models import MDstatement
+from portaladmin.models.MDstatement import MDstatement
 assert 'portaladmin' in settings.INSTALLED_APPS
 
 pytestmark = pytest.mark.django_db

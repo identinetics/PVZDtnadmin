@@ -10,10 +10,10 @@ import pytest
 from PVZDpy.aods_record import AodsRecord
 from PVZDpy.policychange import PolicyChangeList
 from common.recreate_db import recreate_db
-from fedop.models import Issuer, Namespaceobj, PolicyStorage, Revocation, Userprivilege
+from fedop.models.policystorage import PolicyStorage
 from fedop.poljournal_updater import PolicyJournalUpdater
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
-from tnadmin.models import GvOrganisation
+from tnadmin.models.gvorg import GvOrganisation
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 
 

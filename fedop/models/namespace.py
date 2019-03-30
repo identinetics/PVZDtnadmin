@@ -1,5 +1,5 @@
 from django.db import models
-from tnadmin.models import GvUserPortalOperator
+from tnadmin.models.gvfederationorg import GvUserPortalOperator
 from fedop.models.fedop_base import FedopBaseAbstract
 
 class Namespaceobj(FedopBaseAbstract):
