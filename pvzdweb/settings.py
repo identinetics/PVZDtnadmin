@@ -13,7 +13,7 @@ DATABASES = {
         'NAME': 'pvzddb',
         'USER': 'postgres',
         'PASSWORD': 'changeit',  # superuser password for PostgreSQL
-        'HOST': 'postgres_ci',
+        'HOST': 'localhost',
         'PORT': '5432',
     },
     'admin_db': {  # used to drop/create the default db
@@ -21,7 +21,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'changeit',  # superuser password for PostgreSQL
-        'HOST': 'postgres_ci',
+        'HOST': 'localhost',
         'PORT': '5432',
     },
     'ldap': {

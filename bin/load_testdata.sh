@@ -32,4 +32,7 @@ exec_loader "python $APPHOME/fedop/tests/load_db_with_testdata.py"
 echo 'portaladmin test data: MD Statements'
 exec_loader "python $APPHOME/portaladmin/tests/load_db_with_testdata.py"
 
+echo 'portaladmin test data: MD Statements'
+exec_loader "python $APPHOME/common/load_groups.py"
+
 exit $rc_sum
