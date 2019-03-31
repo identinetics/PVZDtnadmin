@@ -3,24 +3,15 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
+if os.environ.get('DJANGO_DEBUG', False):
+    DEBUG = True
+else:
+    DEBUG = False
+if not DEBUG and 'DJANGO_SECRET_KEY' not in os.environ:
+    raise Exception('environment variable DJANGO_SECRET_KEY not set')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'secretwithsomemildformofrandomness@s564zdg')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'a)$#m^s5*4zv5i&o9p7gn$6iyp7qd&*oev#9b$*30)542@szdg')
-
-# Application definition
-
-#MENU_WEIGHT = {
-#    'GvOrganisation': 20,
-#    'GvFederationOrg': 15,
-#    'GvUserPortal': 10,
-#    'GvFederation': 5
-#}
-
-# Add apps according to the instance
 INSTALLED_APPS = [
-    #'admin_menu',
     # 'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',

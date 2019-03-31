@@ -13,15 +13,15 @@ DATABASES = {
         'NAME': 'pvzddb',
         'USER': 'postgres',
         'PASSWORD': 'changeit',  # superuser password for PostgreSQL
-        'HOST': 'postgres_ci',
+        'HOST': 'mypostgreshost',
         'PORT': '5432',
     },
-    'admin_db': {  # used to drop/create the default db
+    'admin_db': {  # same instance as above, but using postgres-db to drop/create the default db
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'changeit',  # superuser password for PostgreSQL
-        'HOST': 'postgres_ci',
+        'HOST': 'mypostgreshost',
         'PORT': '5432',
     },
     'ldap': {
