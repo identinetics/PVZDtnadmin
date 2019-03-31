@@ -5,7 +5,8 @@ import django
 from django.conf import settings
 
 from common.recreate_db import recreate_db
-from tnadmin.models import GvFederationOrg, GvOrganisation
+from tnadmin.models.gvfederationorg import GvFederationOrg
+from tnadmin.models.gvorg import GvOrganisation
 from tnadmin.models.constants import LEGAL_BASIS_PVV
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 

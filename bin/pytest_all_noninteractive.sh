@@ -3,7 +3,7 @@
 # The python virtual env needs to be set
 
 scriptsdir=$(cd "$(dirname ${BASH_SOURCE[0]})" && pwd)
-APPHOME=$(dirname $scriptsdir)
+[[ "$APPHOME" ]] || APPHOME=$(dirname $scriptsdir)
 
 source $scriptsdir/setenv.sh
 
@@ -26,7 +26,7 @@ cd $APPHOME
 #pytest -v -m "not show_testenv" --tb=short portaladmin/tests/test_mdstatement_api.py
 
 exec_pytest() {
-    pytest -v -m "not show_testenv" --tb=short $1
+    pytest -v -m "not show_testenv" -m "not requires_webapp" --tb=short --ignore PVZDlib $1
 }
 
 
