@@ -2,16 +2,10 @@ import os
 import pytest
 
 import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pvzdweb.settings_pytest_dev")
-django.setup()
 from ldapgvat.models import GvOrganisation
+import common.pytest_django_db
 
-
-#@pytest.mark.django_db does not work
-from pytest_django.plugin import _blocking_manager
-from django.db.backends.base.base import BaseDatabaseWrapper
-_blocking_manager.unblock()
-_blocking_manager._blocking_wrapper = BaseDatabaseWrapper.ensure_connection
+django.setup()
 
 @pytest.mark.requires_ldap
 def test_gvOrganisation_get_by_gvouid():

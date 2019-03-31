@@ -5,6 +5,7 @@ from pvzdweb.settings_base import *
 
 ALLOWED_HOSTS = ['*']
 
+INSTALLED_APPS.append('ldapgvat')
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 DATABASES = {

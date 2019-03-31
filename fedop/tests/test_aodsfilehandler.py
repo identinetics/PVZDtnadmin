@@ -6,10 +6,11 @@ import django
 import pytest
 from django.conf import settings
 
-from PVZDpy.aodsfilehandler import AodsFileHandler
+import common.pytest_django_db
 from common.recreate_db import recreate_db
+from PVZDpy.aodsfilehandler import AodsFileHandler
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
-from tnadmin.models import GvOrganisation
+from tnadmin.models.gvorg import GvOrganisation
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 
 # prepare database fixture

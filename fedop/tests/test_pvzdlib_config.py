@@ -11,7 +11,7 @@ from PVZDpy.userexceptions import PolicyJournalNotInitialized
 from common.recreate_db import recreate_db
 from common.show_env import show_env
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
-from tnadmin.models import GvOrganisation
+from tnadmin.models.gvorg import GvOrganisation
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 
 # prepare database fixture
