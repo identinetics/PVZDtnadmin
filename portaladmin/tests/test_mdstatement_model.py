@@ -12,7 +12,7 @@ from fedop.models.policystorage import PolicyStorage
 from fedop.tests.setup_db_fedop import loaddata_fedop1, setup_db_tables_fedop
 from portaladmin.models.MDstatement import MDstatement
 from portaladmin.tests.setup_db_portaladmin import setup_db_tables_portaladmin
-from tnadmin.models import GvOrganisation
+from tnadmin.models.gvorg import GvOrganisation
 from tnadmin.tests.setup_db_tnadmin import load_tnadmin1, setup_db_tables_tnadmin
 
 # prepare database fixture (a temporary in-memory database is created for this test)
