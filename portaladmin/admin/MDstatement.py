@@ -144,6 +144,6 @@ class MDstatementAdmin(admin.ModelAdmin):
         else:
             return super().response_change(request, obj)
 
-    actions = ['delete_selected', ]  # for dev
+    #actions = ['delete_selected', ]  # for dev
     #actions = []
 
