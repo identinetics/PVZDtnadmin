@@ -13,7 +13,7 @@ else:
 from django.core.exceptions import ObjectDoesNotExist
 from ldapgvat.models import GvOrganisation as LdapGvOrg
 from tnadmin.models.get_defaults import get_default_org
-from tnadmin.models import GvOrganisation as DbGvOrg
+from tnadmin.models.gvorg import GvOrganisation as DbGvOrg
 from tnadmin.models.ldapsync import LdapSyncErrorPull, LdapSyncJobPull
 import tnadmin.models.gvorg
 
