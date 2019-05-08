@@ -36,3 +36,14 @@ Pytest: pytest.ini
 
 
 === DJANGO_SETTINGS_MODULE
+
+=== Autorisierung und Authentifizierung
+
+Benutzer können lokal (userID/Passwort) oder extern authentifiziert werden.
+
+Bei externern Authentifizierung werden beim ersten Login folgende HTTP-Header ausgewertet und in ein internes Benutzerobjekt gespeichert:
+
+- X-PVP-USERID
+- X-PVP-PRINCIPAL-NAME
+- X-PVP-MAIL
+- X-PVP-ROLES (wird derzeit ignoriert, es werden fix die Rollen fedop, portaladmin und tnadmin zugewiesen.

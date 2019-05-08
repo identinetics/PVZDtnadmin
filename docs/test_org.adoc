@@ -2,7 +2,7 @@
 
 Hier werden Unittests and Funktionstests beschrieben.
 
-== Test Dankebanken und Fixtures
+== Test Datenbanken und Fixtures
 
 Für die meisten Tests sind bestehende Datenbankinstanzen, z.T. LDAP-Instanzen erforderlich.
 Sie werden über unterschiedliche Django-Settings eingestellt:
@@ -37,7 +37,7 @@ Die unittest_db Testfälle initialisieren pro Testmodul (test_xxxx.py) eine Date
 Der Aufruf der nicht-interaktiven Tests erfolgt mit bin/pytest_all_noninteractive.sh
 
 
-== FunKtionstest Database Setup
+== Funktionstest Database Setup
 
 Funktionstests verwenden die Default-Datenbank in Django (persistent, beim Aufruf existierend).
 Mit dem Script reset_db_dev" wird die Default-Datenbank der Entwicklugnsumgebung zurückgesetzt und mit Testdaten (lokal und ldap) nue geladen.

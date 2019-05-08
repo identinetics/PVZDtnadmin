@@ -31,12 +31,19 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'common.custom_header_middleware.CustomHeaderMiddleware',
-    'identity.external.PersistentRemoteUserMiddlewareVar',
-    'identity.external.RemoteUserAttrMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
+    'common.custom_remote_user_middleware.CustomRemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'common.custom_remote_user_backend.CustomRemoteUserBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+    #'identity.external.PersistentRemoteUserMiddlewareVar',
+    #'identity.external.RemoteUserAttrMiddleware',
 
 ROOT_URLCONF = 'pvzdweb.urls'
 
