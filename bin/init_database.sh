@@ -5,6 +5,8 @@ main() {
     if [[ -e "$APPHOME/pvzdweb/database_is_initialized" ]]; then
         echo 'database already initialized'
         exit 0
+    else
+        touch $APPHOME/pvzdweb/database_is_initialized
     fi
     migrate
     createsuperuser
@@ -53,7 +55,4 @@ load_auth_group_perms() {
 }
 
 
-touch $APPHOME/pvzdweb/database_is_initialized
-
-
-main() $@
+main $@
